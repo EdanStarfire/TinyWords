@@ -5,11 +5,63 @@ import android.content.Context
 import android.util.Log
 import kotlinx.serialization.json.Json
 import java.io.IOException
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class) // Or ViewModelComponent::class if WordChallengeGenerator's lifecycle should be tied to ViewModels
+object GameModule { // You can name this module as you see fit
 
-class WordChallengeGenerator(
+    // Provider for List<WordDefinition>
+    @Provides
+    @Singleton // Assuming word definitions are loaded once and reused
+    fun provideWordDefinitions(@ApplicationContext context: Context): List<WordDefinition> {
+        val jsonString: String
+        try {
+            // It's generally better to use applicationContext.assets to avoid context leaks
+            // if this module/dependency lives longer than an Activity/Fragment context.
+            jsonString = context.assets.open("word_definitions.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (ioException: IOException) {
+            // Log the error or handle it appropriately
+            ioException.printStackTrace()
+            return emptyList()
+        }
+
+        return try {
+            Json { ignoreUnknownKeys = true } // Good practice to add ignoreUnknownKeys
+                .decodeFromString<List<WordDefinition>>(jsonString)
+        } catch (e: Exception) {
+            // Log the error or handle it appropriately
+            e.printStackTrace()
+            return emptyList()
+        }
+    }
+
+    // Provider for WordChallengeGenerator
+    @Provides
+    // Consider if WordChallengeGenerator should be a @Singleton or scoped differently
+    // If it's used by ViewModels and doesn't hold mutable state that needs to be shared globally,
+    // ViewModelScoped might be more appropriate.
+    // For simplicity, SingletonComponent is often a good start if it's stateless or its state is app-wide.
+    @Singleton // If you want a single instance of the generator
+    fun provideWordChallengeGenerator(
+        @ApplicationContext context: Context, // Hilt provides this
+        allWordDefinitions: List<WordDefinition> // Hilt provides this from the method above
+    ): WordChallengeGenerator {
+        return WordChallengeGenerator(context, allWordDefinitions)
+    }
+}
+
+class WordChallengeGenerator (
     private val context: Context, // Still needed for getDrawableResId
-    private val allWordDefinitions: List<WordDefinition> // Injected list
+    private val allWordDefinitions: List<WordDefinition>, // Injected list
+    private val deterministic: Boolean = false // Use fixed order for tests if true
 ) {
 
     fun generateChallenge(currentWordString: String): WordChallenge? {
@@ -25,16 +77,29 @@ class WordChallengeGenerator(
         }
 
         // --- Logic to find two unique distractors ---
-        val distractors = allWordDefinitions.filter { definition ->
-            definition.targetWord != targetDefinition.targetWord &&
-                    (definition.part1Sound != targetDefinition.part1Sound &&
-                            definition.part2Sound == targetDefinition.part2Sound &&
-                            definition.part3Sound == targetDefinition.part3Sound)
-        }.shuffled()
+        val distractors = if(deterministic) {
+            allWordDefinitions.filter { definition ->
+                definition.targetWord != targetDefinition.targetWord &&
+                        (definition.part1Sound != targetDefinition.part1Sound &&
+                                definition.part2Sound == targetDefinition.part2Sound &&
+                                definition.part3Sound == targetDefinition.part3Sound)
+            }
+        } else {
+            allWordDefinitions.filter { definition ->
+                definition.targetWord != targetDefinition.targetWord &&
+                        (definition.part1Sound != targetDefinition.part1Sound &&
+                                definition.part2Sound == targetDefinition.part2Sound &&
+                                definition.part3Sound == targetDefinition.part3Sound)
+            }.shuffled()
+        }
 
         if (distractors.size < 2) {
             Log.w("WordChallengeGenerator", "Not enough suitable distractors found for '${targetDefinition.targetWord}'. Found: ${distractors.size}")
-            val otherDistractors = allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }.shuffled()
+            val otherDistractors = if (deterministic) {
+                allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }
+            } else {
+                allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }.shuffled()
+            }
             if (otherDistractors.size < 2) {
                 Log.e("WordChallengeGenerator", "Globally not enough words to form a challenge for '${targetDefinition.targetWord}'")
                 return null
@@ -93,7 +158,7 @@ class WordChallengeGenerator(
             Log.e("WordChallengeGenerator", "Word definitions list is empty. Cannot get random challenge.")
             return null
         }
-        val randomInitialWordDefinition = allWordDefinitions.random()
+        val randomInitialWordDefinition = if (deterministic) allWordDefinitions.first() else allWordDefinitions.random()
         return generateChallenge(randomInitialWordDefinition.targetWord)
     }
 
