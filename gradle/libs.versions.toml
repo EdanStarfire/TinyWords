@@ -1,0 +1,81 @@
+[versions]
+agp = "8.11.0"
+kotlin = "2.2.0"
+coreKtx = "1.16.0"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+kotlinxSerializationJson = "1.9.0"
+lifecycleRuntimeKtx = "2.9.1"
+activityCompose = "1.10.1"
+composeBom = "2025.06.01"
+kotlinxSerializationPlugin = "1.9.20"
+# AndroidX Test
+androidxCoreKtx = "1.13.1" # Example, you likely have this for implementation
+androidxJunit = "1.2.1" # For AndroidJUnitRunner and UI tests
+androidxEspressoCore = "3.6.1" # For UI tests
+androidxTestCore = "1.6.1" # For Robolectric and unit testing Android components
+androidxTestRunner = "1.6.2" # AndroidJUnitRunner
+# JUnit
+junit = "4.13.2"
+# Robolectric
+robolectric = "4.15.1"
+# Truth
+truth = "1.4.4" # Or later, check Google's Truth releases
+# Mockito
+mockitoCore = "5.18.0" # Check latest Mockito versions
+mockitoKotlin = "5.4.0" # For org.mockito.kotlin:mockito-kotlin
+mockitoAndroid = "5.18.0"
+
+# kotlinx-coroutines-test (if you add it later)
+# kotlinxCoroutinesTest = "1.7.3"
+guava = "33.4.8-android"
+
+hiltVersion = "2.56.2"
+kspVersion = "2.2.0-2.0.2"
+javapoet = "1.13.0"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+# AndroidX Test
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspressoCore" }
+androidx-test-core = { group = "androidx.test", name = "core-ktx", version.ref = "androidxTestCore" } # core-ktx is common for unit tests
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+
+# JUnit (for pure JVM tests and used by AndroidX Test)
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+# Robolectric
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+# Google Truth (for assertions)
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+
+# Mockito (for mocking)
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-android = { group = "org.mockito", name="mockito-android", version.ref = "mockitoAndroid" }
+# kotlinx-coroutines-test (if you add it later)
+# kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android" , version.ref = "hiltVersion"}
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler" , version.ref = "hiltVersion"}
+javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
+hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }

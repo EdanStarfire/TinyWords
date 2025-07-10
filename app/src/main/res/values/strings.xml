@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">TinyWords</string>
+
+    <!-- Initial Target Words (Examples - you'll have more or load dynamically) -->
+    <!-- You might not put all target words here if they are part of your game data,
+         but having a few for testing UI layout is fine. -->
+    <string name="word_cat">CAT</string>
+    <string name="word_hat">HAT</string>
+    <string name="word_bat">BAT</string>
+    <string name="word_car">CAR</string>
+    <string name="word_bar">BAR</string>
+
+    <!-- Button Labels -->
+    <string name="button_restart">Restart</string>
+    <string name="button_help">Help</string>
+    <string name="button_options">Options</string>
+    <string name="button_next_word">Next Word</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+
+    <!-- Messages & Feedback (for UI and TTS) -->
+    <string name="feedback_correct">Correct!</string>
+    <string name="feedback_try_again">Try Again</string>
+    <string name="dialog_restart_title">Restart Game</string>
+    <string name="dialog_restart_message">Are you sure you want to restart the current game?
+    </string>
+    <string name="label_streak_counter">Streak: %1$d</string> <!-- Example for formatted string -->
+
+    <!-- Settings Screen/Dialog -->
+    <string name="settings_title">Settings</string>
+    <string name="setting_label_auto_advance">Auto-Advance Timer</string>
+    <string name="setting_label_show_words">Always Show Words Under Images</string>
+    <string name="setting_timer_3_seconds">3 Seconds</string>
+    <string name="setting_timer_5_seconds">5 Seconds</string>
+    <string name="setting_timer_8_seconds">8 Seconds</string>
+    <string name="setting_timer_10_seconds">10 Seconds</string>
+    <string name="setting_timer_disabled">Disabled</string>
+
+    <!-- Content Descriptions (Accessibility) -->
+    <string name="cd_restart_button">Restart game</string>
+    <string name="cd_help_button">Get a hint</string>
+    <string name="cd_options_button">Open game settings</string>
+    <string name="cd_next_word_button">Go to the next word</string>
+    <!-- Dynamic content descriptions for choice images might be constructed in code
+         e.g., "Image representing the word [WORD]" -->
+    <string name="cd_choice_image_template">Image representing the word %1$s</string>
+</resources>

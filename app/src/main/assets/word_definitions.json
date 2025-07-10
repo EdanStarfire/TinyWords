@@ -1,0 +1,23 @@
+[
+  {
+    "targetWord": "CAT",
+    "imageResName": "cat_image",
+    "part1Sound": "C",
+    "part2Sound": "A",
+    "part3Sound": "T"
+  },
+  {
+    "targetWord": "BAT",
+    "imageResName": "bat_image",
+    "part1Sound": "B",
+    "part2Sound": "A",
+    "part3Sound": "T"
+  },
+  {
+    "targetWord": "HAT",
+    "imageResName": "hat_image",
+    "part1Sound": "H",
+    "part2Sound": "A",
+    "part3Sound": "T"
+  }
+]
