@@ -91,4 +91,10 @@ dependencies {
     androidTestImplementation(libs.mockito.android)
     // For kotlinx.coroutines.test if you add coroutines later
     // testImplementation(libs.kotlinx.coroutines.test)
+
+    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.kotlinx.coroutines.test) // Use the latest stable version
+    androidTestImplementation(libs.kotlinx.coroutines.test) // Use the latest stable version
+
+    androidTestImplementation(kotlin("test"))
 }

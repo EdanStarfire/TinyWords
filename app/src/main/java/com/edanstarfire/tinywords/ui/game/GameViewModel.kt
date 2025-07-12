@@ -233,7 +233,27 @@ class GameViewModel @Inject constructor(
         Log.i("GameViewModel", "GameViewModel cleared.")
     }
 
-    // ... Your game state holders and other logic will go here ...
+    fun requestHint() {
+        val currentLevel = _hintLevel.value
+        val maxLevel = _gameSettings.value.hintLevelAllowed
+        if (currentLevel < maxLevel) {
+            _hintLevel.value = currentLevel + 1
+            _isHintButtonEnabled.value = _hintLevel.value < maxLevel
+        } else {
+            _isHintButtonEnabled.value = false
+        }
+    }
+
+    fun resetGame() {
+        _score.value = 0
+        _streak.value = 0
+        _hintLevel.value = 0
+        _isHintButtonEnabled.value = true
+        _feedbackState.value = GameFeedback.None
+        cancelAutoAdvanceTimer()
+        loadNewWordChallenge()
+    }
+
 }
 
 // Placeholder for game feedback

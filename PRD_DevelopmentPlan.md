@@ -9,16 +9,16 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [/] Configure `build.gradle` with necessary dependencies (e.g., Kotlin Coroutines, Jetpack Compose, ViewModel, LiveData/StateFlow, Jetpack DataStore) - *Ongoing as features are added*.
 *   **Task 1.2: Basic Asset & Initial TTS Management**
     *   [x] Create placeholder images for the three choices (`placeholder_1.png`, `placeholder_2.png`, `placeholder_3.png` added to `res/drawable`).
-    *   [X] Implement a basic Text-To-Speech (TTS) helper class for word pronunciations (target words, "Correct!", "Try Again").
-        *   [X] Handle TTS engine initialization and lifecycle.
+    *   [x] Implement a basic Text-To-Speech (TTS) helper class for word pronunciations (target words, "Correct!", "Try Again").
+        *   [x] Handle TTS engine initialization and lifecycle.
     *   [/] Set up `strings.xml` for all user-facing text (initial target words, button labels, messages, TTS phrases like "Correct", "Try Again").
 *   **Task 1.3: Data Structures for Words**
-    *   [X] Define how the word list will be stored (e.g., hardcoded list, JSON in assets).
-    *   [X] Define data class for a "Game Round" or "Word Challenge" (e.g., `WordChallenge(targetWord: String, correctImageWord: String, incorrectImageWord1: String, incorrectImageWord2: String, targetImageRes: Int, incorrect1ImageRes: Int, incorrect2ImageRes: Int)`).
+    *   [x] Define how the word list will be stored (e.g., hardcoded list, JSON in assets).
+    *   [x] Define data class for a "Game Round" or "Word Challenge" (e.g., `WordChallenge(targetWord: String, correctImageWord: String, incorrectImageWord1: String, incorrectImageWord2: String, targetImageRes: Int, incorrect1ImageRes: Int, incorrect2ImageRes: Int)`).
 *   **Task 1.4: Core Game Logic - State Management**
-    *   [X] Create `GameViewModel` (extending `androidx.lifecycle.ViewModel`).
-    *   [X] Inject or provide access to the TTS helper in `GameViewModel`.
-    *   [X] Define state holders in `GameViewModel`:
+    *   [x] Create `GameViewModel` (extending `androidx.lifecycle.ViewModel`).
+    *   [x] Inject or provide access to the TTS helper in `GameViewModel`.
+    *   [x] Define state holders in `GameViewModel`:
         *   Current target word.
         *   Current image choices (associated words, drawable IDs).
         *   Correct/incorrect status.
@@ -29,10 +29,11 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [/] Implement basic functions in `GameViewModel` (most logic complete – hint & reset remain):
         *   [x] `loadNewWordChallenge()` (pronounce new target word)
         *   [x] `processPlayerChoice(selectedWord: String)` (pronounce result/feedback)
-        *   [ ] `requestHint()`
-        *   [ ] `resetGame()`
+        *   [x] `requestHint()`
+        *   [x] `resetGame()`
         *   [x] `startAutoAdvanceTimer()` / `cancelAutoAdvanceTimer()`
         *   [x] `updateSettings(newSettings: GameSettings)`
+    *   [x] Update WordChallengeGenerator to disable randomness for testing purposes.
 
 ## Phase 2: UI Implementation - Main Game Screen (Portrait First with Jetpack Compose)
 
@@ -42,19 +43,22 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 2.2: Target Word Display & Pronunciation**
     *   [ ] Composable for target word from `GameViewModel`.
     *   [ ] Trigger TTS pronunciation of the target word via `GameViewModel` when it appears/changes.
-    *   [ ] Implement dynamic highlighting for Hint Tier 1.
+    *   [ ] Implement dynamic highlighting for Hint Tier 1, matching PRD logic (highlight the differing letter position among image choices for the current target word).
 *   **Task 2.3: Image Choices Display & Interaction**
     *   [ ] Reusable Composable for a single image choice.
     *   [ ] Display three images from `GameViewModel`.
     *   [ ] Implement tap handling, linking to `GameViewModel.processPlayerChoice()`.
+    *   [ ] Grey out and disable any image choice immediately after an incorrect tap, as per PRD feedback flow.
 *   **Task 2.4: Feedback Implementation (Visual & TTS Auditory)**
     *   [ ] Visual feedback: dynamic border, animations (shake/star).
     *   [ ] Auditory feedback: Trigger TTS for "Correct!" / "Try Again" / selected word pronunciation via `GameViewModel`.
-    *   [ ] Logic for greying out & disabling incorrect choices.
-    *   [ ] Logic for showing/hiding words under images & highlighting letters.
-*   **Task 2.5: Border UI Elements (Static Display)**
+    *   [ ] After each incorrect selection, visually grey out (desaturate) only the chosen image and disable its tap, as per GameUX feedback.
+    *   [ ] Show words under images after correct or incorrect answers, with only the differing letter highlighted (green for correct, red for incorrect), following the stepwise feedback sequence described in the PRD.
+*   **Task 2.5: Border UI Elements (Static Display & Feedback Logic)**
     *   [ ] Composables for `ScoreStreakDisplay`, `RestartButton`, `HelpButton`, `OptionsButton`.
     *   [ ] Position within `GameBorder`. Display initial values from `GameViewModel`.
+    *   [ ] Implement logic for "I Need Help" button: enabled at the start of each new word, disabled after using Tier 2, re-enabled for the next word, matching UX rules.
+    *   [ ] Ensure feedback animations (shake, star burst, border color) and UI placement exactly follow visual/interaction details in the GameUX PRD.
 
 ## Phase 3: UI Implementation - Border UI Functionality & Settings
 

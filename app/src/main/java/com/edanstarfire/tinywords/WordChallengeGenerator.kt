@@ -130,7 +130,6 @@ class WordChallengeGenerator (
                         "${incorrect1Def.imageResName}(${incorrect1ImageResId}), " +
                         "${incorrect2Def.imageResName}(${incorrect2ImageResId})"
             )
-            return null
         }
 
         return WordChallenge(
