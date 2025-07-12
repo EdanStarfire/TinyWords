@@ -38,8 +38,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 ## Phase 2: UI Implementation - Main Game Screen (Portrait First with Jetpack Compose)
 
 *   **Task 2.1: Basic Layout (Portrait)**
-    *   [ ] Create main activity & Jetpack Compose content view.
-    *   [ ] Implement portrait layout: `TargetWordArea`, `ImageChoicesArea`, `GameBorder`, internal dividers.
+    *   [x] Create main activity & Jetpack Compose content view.
+    *   [x] Implement portrait layout: `TargetWordArea`, `ImageChoicesArea`, `GameBorder`, internal dividers.
 *   **Task 2.2: Target Word Display & Pronunciation**
     *   [ ] Composable for target word from `GameViewModel`.
     *   [ ] Trigger TTS pronunciation of the target word via `GameViewModel` when it appears/changes.
@@ -55,8 +55,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [ ] After each incorrect selection, visually grey out (desaturate) only the chosen image and disable its tap, as per GameUX feedback.
     *   [ ] Show words under images after correct or incorrect answers, with only the differing letter highlighted (green for correct, red for incorrect), following the stepwise feedback sequence described in the PRD.
 *   **Task 2.5: Border UI Elements (Static Display & Feedback Logic)**
-    *   [ ] Composables for `ScoreStreakDisplay`, `RestartButton`, `HelpButton`, `OptionsButton`.
-    *   [ ] Position within `GameBorder`. Display initial values from `GameViewModel`.
+    *   [x] Composables for `ScoreStreakDisplay`, `RestartButton`, `HelpButton`, `OptionsButton`.
+    *   [x] Position within `GameBorder`. Display initial values from `GameViewModel`.
     *   [ ] Implement logic for "I Need Help" button: enabled at the start of each new word, disabled after using Tier 2, re-enabled for the next word, matching UX rules.
     *   [ ] Ensure feedback animations (shake, star burst, border color) and UI placement exactly follow visual/interaction details in the GameUX PRD.
 
@@ -92,6 +92,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   (Same as before)
 
 ---
+
+**Workflow Note:**
+- Always update and check-in PRD_DevelopmentPlan.md before every code commit to ensure plan/actual status stays in sync.
 
 **Tracking Legend:**
 
