@@ -114,7 +114,9 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                     },
                     fontSize = 72.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .clickable { viewModel.pronounceWord(target) }
                 )
             } else {
                 androidx.compose.material3.Text(text = "…", modifier = Modifier.padding(16.dp))
@@ -226,13 +228,10 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
                             res = res,
                             enabled = true,
                             isCorrect = word == currentChallenge.correctImageWord,
-                            isSelected = chosenWord == word,
-                            isDisabled = disabledWords.contains(word) && chosenWord != currentChallenge.correctImageWord,
-                            showWordBelow = when (feedbackState) {
-                                is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct -> true
-                                is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect -> word in disabledWords
-                                else -> false
-                            },
+                            isSelected = (chosenWord == word) || (disabledWords.contains(word) && word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
+                            isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(word) && chosenWord != currentChallenge.correctImageWord,
+                            showWordBelow = (word in disabledWords) ||
+                                (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
                             differingIndex = run {
                                 val tgt = currentChallenge.targetWord
                                 val incorrect1 = currentChallenge.incorrectImageWord1

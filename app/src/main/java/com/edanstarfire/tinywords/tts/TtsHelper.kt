@@ -51,10 +51,12 @@ class TtsHelper @Inject constructor(
         }
     }
 
-    fun speak(text: String, queueMode: Int = TextToSpeech.QUEUE_FLUSH) {
+    fun speak(text: String, queueMode: Int = TextToSpeech.QUEUE_FLUSH, pitch: Float? = null, rate: Float? = null) {
         if (_isInitialized.value && tts != null) {
+            pitch?.let { tts?.setPitch(it) }
+            rate?.let { tts?.setSpeechRate(it) }
             tts?.speak(text, queueMode, null, null)
-            Log.i("TtsHelper", "Speaking: '$text'")
+            Log.i("TtsHelper", "Speaking: '$text' (pitch=${pitch ?: "default"}, rate=${rate ?: "default"})")
         } else {
             Log.w("TtsHelper", "TTS not initialized or null, cannot speak: '$text'. Current init state: ${_isInitialized.value}")
         }

@@ -1,5 +1,11 @@
 package com.edanstarfire.tinywords.ui.game
 
+import android.content.Context
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
+import java.io.IOException
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope // Important for launching coroutines
@@ -19,10 +25,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Serializable
+data class SpokenContent(
+    val positive: List<String> = emptyList(),
+    val encouragement: List<String> = emptyList()
+)
+
 @HiltViewModel // Marks this ViewModel for Hilt injection
 class GameViewModel @Inject constructor(
     private val ttsHelper: TtsHelper,
-    private val wordChallengeGenerator: WordChallengeGenerator
+    private val wordChallengeGenerator: WordChallengeGenerator,
+    @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: Context
 ) : ViewModel() {
     // Expose TTS readiness to the UI or for internal ViewModel logic
     val isTtsReady: StateFlow<Boolean> = ttsHelper.isInitialized
@@ -68,13 +81,18 @@ class GameViewModel @Inject constructor(
 
     // To hold the reference to the current timer job so it can be cancelled
     private var autoAdvanceJob: Job? = null
+    private var encouragementJob: Job? = null
 
     // 6. Settings values
     private val _gameSettings = MutableStateFlow(GameSettings()) // Default settings
     val gameSettings: StateFlow<GameSettings> = _gameSettings.asStateFlow()
 
+    // --- Spoken feedback loaded from assets/spoken_content.json ---
+    private var spokenContent: SpokenContent = SpokenContent()
 
     init {
+        loadSpokenContent()
+
         Log.i("GameViewModel", "GameViewModel initialized with TtsHelper and WordChallengeGenerator.")
 
         viewModelScope.launch {
@@ -115,6 +133,12 @@ class GameViewModel @Inject constructor(
     }
 
     fun processPlayerChoice(selectedWord: String) {
+        // If previous answer was correct, just say the word and do nothing else
+        if (_feedbackState.value is GameFeedback.Correct) {
+            encouragementJob?.cancel()
+            pronounceWord(selectedWord)
+            return
+        }
         val challenge = _currentChallenge.value
         Log.d("GameViewModel", "Processing player choice: $selectedWord, Challenge: $challenge")
         autoAdvanceJob?.cancel()
@@ -125,11 +149,21 @@ class GameViewModel @Inject constructor(
             return
         }
 
+        encouragementJob?.cancel()
         pronounceWord(selectedWord)
         val isCorrect = selectedWord == challenge.correctImageWord
 
+        // Speak a feedback phrase ~1s after word
+        encouragementJob = viewModelScope.launch {
+            delay(1000L)
+            val list = if (isCorrect) spokenContent.positive else spokenContent.encouragement
+            val saying = if (list.isNotEmpty()) list.shuffled().first() else if (isCorrect) "Correct!" else "Try again!"
+            pronounceWord(saying, pitch = if (isCorrect) 1.2f else 1.0f)
+        }
+
         if (isCorrect) {
             _feedbackState.value = GameFeedback.Correct(selectedWord)
+            _isHintButtonEnabled.value = false
             _score.value += 10
             _streak.value += 1
             _disabledWords.value = emptySet() // Reset on correct
@@ -216,15 +250,12 @@ class GameViewModel @Inject constructor(
         // or cancels an active one if auto-advance is disabled.
     }
 
-    fun pronounceWord(word: String) {
-        // TtsHelper now internally checks if it's initialized before speaking
-        // So, direct call is safer. But you could still add a check here if needed.
-        if (isTtsReady.value) { // Optional: Check here too if you want GameViewModel to be aware
-            ttsHelper.speak(word)
+    fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null) {
+        encouragementJob?.cancel()
+        if (isTtsReady.value) {
+            ttsHelper.speak(word, pitch = pitch, rate = rate)
         } else {
             Log.w("GameViewModel", "Attempted to pronounceWord, but TTS is not ready. Word: $word")
-            // You could queue the word here to be spoken once TTS is ready,
-            // or inform the user.
         }
     }
 
@@ -239,6 +270,7 @@ class GameViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         autoAdvanceJob?.cancel() // Ensure timer is cancelled when ViewModel is cleared
+        encouragementJob?.cancel()
         Log.i("GameViewModel", "GameViewModel cleared.")
     }
 
@@ -248,6 +280,9 @@ class GameViewModel @Inject constructor(
         if (currentLevel < maxLevel) {
             _hintLevel.value = currentLevel + 1
             _isHintButtonEnabled.value = _hintLevel.value < maxLevel
+            if (currentLevel == 0 && _currentChallenge.value?.targetWord != null) {
+                pronounceWord(_currentChallenge.value!!.targetWord)
+            }
             if (_hintLevel.value == 2) {
                 // Tier 2: Eliminate one incorrect image (pick a word to disable)
                 val challenge = _currentChallenge.value
@@ -256,12 +291,29 @@ class GameViewModel @Inject constructor(
                     // Only add one word that's not already disabled
                     val notYetDisabled = incorrectWords.filter { it !in _disabledWords.value }
                     if (notYetDisabled.isNotEmpty()) {
-                        _disabledWords.value = _disabledWords.value + notYetDisabled.first()
+                        val disabledWord = notYetDisabled.first()
+                        _disabledWords.value = _disabledWords.value + disabledWord
+                        pronounceWord(disabledWord)
                     }
                 }
             }
         } else {
             _isHintButtonEnabled.value = false
+        }
+    }
+
+    // Load spoken_content.json from assets for TTS feedback
+    private fun loadSpokenContent() {
+        try {
+            val inputStream = appContext.assets.open("spoken_content.json")
+            val jsonString = inputStream.bufferedReader().use { it.readText() }
+            spokenContent = Json { ignoreUnknownKeys = true }.decodeFromString(jsonString)
+        } catch (ioException: IOException) {
+            Log.e("GameViewModel", "Error reading spoken_content.json", ioException)
+            spokenContent = SpokenContent()
+        } catch (e: Exception) {
+            Log.e("GameViewModel", "Error parsing spoken_content.json", e)
+            spokenContent = SpokenContent()
         }
     }
 

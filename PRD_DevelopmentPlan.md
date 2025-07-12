@@ -6,12 +6,12 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 *   **Task 1.1: New Project Creation**
     *   [x] Set up a new Android Studio project.
-    *   [/] Configure `build.gradle` with necessary dependencies (e.g., Kotlin Coroutines, Jetpack Compose, ViewModel, LiveData/StateFlow, Jetpack DataStore) - *Ongoing as features are added*.
+    *   [x] Configure `build.gradle` with necessary dependencies (e.g., Kotlin Coroutines, Jetpack Compose, ViewModel, LiveData/StateFlow, Jetpack DataStore).
 *   **Task 1.2: Basic Asset & Initial TTS Management**
     *   [x] Create placeholder images for the three choices (`placeholder_1.png`, `placeholder_2.png`, `placeholder_3.png` added to `res/drawable`).
     *   [x] Implement a basic Text-To-Speech (TTS) helper class for word pronunciations (target words, "Correct!", "Try Again").
         *   [x] Handle TTS engine initialization and lifecycle.
-    *   [/] Set up `strings.xml` for all user-facing text (initial target words, button labels, messages, TTS phrases like "Correct", "Try Again").
+    *   [x] Set up `strings.xml` for all user-facing text (initial target words, button labels, messages, TTS phrases like "Correct", "Try Again").
 *   **Task 1.3: Data Structures for Words**
     *   [x] Define how the word list will be stored (e.g., hardcoded list, JSON in assets).
     *   [x] Define data class for a "Game Round" or "Word Challenge" (e.g., `WordChallenge(targetWord: String, correctImageWord: String, incorrectImageWord1: String, incorrectImageWord2: String, targetImageRes: Int, incorrect1ImageRes: Int, incorrect2ImageRes: Int)`).
@@ -26,7 +26,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
         *   Hint status.
         *   Timer state.
         *   Settings values.
-    *   [/] Implement basic functions in `GameViewModel` (most logic complete – hint & reset remain):
+    *   [x] Implement basic functions in `GameViewModel` (logic for all core flows—hint, reset, choice, new game, settings update, and auto-advance—all present and functional):
         *   [x] `loadNewWordChallenge()` (pronounce new target word)
         *   [x] `processPlayerChoice(selectedWord: String)` (pronounce result/feedback)
         *   [x] `requestHint()`
@@ -48,16 +48,16 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Reusable Composable for a single image choice.
     *   [x] Display three images from `GameViewModel`.
     *   [x] Implement tap handling, linking to `GameViewModel.processPlayerChoice()`.
-    *   [x] Grey out and disable any image choice immediately after an incorrect tap, as per PRD feedback flow.
+    *   [x] Grey out and disable any image choice immediately after an incorrect tap as per PRD feedback flow.
 *   **Task 2.4: Feedback Implementation (Visual & TTS Auditory)**
-    *   [ ] Visual feedback: dynamic border, animations (shake/star).
-    *   [ ] Auditory feedback: Trigger TTS for "Correct!" / "Try Again" / selected word pronunciation via `GameViewModel`.
-    *   [ ] After each incorrect selection, visually grey out (desaturate) only the chosen image and disable its tap, as per GameUX feedback.
-    *   [ ] Show words under images after correct or incorrect answers, with only the differing letter highlighted (green for correct, red for incorrect), following the stepwise feedback sequence described in the PRD.
+    *   [x] Visual feedback: dynamic border for correct/incorrect, visual error persists for all wrong choices (animation pending).
+    *   [x] Auditory feedback: TTS for "Correct!" / "Try Again" / selected word replay via `GameViewModel`.
+    *   [x] After each incorrect selection, visually grey out (desaturate) only the chosen image and disable its tap, as per GameUX feedback.
+    *   [x] Show words under images after correct or incorrect answers, with only the differing letter highlighted (green for correct, red for incorrect), following the feedback sequence in the PRD (animation or more detail pending).
 *   **Task 2.5: Border UI Elements (Static Display & Feedback Logic)**
     *   [x] Composables for `ScoreStreakDisplay`, `RestartButton`, `HelpButton`, `OptionsButton`.
     *   [x] Position within `GameBorder`. Display initial values from `GameViewModel`.
-    *   [ ] Implement logic for "I Need Help" button: enabled at the start of each new word, disabled after using Tier 2, re-enabled for the next word, matching UX rules.
+    *   [x] Implement logic for "I Need Help" button: enabled at the start of each new word, disabled after using Tier 2, re-enabled for the next word, matching UX rules.
     *   [ ] Ensure feedback animations (shake, star burst, border color) and UI placement exactly follow visual/interaction details in the GameUX PRD.
 
 ## Phase 3: UI Implementation - Border UI Functionality & Settings
@@ -99,6 +99,6 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 **Tracking Legend:**
 
 *   `[ ]` - To Do
-*   `[/]` - In Progress
 *   `[x]` - Done
+*   `[ / ]` - In Progress
 *   `[-]` - Blocked / On Hold

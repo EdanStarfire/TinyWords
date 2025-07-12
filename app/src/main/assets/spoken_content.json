@@ -1,0 +1,21 @@
+{
+  "positive": [
+    "Yes!",
+    "All right!",
+    "Great job!",
+    "Correct!",
+    "You got it!",
+    "Well done!",
+    "That's right!",
+    "Awesome!"
+  ],
+  "encouragement": [
+    "Nice try!",
+    "Try again!",
+    "Not quite!",
+    "Almost!",
+    "Keep going!",
+    "You can do it!",
+    "Give it another shot!"
+  ]
+}
