@@ -41,9 +41,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Create main activity & Jetpack Compose content view.
     *   [x] Implement portrait layout: `TargetWordArea`, `ImageChoicesArea`, `GameBorder`, internal dividers.
 *   **Task 2.2: Target Word Display & Pronunciation**
-    *   [ ] Composable for target word from `GameViewModel`.
-    *   [ ] Trigger TTS pronunciation of the target word via `GameViewModel` when it appears/changes.
-    *   [ ] Implement dynamic highlighting for Hint Tier 1, matching PRD logic (highlight the differing letter position among image choices for the current target word).
+    *   [x] Composable for target word from `GameViewModel`.
+    *   [x] Trigger TTS pronunciation of the target word via `GameViewModel` when it appears/changes.
+    *   [x] Implement dynamic highlighting for Hint Tier 1, matching PRD logic (highlight the differing letter position among image choices for the current target word).
 *   **Task 2.3: Image Choices Display & Interaction**
     *   [ ] Reusable Composable for a single image choice.
     *   [ ] Display three images from `GameViewModel`.

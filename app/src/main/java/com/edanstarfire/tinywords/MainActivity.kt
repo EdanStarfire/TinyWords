@@ -25,6 +25,8 @@ import com.edanstarfire.tinywords.ui.game.GameViewModel
 import androidx.compose.runtime.collectAsState  // <-- Import this
 import androidx.compose.runtime.getValue      // <-- Import this
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -80,24 +82,46 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
 
 @Composable
 fun TargetWordArea(viewModel: GameViewModel?) {
-    // Show target word large, centered from currentChallenge
+    // Show target word large, centered from currentChallenge, with Tier 1 highlighting & TTS
     if (viewModel != null) {
         val currentChallenge by viewModel.currentChallenge.collectAsState()
+        val hintLevel by viewModel.hintLevel.collectAsState()
+        val target = currentChallenge?.targetWord
+        val incorrect1 = currentChallenge?.incorrectImageWord1
+        val incorrect2 = currentChallenge?.incorrectImageWord2
+        val differingIndex = if (hintLevel >= 1 && target != null && incorrect1 != null && incorrect2 != null) {
+            target.indices.firstOrNull { idx ->
+                (idx < incorrect1.length && target[idx] != incorrect1[idx]) ||
+                (idx < incorrect2.length && target[idx] != incorrect2[idx])
+            }
+        } else null
+
+        androidx.compose.runtime.LaunchedEffect(target) {
+            if (target != null) viewModel.pronounceWord(target)
+        }
         androidx.compose.foundation.layout.Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = androidx.compose.ui.Alignment.Center
         ) {
-            Text(
-                text = currentChallenge?.targetWord ?: "…",
-                modifier = Modifier.padding(16.dp),
-                style = androidx.compose.ui.text.TextStyle(
+            if (target != null) {
+                androidx.compose.material3.Text(
+                    text = buildAnnotatedString {
+                        target.forEachIndexed { i, c ->
+                            if (i == differingIndex) {
+                                withStyle(androidx.compose.ui.text.SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF388E3C))) { append(c) }
+                            } else append(c)
+                        }
+                    },
                     fontSize = 72.sp,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
                 )
-            )
+            } else {
+                androidx.compose.material3.Text(text = "…", modifier = Modifier.padding(16.dp))
+            }
         }
     } else {
-        Text(text = "TargetWordArea", modifier = Modifier.padding(16.dp))
+        androidx.compose.material3.Text(text = "TargetWordArea", modifier = Modifier.padding(16.dp))
     }
 }
 
