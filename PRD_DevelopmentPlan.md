@@ -88,6 +88,24 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 5.3: UI Polish & Animations**
 *   **Task 5.4: Code Cleanup & Documentation**
 
+## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
+
+*   [ ] Prevent the words from being pronounced when the device is rotated.
+*   [ ] Ensure the word is pronounced on the first display of the app.
+*   [ ] Stop the game from auto-progressing when the app is backgrounded.
+*   [ ] Explore using the phonetic alphabet for sound matching (PRD section 7 & undecided/logic).
+*   [ ] Explore indices instead of letters for sound matching (PRD section 7 & undecided/logic).
+*   [ ] Explore recorded words instead of text-to-speech.
+*   [ ] Displaying score and streak prominently per GameUX.
+*   [ ] Add a "Next Word" button to bypass the auto-advance timer after a correct answer.
+*   [ ] Review all PRD_GameUX details and complete any missing subtlety, especially:
+    *   Visual feedback: star animation, shake effect, feedback sound for right/wrong.
+    *   "Restart" should require a confirmation popup.
+    *   Option for "Always Show Words Under Images" (toggle in Options).
+    *   Options/settings dialog responsive placement.
+    *   Support for landscape layout and border UI in all modes.
+*   [ ] (General) Sweep for any additional polish or small gaps left in UI/logic per PRD/UX checklist.
+
 ## General Considerations Throughout Development:
 *   (Same as before)
 
