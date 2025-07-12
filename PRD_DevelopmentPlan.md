@@ -45,10 +45,10 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Trigger TTS pronunciation of the target word via `GameViewModel` when it appears/changes.
     *   [x] Implement dynamic highlighting for Hint Tier 1, matching PRD logic (highlight the differing letter position among image choices for the current target word).
 *   **Task 2.3: Image Choices Display & Interaction**
-    *   [ ] Reusable Composable for a single image choice.
-    *   [ ] Display three images from `GameViewModel`.
-    *   [ ] Implement tap handling, linking to `GameViewModel.processPlayerChoice()`.
-    *   [ ] Grey out and disable any image choice immediately after an incorrect tap, as per PRD feedback flow.
+    *   [x] Reusable Composable for a single image choice.
+    *   [x] Display three images from `GameViewModel`.
+    *   [x] Implement tap handling, linking to `GameViewModel.processPlayerChoice()`.
+    *   [x] Grey out and disable any image choice immediately after an incorrect tap, as per PRD feedback flow.
 *   **Task 2.4: Feedback Implementation (Visual & TTS Auditory)**
     *   [ ] Visual feedback: dynamic border, animations (shake/star).
     *   [ ] Auditory feedback: Trigger TTS for "Correct!" / "Try Again" / selected word pronunciation via `GameViewModel`.

@@ -52,6 +52,10 @@ class GameViewModel @Inject constructor(
     private val _hintLevel = MutableStateFlow(0)
     val hintLevel: StateFlow<Int> = _hintLevel.asStateFlow()
 
+    // Tracks which words are currently disabled for this round (wrong guesses, hints)
+    private val _disabledWords = MutableStateFlow<Set<String>>(emptySet())
+    val disabledWords: StateFlow<Set<String>> = _disabledWords.asStateFlow()
+
     private val _isHintButtonEnabled = MutableStateFlow(true) // Can hints be requested now?
     val isHintButtonEnabled: StateFlow<Boolean> = _isHintButtonEnabled.asStateFlow()
 
@@ -102,6 +106,7 @@ class GameViewModel @Inject constructor(
         val challenge = wordChallengeGenerator.getRandomInitialChallenge()
         _currentChallenge.value = challenge
         _feedbackState.value = GameFeedback.None
+        _disabledWords.value = emptySet()
 
         challenge?.let {
             pronounceWord(it.targetWord)
@@ -120,12 +125,14 @@ class GameViewModel @Inject constructor(
             return
         }
 
+        pronounceWord(selectedWord)
         val isCorrect = selectedWord == challenge.correctImageWord
 
         if (isCorrect) {
             _feedbackState.value = GameFeedback.Correct(selectedWord)
             _score.value += 10
             _streak.value += 1
+            _disabledWords.value = emptySet() // Reset on correct
             if (_gameSettings.value.autoAdvance) {
                 startAutoAdvanceTimer()
             } else {
@@ -134,6 +141,8 @@ class GameViewModel @Inject constructor(
         } else {
             _feedbackState.value = GameFeedback.Incorrect(selectedWord)
             _streak.value = 0
+            // Add this word to the set of disabled words
+            _disabledWords.value = _disabledWords.value + selectedWord
             Log.i("GameViewModel", "Incorrect answer.")
         }
     }
@@ -239,6 +248,18 @@ class GameViewModel @Inject constructor(
         if (currentLevel < maxLevel) {
             _hintLevel.value = currentLevel + 1
             _isHintButtonEnabled.value = _hintLevel.value < maxLevel
+            if (_hintLevel.value == 2) {
+                // Tier 2: Eliminate one incorrect image (pick a word to disable)
+                val challenge = _currentChallenge.value
+                if (challenge != null) {
+                    val incorrectWords = listOf(challenge.incorrectImageWord1, challenge.incorrectImageWord2)
+                    // Only add one word that's not already disabled
+                    val notYetDisabled = incorrectWords.filter { it !in _disabledWords.value }
+                    if (notYetDisabled.isNotEmpty()) {
+                        _disabledWords.value = _disabledWords.value + notYetDisabled.first()
+                    }
+                }
+            }
         } else {
             _isHintButtonEnabled.value = false
         }
@@ -250,6 +271,7 @@ class GameViewModel @Inject constructor(
         _hintLevel.value = 0
         _isHintButtonEnabled.value = true
         _feedbackState.value = GameFeedback.None
+        _disabledWords.value = emptySet()
         cancelAutoAdvanceTimer()
         loadNewWordChallenge()
     }
