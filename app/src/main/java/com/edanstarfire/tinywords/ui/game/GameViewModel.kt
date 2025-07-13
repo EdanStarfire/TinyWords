@@ -125,6 +125,8 @@ class GameViewModel @Inject constructor(
         _currentChallenge.value = challenge
         _feedbackState.value = GameFeedback.None
         _disabledWords.value = emptySet()
+        _hintLevel.value = 0
+        _isHintButtonEnabled.value = true
 
         challenge?.let {
             pronounceWord(it.targetWord)

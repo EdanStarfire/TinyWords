@@ -96,8 +96,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   [ ] Explore using the phonetic alphabet for sound matching (PRD section 7 & undecided/logic).
 *   [ ] Explore indices instead of letters for sound matching (PRD section 7 & undecided/logic).
 *   [ ] Explore recorded words instead of text-to-speech.
-*   [ ] Displaying score and streak prominently per GameUX.
-*   [ ] Add a "Next Word" button to bypass the auto-advance timer after a correct answer.
+*   [x] Displaying score and streak prominently per GameUX.
+*   [x] Add a "Next Word" button to bypass the auto-advance timer after a correct answer.
 *   [ ] Review all PRD_GameUX details and complete any missing subtlety, especially:
     *   Visual feedback: star animation, shake effect, feedback sound for right/wrong.
     *   "Restart" should require a confirmation popup.

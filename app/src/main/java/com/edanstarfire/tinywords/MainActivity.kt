@@ -14,6 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -145,10 +153,21 @@ fun ImageChoice(
         isSelected && !isCorrect -> androidx.compose.ui.graphics.Color(0xFFD32F2F)
         else -> androidx.compose.ui.graphics.Color.LightGray
     }
+    // --- Animation: Shake on new incorrect tap ---
+    val shakeOffset = if (isSelected && !isCorrect) 12 else 0
+    val animatedShake = animateFloatAsState(
+        targetValue = if (isSelected && !isCorrect) 1f else 0f,
+        animationSpec = tween(durationMillis = 500)
+    )
     androidx.compose.material3.Surface(
         modifier = Modifier
             .padding(horizontal = 8.dp)
-            .alpha(alpha),
+            .alpha(alpha)
+            .graphicsLayer {
+                if (isSelected && !isCorrect && animatedShake.value > 0f) {
+                    translationX = (kotlin.math.sin(animatedShake.value * 6 * Math.PI) * shakeOffset).toFloat()
+                }
+            },
         tonalElevation = 2.dp,
         onClick = if (enabled && !isDisabled) onClick else ({}),
         border = androidx.compose.foundation.BorderStroke(3.dp, borderColor),
@@ -164,13 +183,45 @@ fun ImageChoice(
             ) {
                 if (res != 0) {
                     val painter = androidx.compose.ui.res.painterResource(id = res)
-                    androidx.compose.foundation.Image(
+                    Image(
                         painter = painter,
                         contentDescription = word,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
                     Text(text = word, fontSize = 25.sp)
+                }
+                // --- Correct/checkmark/try again overlay icons ---
+                if (isSelected && isCorrect) {
+                    androidx.compose.animation.AnimatedVisibility(true) {
+                        androidx.compose.foundation.layout.Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = androidx.compose.ui.Alignment.TopEnd
+                        ) {
+                            val checkMark = androidx.compose.ui.res.painterResource(id = com.edanstarfire.tinywords.R.drawable.correct_icon)
+                            Image(
+                                painter = checkMark,
+                                contentDescription = "Correct",
+                                modifier = Modifier.size(48.dp).padding(2.dp),
+                                alpha = 0.95f
+                            )
+                        }
+                    }
+                } else if (isSelected && !isCorrect) {
+                    androidx.compose.animation.AnimatedVisibility(true) {
+                        androidx.compose.foundation.layout.Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = androidx.compose.ui.Alignment.TopEnd
+                        ) {
+                            val tryAgainIcon = androidx.compose.ui.res.painterResource(id = com.edanstarfire.tinywords.R.drawable.try_again_icon)
+                            Image(
+                                painter = tryAgainIcon,
+                                contentDescription = "Try Again",
+                                modifier = Modifier.size(44.dp).padding(2.dp),
+                                alpha = 0.95f
+                            )
+                        }
+                    }
                 }
             }
             androidx.compose.material3.Text(
@@ -258,6 +309,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
 fun GameBorder(viewModel: GameViewModel?) {
     if (viewModel != null) {
         val streak by viewModel.streak.collectAsState()
+        val score by viewModel.score.collectAsState()
+        val feedbackState by viewModel.feedbackState.collectAsState()
         val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
         androidx.compose.foundation.layout.Box(
             modifier = Modifier
@@ -265,11 +318,18 @@ fun GameBorder(viewModel: GameViewModel?) {
                 .fillMaxHeight()
                 .padding(8.dp),
         ) {
-            // Streak counter (top-left)
+            // Score (top-left)
             androidx.compose.material3.Text(
-                text = "Streak: $streak",
+                text = "Score: $score",
                 fontSize = 20.sp,
                 modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart)
+            )
+
+            // Streak counter (just below score)
+            androidx.compose.material3.Text(
+                text = "Streak: $streak",
+                fontSize = 18.sp,
+                modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 28.dp)
             )
 
             // Restart button (top-right)
@@ -302,6 +362,16 @@ fun GameBorder(viewModel: GameViewModel?) {
                     .align(androidx.compose.ui.Alignment.BottomEnd)
                     .clickable { /* open settings */ }
             )
+
+            // Next Word button (center, appears after correct)
+            if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
+                androidx.compose.material3.Button(
+                    onClick = { viewModel.requestNextWordManually() },
+                    modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
+                ) {
+                    androidx.compose.material3.Text("Next Word")
+                }
+            }
         }
     } else {
         androidx.compose.material3.Text(text = "GameBorder", modifier = Modifier.padding(16.dp))
