@@ -58,7 +58,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Composables for `ScoreStreakDisplay`, `RestartButton`, `HelpButton`, `OptionsButton`.
     *   [x] Position within `GameBorder`. Display initial values from `GameViewModel`.
     *   [x] Implement logic for "I Need Help" button: enabled at the start of each new word, disabled after using Tier 2, re-enabled for the next word, matching UX rules.
-    *   [ ] Ensure feedback animations (shake, star burst, border color) and UI placement exactly follow visual/interaction details in the GameUX PRD.
+    *   [x] Ensure feedback animations (shake, star burst, border color) and UI placement exactly follow visual/interaction details in the GameUX PRD.
 
 ## Phase 3: UI Implementation - Border UI Functionality & Settings
 
