@@ -73,13 +73,13 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Reset all game state on restart (score, streak, progress, hints)
     *   [-] Optionally: add TTS confirmation prompt for reset (will not implement; not needed for MVP)
 *   **Task 3.3: "I Need Help" Button Functionality**
-    *   [ ] Hint Tier 1 works (TargetWord letter highlight)
-    *   [ ] Hint Tier 2 disables/greys out one distractor
-    *   [ ] Hint button enable/disable logic is correct after every game event
+    *   [x] Hint Tier 1 works (TargetWord letter highlight)
+    *   [x] Hint Tier 2 disables/greys out one distractor
+    *   [x] Hint button enable/disable logic is correct after every game event
 *   **Task 3.4: "Next Word" Button**
-    *   [ ] Button appears after correct answer if auto-advance is off or timer is running
-    *   [ ] Immediate manual advance works and resets display state cleanly
-    *   [ ] Hide button once next word has loaded
+    *   [x] Button appears after correct answer if auto-advance is off or timer is running
+    *   [x] Immediate manual advance works and resets display state cleanly
+    *   [x] Hide button once next word has loaded
 *   **Task 3.5: Auto-Advance Timer**
     *   [ ] Configurable timer visible/counts down after correct answer
     *   [ ] Timer can be toggled in settings
