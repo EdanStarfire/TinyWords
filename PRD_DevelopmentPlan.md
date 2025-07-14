@@ -115,9 +115,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
 
-*   [ ] Prevent the words from being pronounced when the device is rotated.
+*   [x] Prevent the words from being pronounced when the device is rotated.
 *   [ ] Ensure the word is pronounced on the first display of the app.
-*   [ ] Stop the game from auto-progressing when the app is backgrounded.
+*   [x] Stop the game from auto-progressing when the app is backgrounded.
 *   [ ] Explore using the phonetic alphabet for sound matching (PRD section 7 & undecided/logic).
 *   [ ] Explore indices instead of letters for sound matching (PRD section 7 & undecided/logic).
 *   [ ] Explore recorded words instead of text-to-speech.
