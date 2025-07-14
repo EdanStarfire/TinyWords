@@ -270,6 +270,12 @@ class GameViewModel @Inject constructor(
         Log.i("GameViewModel", "Auto-advance timer cancelled explicitly.")
     }
 
+    fun pauseAutoAdvanceTimer() {
+        autoAdvanceJob?.cancel()
+        _isTimerRunning.value = false
+        Log.i("GameViewModel", "Auto-advance timer paused due to background or lifecycle event.")
+    }
+
     // This function is now more about updating the _gameSettings StateFlow.
     // The collectLatest block on _gameSettings will handle reacting to the change.
     fun updateSettings(newSettings: GameSettings) {

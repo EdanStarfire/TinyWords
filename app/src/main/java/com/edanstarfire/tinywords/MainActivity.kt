@@ -56,6 +56,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        gameViewModel.pauseAutoAdvanceTimer()
+    }
 }
 
 @Composable
@@ -399,13 +404,16 @@ fun GameBorder(viewModel: GameViewModel?) {
                     .clickable { /* open settings */ }
             )
 
-            // Next Word button (center, appears after correct)
+            // Next Word button or timer (center, after correct)
             if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
+                val isTimerRunning by viewModel.isTimerRunning.collectAsState()
+                val timerValue by viewModel.timerValueSeconds.collectAsState()
                 androidx.compose.material3.Button(
                     onClick = { viewModel.requestNextWordManually() },
                     modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
                 ) {
-                    androidx.compose.material3.Text("Next Word")
+                    val label = if (isTimerRunning && timerValue > 0) "Next ${timerValue}s" else "Next Word"
+                    androidx.compose.material3.Text(label)
                 }
             }
         }

@@ -81,14 +81,15 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Immediate manual advance works and resets display state cleanly
     *   [x] Hide button once next word has loaded
 *   **Task 3.5: Auto-Advance Timer**
-    *   [ ] Configurable timer visible/counts down after correct answer
-    *   [ ] Timer can be toggled in settings
-    *   [ ] Correct behavior if interrupted (background, settings change)
+    *   [x] Configurable timer visible/counts down after correct answer
+    *   [x] (Moved to 3.6) Timer can be toggled in settings
+    *   [x] Correct behavior if interrupted (background, settings change)
 *   **Task 3.6: Options/Settings Screen/Dialog**
     *   [ ] Implement modal or screen for user to modify:
         *   [ ] Timer on/off and duration
         *   [ ] Always Show Words Under Images
         *   [ ] TTS rate
+        *   [ ] Pronounce target word at start of each challenge (default: OFF)
         *   [ ] Other future toggles
 *   **Task 3.7: Settings Persistence (Jetpack DataStore)**
     *   [ ] Save user settings persistently
