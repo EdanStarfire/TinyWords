@@ -346,6 +346,8 @@ fun GameBorder(viewModel: GameViewModel?) {
                 modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 28.dp)
             )
 
+            // Restart confirmation dialog state
+            var restartDialogOpen = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
             // Restart button (top-right)
             androidx.compose.foundation.Image(
                 painter = androidx.compose.ui.res.painterResource(id = R.drawable.placeholder_1),
@@ -353,8 +355,28 @@ fun GameBorder(viewModel: GameViewModel?) {
                 modifier = Modifier
                     .size(60.dp)
                     .align(androidx.compose.ui.Alignment.TopEnd)
-                    .clickable { viewModel.resetGame() }
+                    .clickable { restartDialogOpen.value = true }
             )
+            if (restartDialogOpen.value) {
+                androidx.compose.material3.AlertDialog(
+                    onDismissRequest = { restartDialogOpen.value = false },
+                    title = { androidx.compose.material3.Text("Confirm Restart") },
+                    text = { androidx.compose.material3.Text("Are you sure you want to restart? This will reset your score, streak, and progress.") },
+                    confirmButton = {
+                        androidx.compose.material3.TextButton(onClick = {
+                            restartDialogOpen.value = false
+                            viewModel.resetGame()
+                        }) {
+                            androidx.compose.material3.Text("Restart")
+                        }
+                    },
+                    dismissButton = {
+                        androidx.compose.material3.TextButton(onClick = { restartDialogOpen.value = false }) {
+                            androidx.compose.material3.Text("Cancel")
+                        }
+                    }
+                )
+            }
 
             // Help button (bottom-center)
             androidx.compose.foundation.Image(

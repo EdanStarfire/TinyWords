@@ -69,9 +69,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Streak resets on incorrect, increments on correct
     *   [x] Visual feedback for score increase (popup '+N' display); streak done via static counter; loss handled by main feedback. 
 *   **Task 3.2: Restart Button Functionality**
-    *   [ ] Implement restart confirmation dialog ("Are you sure?") before reset
-    *   [ ] Reset all game state on restart (score, streak, progress, hints)
-    *   [ ] Optionally: add TTS confirmation prompt for reset
+    *   [x] Implement restart confirmation dialog ("Are you sure?") before reset
+    *   [x] Reset all game state on restart (score, streak, progress, hints)
+    *   [-] Optionally: add TTS confirmation prompt for reset (will not implement; not needed for MVP)
 *   **Task 3.3: "I Need Help" Button Functionality**
     *   [ ] Hint Tier 1 works (TargetWord letter highlight)
     *   [ ] Hint Tier 2 disables/greys out one distractor
