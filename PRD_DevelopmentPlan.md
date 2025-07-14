@@ -85,16 +85,16 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] (Moved to 3.6) Timer can be toggled in settings
     *   [x] Correct behavior if interrupted (background, settings change)
 *   **Task 3.6: Options/Settings Screen/Dialog**
-    *   [ ] Implement modal or screen for user to modify:
-        *   [ ] Timer on/off and duration
-        *   [ ] Always Show Words Under Images
+    *   [x] Implement modal or screen for user to modify:
+        *   [x] Timer on/off and duration
+        *   [x] Always Show Words Under Images
         *   [ ] TTS rate
-        *   [ ] Pronounce target word at start of each challenge (default: OFF)
+        *   [x] Pronounce target word at start of each challenge (default: OFF)
         *   [ ] Other future toggles
 *   **Task 3.7: Settings Persistence (Jetpack DataStore)**
-    *   [ ] Save user settings persistently
-    *   [ ] Reload settings on app launch
-    *   [ ] All preference toggles are idempotent and update UI/game immediately
+    *   [x] Save user settings persistently
+    *   [x] Reload settings on app launch
+    *   [-] All preference toggles are idempotent and update UI/game immediately (deferred; see 5.3 for enhancement)
 
 ## Phase 4: Word Progression & Responsive Layout
 
@@ -111,6 +111,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [ ] (Post-MVP or iterative) Consider adding subtle, non-verbal sound effects for UI interactions (button clicks, animations) if desired, to complement TTS.
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
+    *   [ ] Settings toggles update UI/game immediately as toggled (make idempotent and live, not on OK only, from 3.7)
 *   **Task 5.4: Code Cleanup & Documentation**
 
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)

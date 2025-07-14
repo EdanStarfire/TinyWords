@@ -17,6 +17,7 @@ import com.edanstarfire.tinywords.WordDefinition
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import com.edanstarfire.tinywords.ScoreStreakRepository
+import com.edanstarfire.tinywords.GameSettingsRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,8 +39,10 @@ class GameViewModel @Inject constructor(
     private val wordChallengeGenerator: WordChallengeGenerator,
     @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: Context
 ) : ViewModel() {
+    private var lastPronouncedTarget: String? = null
 
     private val scoreStreakRepo = ScoreStreakRepository(appContext)
+    private val gameSettingsRepo = GameSettingsRepository(appContext)
     // Expose TTS readiness to the UI or for internal ViewModel logic
     val isTtsReady: StateFlow<Boolean> = ttsHelper.isInitialized
         .stateIn(
@@ -95,6 +98,7 @@ class GameViewModel @Inject constructor(
     // 6. Settings values
     private val _gameSettings = MutableStateFlow(GameSettings()) // Default settings
     val gameSettings: StateFlow<GameSettings> = _gameSettings.asStateFlow()
+    private var initialGameSettingsLoaded = false
 
     // --- Spoken feedback loaded from assets/spoken_content.json ---
     private var spokenContent: SpokenContent = SpokenContent()
@@ -111,6 +115,16 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             scoreStreakRepo.streak.collect {
                 _streak.value = it
+            }
+        }
+
+        // Load settings from DataStore
+        viewModelScope.launch {
+            gameSettingsRepo.settings.collect { loadedSettings ->
+                if (!initialGameSettingsLoaded) {
+                    initialGameSettingsLoaded = true
+                    _gameSettings.value = loadedSettings
+                }
             }
         }
 
@@ -139,6 +153,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun loadNewWordChallenge() {
+        lastPronouncedTarget = null
         Log.d("GameViewModel", "Loading new word challenge...")
         cancelAutoAdvanceTimer()
 
@@ -153,7 +168,7 @@ class GameViewModel @Inject constructor(
         _isHintButtonEnabled.value = true
 
         challenge?.let {
-            pronounceWord(it.targetWord)
+            if (_gameSettings.value.pronounceTargetAtStart) pronounceWord(it.targetWord)
             Log.i("GameViewModel", "New word loaded: ${it.targetWord}.")
         } ?: Log.w("GameViewModel", "No new word challenge could be loaded.")
     }
@@ -279,6 +294,9 @@ class GameViewModel @Inject constructor(
     // This function is now more about updating the _gameSettings StateFlow.
     // The collectLatest block on _gameSettings will handle reacting to the change.
     fun updateSettings(newSettings: GameSettings) {
+        viewModelScope.launch {
+            gameSettingsRepo.setSettings(newSettings)
+        }
         Log.i("GameViewModel", "ViewModel: Updating game settings to: $newSettings")
         val oldSettings = _gameSettings.value
         _gameSettings.value = newSettings
@@ -301,7 +319,12 @@ class GameViewModel @Inject constructor(
         // or cancels an active one if auto-advance is disabled.
     }
 
-    fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null) {
+    fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null, asTargetWord: Boolean = false) {
+        if (asTargetWord) {
+            if (lastPronouncedTarget == word) return
+            lastPronouncedTarget = word
+        }
+
         encouragementJob?.cancel()
         if (isTtsReady.value) {
             ttsHelper.speak(word, pitch = pitch, rate = rate)
@@ -395,6 +418,7 @@ data class GameSettings(
     val ttsSpeed: Float = 1.0f,
     val autoAdvance: Boolean = true,
     val autoAdvanceIntervalSeconds: Int = 30,
-    val hintLevelAllowed: Int = 2 // e.g., 0=none, 1=highlight, 2=show word
-    // Add other settings as needed
+    val hintLevelAllowed: Int = 2, // e.g., 0=none, 1=highlight, 2=show word
+    val alwaysShowWords: Boolean = false,
+    val pronounceTargetAtStart: Boolean = false
 )
