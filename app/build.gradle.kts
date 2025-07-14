@@ -55,7 +55,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.hilt.android)
     implementation(libs.javapoet) // Add this line if using version catalog
-
+    implementation(libs.datastore.preferences)
     ksp(libs.hilt.compiler)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

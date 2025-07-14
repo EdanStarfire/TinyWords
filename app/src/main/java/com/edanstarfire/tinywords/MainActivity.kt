@@ -310,6 +310,7 @@ fun GameBorder(viewModel: GameViewModel?) {
     if (viewModel != null) {
         val streak by viewModel.streak.collectAsState()
         val score by viewModel.score.collectAsState()
+        val scoreDelta by viewModel.scoreDelta.collectAsState()
         val feedbackState by viewModel.feedbackState.collectAsState()
         val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
         androidx.compose.foundation.layout.Box(
@@ -318,6 +319,19 @@ fun GameBorder(viewModel: GameViewModel?) {
                 .fillMaxHeight()
                 .padding(8.dp),
         ) {
+            // +N popup above the score
+            androidx.compose.animation.AnimatedVisibility(
+                visible = (scoreDelta ?: 0) > 0,
+                modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter).padding(start = 56.dp)
+            ) {
+                androidx.compose.material3.Text(
+                    text = "+${scoreDelta ?: 0}",
+                    fontSize = 22.sp,
+                    color = androidx.compose.ui.graphics.Color(0xFF388E3C),
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                )
+            }
             // Score (top-left)
             androidx.compose.material3.Text(
                 text = "Score: $score",

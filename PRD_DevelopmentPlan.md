@@ -64,12 +64,36 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 *   (Tasks remain largely the same but assume TTS is used for any relevant auditory feedback from actions)
 *   **Task 3.1: Score/Streak Logic**
-*   **Task 3.2: Restart Button Functionality** (TTS confirmation for "Are you sure?" is optional, standard dialog is fine)
+    *   [x] Keep score and streak state correct and in sync after all player/game actions
+    *   [x] Score persists through session (until reset)
+    *   [x] Streak resets on incorrect, increments on correct
+    *   [x] Visual feedback for score increase (popup '+N' display); streak done via static counter; loss handled by main feedback. 
+*   **Task 3.2: Restart Button Functionality**
+    *   [ ] Implement restart confirmation dialog ("Are you sure?") before reset
+    *   [ ] Reset all game state on restart (score, streak, progress, hints)
+    *   [ ] Optionally: add TTS confirmation prompt for reset
 *   **Task 3.3: "I Need Help" Button Functionality**
+    *   [ ] Hint Tier 1 works (TargetWord letter highlight)
+    *   [ ] Hint Tier 2 disables/greys out one distractor
+    *   [ ] Hint button enable/disable logic is correct after every game event
 *   **Task 3.4: "Next Word" Button**
+    *   [ ] Button appears after correct answer if auto-advance is off or timer is running
+    *   [ ] Immediate manual advance works and resets display state cleanly
+    *   [ ] Hide button once next word has loaded
 *   **Task 3.5: Auto-Advance Timer**
+    *   [ ] Configurable timer visible/counts down after correct answer
+    *   [ ] Timer can be toggled in settings
+    *   [ ] Correct behavior if interrupted (background, settings change)
 *   **Task 3.6: Options/Settings Screen/Dialog**
+    *   [ ] Implement modal or screen for user to modify:
+        *   [ ] Timer on/off and duration
+        *   [ ] Always Show Words Under Images
+        *   [ ] TTS rate
+        *   [ ] Other future toggles
 *   **Task 3.7: Settings Persistence (Jetpack DataStore)**
+    *   [ ] Save user settings persistently
+    *   [ ] Reload settings on app launch
+    *   [ ] All preference toggles are idempotent and update UI/game immediately
 
 ## Phase 4: Word Progression & Responsive Layout
 

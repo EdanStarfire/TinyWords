@@ -16,6 +16,7 @@ import com.edanstarfire.tinywords.WordChallenge
 import com.edanstarfire.tinywords.WordDefinition
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import com.edanstarfire.tinywords.ScoreStreakRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,6 +38,8 @@ class GameViewModel @Inject constructor(
     private val wordChallengeGenerator: WordChallengeGenerator,
     @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: Context
 ) : ViewModel() {
+
+    private val scoreStreakRepo = ScoreStreakRepository(appContext)
     // Expose TTS readiness to the UI or for internal ViewModel logic
     val isTtsReady: StateFlow<Boolean> = ttsHelper.isInitialized
         .stateIn(
@@ -56,6 +59,8 @@ class GameViewModel @Inject constructor(
     // 3. Score/streak
     private val _score = MutableStateFlow(0)
     val score: StateFlow<Int> = _score.asStateFlow()
+    private val _scoreDelta = MutableStateFlow<Int?>(null)
+    val scoreDelta: StateFlow<Int?> = _scoreDelta.asStateFlow()
 
     private val _streak = MutableStateFlow(0)
     val streak: StateFlow<Int> = _streak.asStateFlow()
@@ -64,6 +69,10 @@ class GameViewModel @Inject constructor(
     // Example: 0 = No hint, 1 = Tier 1 hint active (e.g. highlight letters), 2 = Tier 2 hint (e.g. show word)
     private val _hintLevel = MutableStateFlow(0)
     val hintLevel: StateFlow<Int> = _hintLevel.asStateFlow()
+
+    // Tracks incorrect guesses and hints this round for adaptive scoring
+    private var incorrectCount = 0
+    private var hintCount = 0
 
     // Tracks which words are currently disabled for this round (wrong guesses, hints)
     private val _disabledWords = MutableStateFlow<Set<String>>(emptySet())
@@ -93,6 +102,18 @@ class GameViewModel @Inject constructor(
     init {
         loadSpokenContent()
 
+        // Load score/streak from DataStore
+        viewModelScope.launch {
+            scoreStreakRepo.score.collect {
+                _score.value = it
+            }
+        }
+        viewModelScope.launch {
+            scoreStreakRepo.streak.collect {
+                _streak.value = it
+            }
+        }
+
         Log.i("GameViewModel", "GameViewModel initialized with TtsHelper and WordChallengeGenerator.")
 
         viewModelScope.launch {
@@ -120,6 +141,9 @@ class GameViewModel @Inject constructor(
     fun loadNewWordChallenge() {
         Log.d("GameViewModel", "Loading new word challenge...")
         cancelAutoAdvanceTimer()
+
+        incorrectCount = 0
+        hintCount = 0
 
         val challenge = wordChallengeGenerator.getRandomInitialChallenge()
         _currentChallenge.value = challenge
@@ -166,8 +190,23 @@ class GameViewModel @Inject constructor(
         if (isCorrect) {
             _feedbackState.value = GameFeedback.Correct(selectedWord)
             _isHintButtonEnabled.value = false
-            _score.value += 10
-            _streak.value += 1
+
+            var pts = 10
+            pts -= 3 * hintCount
+            if (incorrectCount == 1) pts -= 3
+            if (incorrectCount == 2) pts -= 8 // -3 first, -5 second
+            if (pts < 1) pts = 1
+            val newScore = _score.value + pts
+            val newStreak = _streak.value + 1
+            _score.value = newScore
+            _streak.value = newStreak
+            viewModelScope.launch { scoreStreakRepo.setScore(newScore) }
+            viewModelScope.launch { scoreStreakRepo.setStreak(newStreak) }
+            _scoreDelta.value = pts
+            viewModelScope.launch {
+                kotlinx.coroutines.delay(2000)
+                _scoreDelta.value = null
+            }
             _disabledWords.value = emptySet() // Reset on correct
             if (_gameSettings.value.autoAdvance) {
                 startAutoAdvanceTimer()
@@ -177,8 +216,12 @@ class GameViewModel @Inject constructor(
         } else {
             _feedbackState.value = GameFeedback.Incorrect(selectedWord)
             _streak.value = 0
+            _score.value = 0
+            viewModelScope.launch { scoreStreakRepo.setStreak(0) }
+            viewModelScope.launch { scoreStreakRepo.setScore(0) }
             // Add this word to the set of disabled words
             _disabledWords.value = _disabledWords.value + selectedWord
+            incorrectCount++
             Log.i("GameViewModel", "Incorrect answer.")
         }
     }
@@ -282,6 +325,7 @@ class GameViewModel @Inject constructor(
         if (currentLevel < maxLevel) {
             _hintLevel.value = currentLevel + 1
             _isHintButtonEnabled.value = _hintLevel.value < maxLevel
+            hintCount++
             if (currentLevel == 0 && _currentChallenge.value?.targetWord != null) {
                 pronounceWord(_currentChallenge.value!!.targetWord)
             }
@@ -322,6 +366,7 @@ class GameViewModel @Inject constructor(
     fun resetGame() {
         _score.value = 0
         _streak.value = 0
+        viewModelScope.launch { scoreStreakRepo.reset() }
         _hintLevel.value = 0
         _isHintButtonEnabled.value = true
         _feedbackState.value = GameFeedback.None
