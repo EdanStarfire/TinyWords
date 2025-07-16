@@ -32,11 +32,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.edanstarfire.tinywords.ui.game.GameViewModel
 import androidx.compose.runtime.collectAsState  // <-- Import this
 import androidx.compose.runtime.getValue      // <-- Import this
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.Row
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -110,7 +114,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
         } else null
 
         androidx.compose.runtime.LaunchedEffect(target) {
-            if (target != null) viewModel.pronounceWord(target)
+            if (target != null) viewModel.pronounceWord(target, asTargetWord = true)
         }
         androidx.compose.foundation.layout.Box(
             modifier = Modifier.fillMaxWidth(),
@@ -286,9 +290,14 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
                             isCorrect = word == currentChallenge.correctImageWord,
                             isSelected = (chosenWord == word) || (disabledWords.contains(word) && word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
                             isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(word) && chosenWord != currentChallenge.correctImageWord,
-                            showWordBelow = (word in disabledWords) ||
+                            showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
+                                (word in disabledWords) ||
                                 (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
-                            differingIndex = run {
+                            differingIndex = if (
+                                feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
+                                (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == word)) ||
+                                (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(word))
+                            ) {
                                 val tgt = currentChallenge.targetWord
                                 val incorrect1 = currentChallenge.incorrectImageWord1
                                 val incorrect2 = currentChallenge.incorrectImageWord2
@@ -296,7 +305,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
                                     (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
                                     (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
                                 }
-                            },
+                            } else null,
                             onClick = { viewModel.processPlayerChoice(word) }
                         )
                     }
@@ -308,6 +317,82 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
     } else {
         Text(text = "ImageChoicesArea", modifier = Modifier.padding(16.dp))
     }
+}
+
+@Composable
+fun SettingsDialog(
+    currentSettings: com.edanstarfire.tinywords.ui.game.GameSettings,
+    onDismiss: () -> Unit,
+    onSettingsChange: (com.edanstarfire.tinywords.ui.game.GameSettings) -> Unit
+) {
+    val autoAdvanceChoices = listOf(
+        Pair(3, stringResource(id = R.string.setting_timer_3_seconds)),
+        Pair(5, stringResource(id = R.string.setting_timer_5_seconds)),
+        Pair(8, stringResource(id = R.string.setting_timer_8_seconds)),
+        Pair(10, stringResource(id = R.string.setting_timer_10_seconds)),
+        Pair(30, "30 Seconds")
+    )
+    var autoAdvanceEnabled by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.autoAdvance) }
+    var autoAdvanceInterval by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.autoAdvanceIntervalSeconds) }
+    var alwaysShowWords by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.alwaysShowWords) }
+    // For completeness: tts speed & pronounce-at-start toggles (hidden if not exposed in UI)
+    var pronounceTargetAtStart by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.pronounceTargetAtStart) }
+    var ttsSpeed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.ttsSpeed) }
+
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { androidx.compose.material3.Text(text = stringResource(id = R.string.settings_title)) },
+        text = {
+            androidx.compose.foundation.layout.Column {
+                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_auto_advance))
+                androidx.compose.material3.Switch(
+                    checked = autoAdvanceEnabled,
+                    onCheckedChange = { autoAdvanceEnabled = it }
+                )
+                if (autoAdvanceEnabled) {
+                    androidx.compose.material3.Text("Interval:")
+                    for (pair in autoAdvanceChoices) {
+                        val (value, label) = pair
+                        Row(modifier = Modifier) {
+                            androidx.compose.material3.RadioButton(
+                                selected = autoAdvanceInterval == value,
+                                onClick = { autoAdvanceInterval = value }
+                            )
+                            androidx.compose.material3.Text(label)
+                        }
+                    }
+                }
+                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_show_words))
+                androidx.compose.material3.Switch(
+                    checked = alwaysShowWords,
+                    onCheckedChange = { alwaysShowWords = it }
+                )
+                androidx.compose.material3.Text("Pronounce Target Word at Start")
+                androidx.compose.material3.Switch(
+                    checked = pronounceTargetAtStart,
+                    onCheckedChange = { pronounceTargetAtStart = it }
+                )
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = {
+                val newSettings = currentSettings.copy(
+                    autoAdvance = autoAdvanceEnabled,
+                    autoAdvanceIntervalSeconds = if (autoAdvanceEnabled) autoAdvanceInterval else 0,
+                    alwaysShowWords = alwaysShowWords,
+                    pronounceTargetAtStart = pronounceTargetAtStart,
+                    ttsSpeed = ttsSpeed
+                )
+                onSettingsChange(newSettings)
+                onDismiss()
+            }) { androidx.compose.material3.Text(text = stringResource(id = R.string.button_ok)) }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                androidx.compose.material3.Text(text = stringResource(id = R.string.button_cancel))
+            }
+        }
+    )
 }
 
 @Composable
@@ -395,14 +480,25 @@ fun GameBorder(viewModel: GameViewModel?) {
             )
 
             // Options/settings button (bottom-end)
+            var settingsDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
             androidx.compose.foundation.Image(
                 painter = androidx.compose.ui.res.painterResource(id = R.drawable.placeholder_1),
-                contentDescription = "Options",
+                contentDescription = stringResource(id = R.string.button_options),
                 modifier = Modifier
                     .size(60.dp)
                     .align(androidx.compose.ui.Alignment.BottomEnd)
-                    .clickable { /* open settings */ }
+                    .clickable {
+                        viewModel.cancelAutoAdvanceTimer()
+                        settingsDialogOpen = true
+                    }
             )
+            if (settingsDialogOpen) {
+                SettingsDialog(
+                    currentSettings = viewModel.gameSettings.collectAsState().value,
+                    onDismiss = { settingsDialogOpen = false },
+                    onSettingsChange = { viewModel.updateSettings(it) }
+                )
+            }
 
             // Next Word button or timer (center, after correct)
             if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
