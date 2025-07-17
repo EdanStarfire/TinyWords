@@ -103,6 +103,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
     if (viewModel != null) {
         val currentChallenge by viewModel.currentChallenge.collectAsState()
         val hintLevel by viewModel.hintLevel.collectAsState()
+        val gameSettings by viewModel.gameSettings.collectAsState()
         val target = currentChallenge?.targetWord
         val incorrect1 = currentChallenge?.incorrectImageWord1
         val incorrect2 = currentChallenge?.incorrectImageWord2
@@ -113,8 +114,10 @@ fun TargetWordArea(viewModel: GameViewModel?) {
             }
         } else null
 
-        androidx.compose.runtime.LaunchedEffect(target) {
-            if (target != null) viewModel.pronounceWord(target, asTargetWord = true)
+        androidx.compose.runtime.LaunchedEffect(target, gameSettings.pronounceTargetAtStart) {
+            if (target != null && gameSettings.pronounceTargetAtStart) {
+                viewModel.pronounceWord(target, asTargetWord = true)
+            }
         }
         androidx.compose.foundation.layout.Box(
             modifier = Modifier.fillMaxWidth(),
