@@ -76,41 +76,39 @@ class WordChallengeGenerator (
             return null
         }
 
-        // --- Logic to find two unique distractors ---
-        val distractors = if(deterministic) {
-            allWordDefinitions.filter { definition ->
-                definition.targetWord != targetDefinition.targetWord &&
-                        (definition.part1Sound != targetDefinition.part1Sound &&
-                                definition.part2Sound == targetDefinition.part2Sound &&
-                                definition.part3Sound == targetDefinition.part3Sound)
+        // Multi-position distractor search
+        val positions = if (deterministic) listOf(0,1,2) else listOf(0,1,2).shuffled()
+        val targetParts = listOf(targetDefinition.part1Sound, targetDefinition.part2Sound, targetDefinition.part3Sound)
+        var foundDistractors: List<WordDefinition>? = null
+        for(idx in positions) {
+            val distractors = allWordDefinitions.filter { definition ->
+                if (definition.targetWord == targetDefinition.targetWord) return@filter false
+                val defParts = listOf(definition.part1Sound, definition.part2Sound, definition.part3Sound)
+                defParts.withIndex().all { (i, v) -> if (i == idx) v != targetParts[i] else v == targetParts[i] }
             }
-        } else {
-            allWordDefinitions.filter { definition ->
-                definition.targetWord != targetDefinition.targetWord &&
-                        (definition.part1Sound != targetDefinition.part1Sound &&
-                                definition.part2Sound == targetDefinition.part2Sound &&
-                                definition.part3Sound == targetDefinition.part3Sound)
-            }.shuffled()
+            val result = if (deterministic) distractors else distractors.shuffled()
+            if (result.size >= 2) {
+                foundDistractors = result.take(2)
+                break
+            }
         }
-
-        if (distractors.size < 2) {
-            Log.w("WordChallengeGenerator", "Not enough suitable distractors found for '${targetDefinition.targetWord}'. Found: ${distractors.size}")
-            val otherDistractors = if (deterministic) {
-                allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }
-            } else {
-                allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }.shuffled()
-            }
-            if (otherDistractors.size < 2) {
-                Log.e("WordChallengeGenerator", "Globally not enough words to form a challenge for '${targetDefinition.targetWord}'")
-                return null
-            }
-            val incorrect1Definition = otherDistractors[0]
-            val incorrect2Definition = otherDistractors[1]
+        if (foundDistractors != null) {
+            val incorrect1Definition = foundDistractors[0]
+            val incorrect2Definition = foundDistractors[1]
             return createWordChallenge(targetDefinition, incorrect1Definition, incorrect2Definition)
         }
-
-        val incorrect1Definition = distractors[0]
-        val incorrect2Definition = distractors[1]
+        Log.w("WordChallengeGenerator", "Not enough suitable distractors found for '${targetDefinition.targetWord}'. Searched all letter positions.")
+        val otherDistractors = if (deterministic) {
+            allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }
+        } else {
+            allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }.shuffled()
+        }
+        if (otherDistractors.size < 2) {
+            Log.e("WordChallengeGenerator", "Globally not enough words to form a challenge for '${targetDefinition.targetWord}'")
+            return null
+        }
+        val incorrect1Definition = otherDistractors[0]
+        val incorrect2Definition = otherDistractors[1]
         return createWordChallenge(targetDefinition, incorrect1Definition, incorrect2Definition)
     }
 
@@ -132,6 +130,7 @@ class WordChallengeGenerator (
             )
         }
 
+        val order = if (deterministic) listOf(0, 1, 2) else listOf(0, 1, 2).shuffled()
         return WordChallenge(
             targetWord = targetDef.targetWord,
             correctImageWord = targetDef.targetWord,
@@ -139,7 +138,8 @@ class WordChallengeGenerator (
             incorrectImageWord1 = incorrect1Def.targetWord,
             incorrectImageRes1 = incorrect1ImageResId,
             incorrectImageWord2 = incorrect2Def.targetWord,
-            incorrectImageRes2 = incorrect2ImageResId
+            incorrectImageRes2 = incorrect2ImageResId,
+            choiceOrder = order
         )
     }
 
@@ -152,12 +152,14 @@ class WordChallengeGenerator (
         return resId
     }
 
-    fun getRandomInitialChallenge(): WordChallenge? {
+    fun getRandomInitialChallenge(exclude: Set<String> = emptySet()): WordChallenge? {
         if (allWordDefinitions.isEmpty()) {
             Log.e("WordChallengeGenerator", "Word definitions list is empty. Cannot get random challenge.")
             return null
         }
-        val randomInitialWordDefinition = if (deterministic) allWordDefinitions.first() else allWordDefinitions.random()
+        val candidateDefs = allWordDefinitions.filter { it.targetWord !in exclude }
+        val useList = if (candidateDefs.isEmpty()) allWordDefinitions else candidateDefs
+        val randomInitialWordDefinition = if (deterministic) useList.first() else useList.random()
         return generateChallenge(randomInitialWordDefinition.targetWord)
     }
 

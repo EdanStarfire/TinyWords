@@ -1,6 +1,10 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last updated: 2025-07-12
+Last updated: 2025-07-17
+
+Purpose & Context
+
+TinyWords is an educational Android game focused on phonics, word recognition, and image association. Core gameplay presents “word challenges” with images and TTS feedback, using Compose UI and centralized game logic.
 
 Build, Lint, and Test
 
@@ -14,32 +18,45 @@ Project Structure & Architecture
 
 - App: Android (Kotlin, Jetpack Compose, Hilt for DI, DataStore, ViewModel/StateFlow, TTS)
 - Core Logic:
-    - GameViewModel: Centralizes game state, event logic, and TTS orchestration. All game updates and UI flows should be routed via the ViewModel.
+    - GameViewModel: Centralizes game state, event logic, and TTS orchestration. All game updates and UI flows should be routed via the ViewModel. UI must only observe StateFlow and must not trigger logic directly.
     - WordChallengeGenerator: Handles word/challenge construction; supports deterministic/test mode for repeatable tests.
     - TtsHelper (under tts/): Provides all Text-to-Speech capabilities. Always use TtsHelper for TTS logic; do not interact directly with TextToSpeech APIs.
 - Assets:
     - Word list/definitions: app/src/main/assets/word_definitions.json
-    - Placeholder images: app/src/main/res/drawable/placeholder_1.png, placeholder_2.png, placeholder_3.png (follow naming placeholder_*.png for all word images)
+    - Placeholder and word images: app/src/main/res/drawable/placeholder_1.png, placeholder_2.png, placeholder_3.png and CVC image set (follow naming convention *_image.png for all word images)
 - UI:
     - Jetpack Compose-based; entrypoint in MainActivity sets all main content.
     - UI components must remain logic-free, observing only the ViewModel state. All user actions must trigger events on the ViewModel.
 - Dependency Versions:
     - All dependencies MUST be added or updated via gradle/libs.versions.toml. Do NOT add new library versions directly in build.gradle.kts files.
+- Settings:
+    - Persisted with Jetpack DataStore; toggling settings (e.g., pronounce target at start, auto-advance, TTS speed) updates game logic flows immediately. Update settings only through recommended ViewModel methods.
 
-Development Process
+TTS & Target Word Rules
 
-- Follow the detailed, evolving checklist in PRD_DevelopmentPlan.md when developing or adding features—always refer for correct task/state sequence.
-- Adhere to the experience and UI guidelines in PRD_GameUX.md.
+- At challenge start: Only pronounce the target word if the "Pronounce Target Word at Start" setting is enabled (see ViewModel and Compose logic for correct implementation).
+- Do NOT call TTS for the target word automatically from Compose unless the setting is ON.
+- All hint, feedback, and manual pronunciations must flow through ViewModel event methods.
+- All TTS calls must go through TtsHelper via the ViewModel—never use TextToSpeech APIs directly or in Compose.
+
+Best Practices for Agents and Contributors
+
 - Use Hilt for Dependency Injection throughout. Do NOT use manual dependency wiring or service locators.
-- When adding/changing words, images, or resources, use consistent naming, and update all references/tests as needed.
-- If you add new TTS-dependent functionality, ensure TTS can gracefully degrade (no crash) and is mockable/disableable in tests.
-- When updating core logic (GameViewModel or WordChallengeGenerator), ensure all relevant tests pass in both unit and instrumented environments. Use the deterministic WordChallengeGenerator test mode.
+- When adding/changing words or images, use consistent naming, and update all references and tests (see WordDefinitionTest for required image coverage).
+- Always extend code by following the Model-View-ViewModel(Device)-DataStore-testable pattern; never introduce UI logic or resource handling outside of these flows.
+- For all new logic, provide both unit and (where appropriate) instrumented tests. Tests that require stable challenge data MUST use deterministic generator mode. See PRD_DevelopmentPlan.md for test strategy.
 
-Testing
+Automated Agent and LLM-specific Rules
 
-- Use only Gradle commands above to execute all tests. Do not rely solely on IDE features for testing.
-- For all new logic, provide both unit and (where appropriate) instrumented tests. Tests that require stable challenge data MUST use deterministic generator mode.
-- Instrumented tests (connectedDebugAndroidTest) require an emulator/device attached and should be run in repeatable environments.
+- Do NOT run or suggest automatic lint, build, debugging, or test commands—these actions should only be run if explicitly requested by the user. Claude Code is often developing for an external/linked build environment.
+- Do NOT add documentation files other than this one unless directly requested. Always summarize new architecture or resource patterns in CLAUDE.md.
+- If you make changes to game logic, architecture, resource handling, or persistent patterns, update this file with a concise summary of new conventions and rationale.
+
+Getting Oriented / Quick Reference
+
+- Review GameViewModel for game state and orchestration; WordChallengeGenerator for challenge/resource creation; and TtsHelper for TTS access.
+- PRD_DevelopmentPlan.md and PRD_GameUX.md define logic, sequence, and UX requirements—always align features to these docs.
+- When handling TTS, settings, asset, or gameplay changes, follow the established MVVM/DataStore/testable pattern.
 
 Version Control, Commit, and PR Conventions
 

@@ -15,14 +15,14 @@ class WordDefinitionTest {
         for (word in wordDefs) {
             val imageFile = File(drawablePath + word.imageResName + ".png")
             if (!imageFile.exists()) {
-                missingImages += word.imageResName + ".png"
+                missingImages += word.targetWord + " (" + word.imageResName + ".png" + ")"
             }
         }
         if (missingImages.isNotEmpty()) {
             println("${missingImages.size}/${wordDefs.size} word definitions reference missing images.")
         }
         assert(missingImages.isEmpty()) {
-            "These word definitions reference missing drawable images: $missingImages"
+            "These word definitions reference missing drawable images: ${"\n * " + missingImages.joinToString(separator = "\n * ")}"
         }
     }
 }

@@ -275,11 +275,12 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
             ) {
                 // Avoid Triple usage; use a local data class for clarity
                 data class ImageChoiceData(val word: String, @androidx.annotation.DrawableRes val res: Int)
-                val items = listOf(
+                val all = listOf(
                     ImageChoiceData(currentChallenge.correctImageWord, currentChallenge.correctImageRes),
                     ImageChoiceData(currentChallenge.incorrectImageWord1, currentChallenge.incorrectImageRes1),
                     ImageChoiceData(currentChallenge.incorrectImageWord2, currentChallenge.incorrectImageRes2)
                 )
+                val items = currentChallenge.choiceOrder.map { all[it] } // use fixed order from challenge
                 for (item in items) {
                     val word = item.word
                     val res = item.res

@@ -39,6 +39,7 @@ class GameViewModel @Inject constructor(
     private val wordChallengeGenerator: WordChallengeGenerator,
     @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: Context
 ) : ViewModel() {
+    private val recentTargetWords = ArrayDeque<String>(10)
     private var lastPronouncedTarget: String? = null
 
     private val scoreStreakRepo = ScoreStreakRepository(appContext)
@@ -160,7 +161,12 @@ class GameViewModel @Inject constructor(
         incorrectCount = 0
         hintCount = 0
 
-        val challenge = wordChallengeGenerator.getRandomInitialChallenge()
+        val challenge = wordChallengeGenerator.getRandomInitialChallenge(recentTargetWords.toSet())
+        challenge?.let {
+            // Track this target word for repetition avoidance
+            if (recentTargetWords.size >= 10) recentTargetWords.removeFirst()
+            recentTargetWords.addLast(it.targetWord)
+        }
         _currentChallenge.value = challenge
         _feedbackState.value = GameFeedback.None
         _disabledWords.value = emptySet()
