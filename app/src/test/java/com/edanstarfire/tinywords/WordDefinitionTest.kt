@@ -25,4 +25,15 @@ class WordDefinitionTest {
             "These word definitions reference missing drawable images: ${"\n * " + missingImages.joinToString(separator = "\n * ")}"
         }
     }
+
+    @Test
+    fun noDuplicateTargetWordsInDefinitions() {
+        val jsonPath = "src/main/assets/word_definitions.json"
+        val jsonString = File(jsonPath).readText()
+        val wordDefs: List<WordDefinition> = Json { ignoreUnknownKeys = true }.decodeFromString(jsonString)
+        val duplicates = wordDefs.groupBy { it.targetWord.lowercase() }.filter { it.value.size > 1 }
+        assert(duplicates.isEmpty()) {
+            "Duplicate targetWord entries found in word_definitions.json: ${duplicates.keys.joinToString(", ")}"
+        }
+    }
 }

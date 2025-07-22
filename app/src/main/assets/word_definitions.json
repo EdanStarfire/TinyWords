@@ -827,13 +827,6 @@
 
   },
   {
-    "targetWord": "BOX",
-    "imageResName": "box_image",
-    "part1Sound": "B",
-    "part2Sound": "O",
-    "part3Sound": "X"
-  },
-  {
     "targetWord": "POX",
     "imageResName": "pox_image",
     "part1Sound": "P",

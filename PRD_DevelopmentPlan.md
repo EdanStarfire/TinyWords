@@ -102,7 +102,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 4.1: Word List & Progression Logic**
     *   [x] Ensure each correct answer leads to a new (unique and valid) word challenge, ideally a one-letter change from the last correct word (see GameUX §4 §9, PRD §5).
     *   [x] Randomize/shuffle the display order of all image/word choices each round so the correct answer is never in a fixed position.
-    *   [x] If word pool is exhausted or can't generate distinct challenge, handle gracefully and let user restart. 
+    *   [x] If word pool is exhausted or can't generate distinct challenge, handle gracefully and let user restart.
+*   [x] Ensure no challenge presents the same word for multiple choices, even if duplicates exist in word list. (Handled by generator logic & duplicate-detection test) 
 *   **Task 4.2: Landscape Layout Implementation**
     *   [ ] Implement main game and border UI in landscape orientation, verifying that all key elements are faithfully arranged and scale/position as required.
     *   [ ] Ensure all border buttons, feedback, and indicators function correctly in both orientations (see GameUX §3.1, layout specifics).

@@ -59,9 +59,10 @@ object GameModule { // You can name this module as you see fit
 }
 
 class WordChallengeGenerator (
-    private val context: Context, // Still needed for getDrawableResId
+    private val context: Context?, // May be null in unit tests
     private val allWordDefinitions: List<WordDefinition>, // Injected list
-    private val deterministic: Boolean = false // Use fixed order for tests if true
+    private val deterministic: Boolean = false, // Use fixed order for tests if true
+    private val skipImageLookupForTest: Boolean = false // New parameter for tests
 ) {
 
     fun generateChallenge(currentWordString: String): WordChallenge? {
@@ -87,8 +88,9 @@ class WordChallengeGenerator (
                 defParts.withIndex().all { (i, v) -> if (i == idx) v != targetParts[i] else v == targetParts[i] }
             }
             val result = if (deterministic) distractors else distractors.shuffled()
-            if (result.size >= 2) {
-                foundDistractors = result.take(2)
+            val distinctResult = result.distinctBy { it.targetWord }
+            if (distinctResult.size >= 2) {
+                foundDistractors = distinctResult.take(2)
                 break
             }
         }
@@ -103,12 +105,13 @@ class WordChallengeGenerator (
         } else {
             allWordDefinitions.filter { it.targetWord != targetDefinition.targetWord }.shuffled()
         }
-        if (otherDistractors.size < 2) {
-            Log.e("WordChallengeGenerator", "Globally not enough words to form a challenge for '${targetDefinition.targetWord}'")
+        val distinctOtherDistractors = otherDistractors.distinctBy { it.targetWord }
+        if (distinctOtherDistractors.size < 2) {
+            Log.e("WordChallengeGenerator", "Globally not enough distinct words to form a challenge for '${targetDefinition.targetWord}'")
             return null
         }
-        val incorrect1Definition = otherDistractors[0]
-        val incorrect2Definition = otherDistractors[1]
+        val incorrect1Definition = distinctOtherDistractors[0]
+        val incorrect2Definition = distinctOtherDistractors[1]
         return createWordChallenge(targetDefinition, incorrect1Definition, incorrect2Definition)
     }
 
@@ -144,8 +147,12 @@ class WordChallengeGenerator (
     }
 
     private fun getDrawableResId(imageName: String): Int {
-        @SuppressLint("DiscouragedApi") // Image names are dynamic from JSON
-        val resId = context.resources.getIdentifier(imageName, "drawable", context.packageName)
+        if (skipImageLookupForTest) return 1
+        if (context == null) return 0
+        @SuppressLint("DiscouragedApi")
+        val res = context.resources
+        if (res == null) return 0
+        val resId = res.getIdentifier(imageName, "drawable", context.packageName)
         if (resId == 0) {
             Log.w("WordChallengeGenerator", "Drawable resource not found for name: $imageName")
         }
