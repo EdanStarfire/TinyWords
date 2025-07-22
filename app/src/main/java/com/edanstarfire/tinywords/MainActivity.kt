@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.verticalScroll
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -69,6 +70,39 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+    if (isLandscape) {
+        // Arrange areas horizontally
+        androidx.compose.foundation.layout.Row(
+            modifier = modifier.fillMaxSize().padding(8.dp),
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+        ) {
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.weight(3f).fillMaxHeight(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            ) {
+                TargetWordArea(viewModel)
+            }
+            androidx.compose.material3.VerticalDivider()
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.weight(5f).fillMaxHeight(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            ) {
+                ImageChoicesArea(viewModel)
+            }
+            androidx.compose.material3.VerticalDivider()
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.weight(2f).fillMaxHeight(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            ) {
+                GameBorder(viewModel)
+            }
+        }
+        return
+    }
+    // Portrait/Default
     androidx.compose.foundation.layout.Column(
         modifier = modifier
             .fillMaxSize()
@@ -327,7 +361,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
 fun SettingsDialog(
     currentSettings: com.edanstarfire.tinywords.ui.game.GameSettings,
     onDismiss: () -> Unit,
-    onSettingsChange: (com.edanstarfire.tinywords.ui.game.GameSettings) -> Unit
+    onSettingsChange: (com.edanstarfire.tinywords.ui.game.GameSettings) -> Unit,
+    onResetGame: () -> Unit
 ) {
     val autoAdvanceChoices = listOf(
         Pair(3, stringResource(id = R.string.setting_timer_3_seconds)),
@@ -347,17 +382,20 @@ fun SettingsDialog(
         onDismissRequest = onDismiss,
         title = { androidx.compose.material3.Text(text = stringResource(id = R.string.settings_title)) },
         text = {
-            androidx.compose.foundation.layout.Column {
-                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_auto_advance))
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())
+            ) {
+                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_auto_advance), modifier = Modifier.padding(vertical = 4.dp))
                 androidx.compose.material3.Switch(
                     checked = autoAdvanceEnabled,
-                    onCheckedChange = { autoAdvanceEnabled = it }
+                    onCheckedChange = { autoAdvanceEnabled = it },
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
                 if (autoAdvanceEnabled) {
-                    androidx.compose.material3.Text("Interval:")
+                    androidx.compose.material3.Text("Interval:", modifier = Modifier.padding(top = 4.dp, bottom = 2.dp))
                     for (pair in autoAdvanceChoices) {
                         val (value, label) = pair
-                        Row(modifier = Modifier) {
+                        Row(modifier = Modifier.padding(bottom = 2.dp)) {
                             androidx.compose.material3.RadioButton(
                                 selected = autoAdvanceInterval == value,
                                 onClick = { autoAdvanceInterval = value }
@@ -366,16 +404,46 @@ fun SettingsDialog(
                         }
                     }
                 }
-                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_show_words))
+                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_show_words), modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
                 androidx.compose.material3.Switch(
                     checked = alwaysShowWords,
-                    onCheckedChange = { alwaysShowWords = it }
+                    onCheckedChange = { alwaysShowWords = it },
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
-                androidx.compose.material3.Text("Pronounce Target Word at Start")
+                androidx.compose.material3.Text("Pronounce Target Word at Start", modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
                 androidx.compose.material3.Switch(
                     checked = pronounceTargetAtStart,
-                    onCheckedChange = { pronounceTargetAtStart = it }
+                    onCheckedChange = { pronounceTargetAtStart = it },
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
+
+                val showResetDialog = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+                androidx.compose.material3.Button(
+                    onClick = { showResetDialog.value = true },
+                    modifier = Modifier.padding(top = 32.dp)
+                ) {
+                    androidx.compose.material3.Text(stringResource(id = R.string.button_restart))
+                }
+                if (showResetDialog.value) {
+                    androidx.compose.material3.AlertDialog(
+                        onDismissRequest = { showResetDialog.value = false },
+                        title = { androidx.compose.material3.Text(stringResource(id = R.string.dialog_restart_title)) },
+                        text = { androidx.compose.material3.Text(stringResource(id = R.string.dialog_restart_message)) },
+                        confirmButton = {
+                            androidx.compose.material3.TextButton(onClick = {
+                                showResetDialog.value = false
+                                onResetGame()
+                            }) {
+                                androidx.compose.material3.Text(stringResource(id = R.string.button_restart))
+                            }
+                        },
+                        dismissButton = {
+                            androidx.compose.material3.TextButton(onClick = { showResetDialog.value = false }) {
+                                androidx.compose.material3.Text(stringResource(id = R.string.button_cancel))
+                            }
+                        }
+                    )
+                }
             }
         },
         confirmButton = {
@@ -440,37 +508,6 @@ fun GameBorder(viewModel: GameViewModel?) {
                 modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 28.dp)
             )
 
-            // Restart confirmation dialog state
-            var restartDialogOpen = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-            // Restart button (top-right)
-            androidx.compose.foundation.Image(
-                painter = androidx.compose.ui.res.painterResource(id = R.drawable.placeholder_1),
-                contentDescription = "Restart",
-                modifier = Modifier
-                    .size(60.dp)
-                    .align(androidx.compose.ui.Alignment.TopEnd)
-                    .clickable { restartDialogOpen.value = true }
-            )
-            if (restartDialogOpen.value) {
-                androidx.compose.material3.AlertDialog(
-                    onDismissRequest = { restartDialogOpen.value = false },
-                    title = { androidx.compose.material3.Text("Confirm Restart") },
-                    text = { androidx.compose.material3.Text("Are you sure you want to restart? This will reset your score, streak, and progress.") },
-                    confirmButton = {
-                        androidx.compose.material3.TextButton(onClick = {
-                            restartDialogOpen.value = false
-                            viewModel.resetGame()
-                        }) {
-                            androidx.compose.material3.Text("Restart")
-                        }
-                    },
-                    dismissButton = {
-                        androidx.compose.material3.TextButton(onClick = { restartDialogOpen.value = false }) {
-                            androidx.compose.material3.Text("Cancel")
-                        }
-                    }
-                )
-            }
 
             // Help button (bottom-center)
             androidx.compose.foundation.Image(
@@ -478,7 +515,7 @@ fun GameBorder(viewModel: GameViewModel?) {
                 contentDescription = "Help",
                 modifier = Modifier
                     .size(60.dp)
-                    .align(androidx.compose.ui.Alignment.BottomCenter)
+                    .align(androidx.compose.ui.Alignment.BottomStart)
                     .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
                     .alpha(if (isHintEnabled) 1f else 0.4f)
             )
@@ -500,7 +537,8 @@ fun GameBorder(viewModel: GameViewModel?) {
                 SettingsDialog(
                     currentSettings = viewModel.gameSettings.collectAsState().value,
                     onDismiss = { settingsDialogOpen = false },
-                    onSettingsChange = { viewModel.updateSettings(it) }
+                    onSettingsChange = { viewModel.updateSettings(it) },
+                    onResetGame = { viewModel.resetGame() }
                 )
             }
 

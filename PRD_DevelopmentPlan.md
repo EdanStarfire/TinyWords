@@ -69,9 +69,10 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Streak resets on incorrect, increments on correct
     *   [x] Visual feedback for score increase (popup '+N' display); streak done via static counter; loss handled by main feedback. 
 *   **Task 3.2: Restart Button Functionality**
-    *   [x] Implement restart confirmation dialog ("Are you sure?") before reset
+    *   [x] Implement restart confirmation dialog ("Are you sure?") before reset; confirmation/reset flow is now exclusively in the Settings dialog footer, not in the border UI.
     *   [x] Reset all game state on restart (score, streak, progress, hints)
     *   [-] Optionally: add TTS confirmation prompt for reset (will not implement; not needed for MVP)
+    *   [x] Border restart/reset options and dialog removed for clarity and responsive usability; all reset actions are via modal at end of Settings.
 *   **Task 3.3: "I Need Help" Button Functionality**
     *   [x] Hint Tier 1 works (TargetWord letter highlight)
     *   [x] Hint Tier 2 disables/greys out one distractor
@@ -136,7 +137,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   Visual feedback: star animation, shake effect, feedback sound for right/wrong.
     *   "Restart" should require a confirmation popup.
     *   Option for "Always Show Words Under Images" (toggle in Options).
-    *   Options/settings dialog responsive placement.
+    *   Options/settings dialog responsive placement. (Dialog now uses vertical scroll with restart modal at footer; all settings and actions always accessible on all screen sizes/orientations.)
     *   Support for landscape layout and border UI in all modes.
 *   [ ] (General) Sweep for any additional polish or small gaps left in UI/logic per PRD/UX checklist.
 
