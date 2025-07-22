@@ -106,8 +106,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] If word pool is exhausted or can't generate distinct challenge, handle gracefully and let user restart.
 *   [x] Ensure no challenge presents the same word for multiple choices, even if duplicates exist in word list. (Handled by generator logic & duplicate-detection test) 
 *   **Task 4.2: Landscape Layout Implementation**
-    *   [ ] Implement main game and border UI in landscape orientation, verifying that all key elements are faithfully arranged and scale/position as required.
-    *   [ ] Ensure all border buttons, feedback, and indicators function correctly in both orientations (see GameUX §3.1, layout specifics).
+    *   [x] Implement main game and border UI in landscape orientation, verifying that all key elements are faithfully arranged and scale/position as required. (Manual test confirmed 2025-07-22)
+    *   [x] Ensure all border buttons, feedback, and indicators function correctly in both orientations (see GameUX §3.1, layout specifics). (Manual test confirmed 2025-07-22)
 *   **Task 4.3: Image Assets** ([ ] (Post-MVP or iterative) Replace placeholders. For MVP, placeholders are fine.)
     *   [ ] Abstract or document the process for preparing non-placeholder/illustration assets post-MVP so art/sound handoff is clear.
 
