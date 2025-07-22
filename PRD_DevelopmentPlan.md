@@ -118,6 +118,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [ ] (Post-MVP or iterative) Consider adding subtle, non-verbal sound effects for UI interactions (button clicks, animations) if desired, to complement TTS.
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
+    *   [x] Improve default font for child readability and letterform distinction (e.g. Comic Neue Bold—clearer I/l differentiation)
     *   [ ] Settings toggles update UI/game immediately as toggled (make idempotent and live, not on OK only, from 3.7)
 *   **Task 5.4: Code Cleanup & Documentation**
 
