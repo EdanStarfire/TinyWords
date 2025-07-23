@@ -99,6 +99,13 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 ## Phase 4: Word Progression & Responsive Layout
 
+*   **Task 4.4: High Score Support and Persistence**
+    *   [x] Track and persist high scores for both Streak and Score.
+    *   [x] High scores persist across sessions (saved until reset).
+    *   [x] High scores are reset to zero when the user uses the reset feature.
+    *   [x] When a player surpasses the previous high score/streak, update and display as new high.
+    *   [x] High score/streak is remembered until reset or mistake. Displayed alongside score/streak in UI for now.
+
 *   (Tasks remain largely the same)
 *   **Task 4.1: Word List & Progression Logic**
     *   [x] Ensure each correct answer leads to a new (unique and valid) word challenge, ideally a one-letter change from the last correct word (see GameUX §4 §9, PRD §5).
@@ -130,6 +137,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 5.4: Code Cleanup & Documentation**
 
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
+
+*   [ ] TTS pronounces POP as an acronym instead of 'pop': Fix by lowercasing target words before sending them to TTS (only for target words, not general TTS messages).
 
 *   [x] Prevent the words from being pronounced when the device is rotated.
 *   [ ] Ensure the word is pronounced on the first display of the app.

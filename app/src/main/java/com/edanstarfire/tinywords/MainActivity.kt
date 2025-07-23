@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TinyWordsTheme {
+            TinyWordsTheme(darkTheme = false, dynamicColor = false) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     GameScreen(
                         modifier = Modifier.padding(innerPadding),
@@ -72,7 +72,13 @@ class MainActivity : ComponentActivity() {
 fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
-
+    val bgRes = if (isLandscape) R.drawable.background_landscape else R.drawable.background_portait
+    androidx.compose.foundation.Image(
+        painter = androidx.compose.ui.res.painterResource(id = bgRes),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = androidx.compose.ui.layout.ContentScale.Crop
+    )
     if (isLandscape) {
         // Arrange areas horizontally
         androidx.compose.foundation.layout.Row(
@@ -85,14 +91,12 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
             ) {
                 TargetWordArea(viewModel)
             }
-            androidx.compose.material3.VerticalDivider()
             androidx.compose.foundation.layout.Column(
                 modifier = Modifier.weight(5f).fillMaxHeight(),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
             ) {
                 ImageChoicesArea(viewModel)
             }
-            androidx.compose.material3.VerticalDivider()
             androidx.compose.foundation.layout.Column(
                 modifier = Modifier.weight(2f).fillMaxHeight(),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
@@ -115,14 +119,12 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         ) {
             TargetWordArea(viewModel)
         }
-        androidx.compose.material3.HorizontalDivider()
         androidx.compose.foundation.layout.Column(
             modifier = Modifier.weight(6f).fillMaxWidth(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
         ) {
             ImageChoicesArea(viewModel)
         }
-        androidx.compose.material3.HorizontalDivider()
         androidx.compose.foundation.layout.Column(
             modifier = Modifier.weight(2f).fillMaxWidth()
         ) {
@@ -495,15 +497,17 @@ fun GameBorder(viewModel: GameViewModel?) {
                 )
             }
             // Score (top-left)
+            val scoreHigh by viewModel.scoreHigh.collectAsState()
+            val streakHigh by viewModel.streakHigh.collectAsState()
             androidx.compose.material3.Text(
-                text = "Score: $score",
+                text = "Score: $score  (Record: $scoreHigh)",
                 fontSize = 20.sp,
                 modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart)
             )
 
             // Streak counter (just below score)
             androidx.compose.material3.Text(
-                text = "Streak: $streak",
+                text = "Streak: $streak  (Best: $streakHigh)",
                 fontSize = 18.sp,
                 modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 28.dp)
             )
@@ -563,7 +567,7 @@ fun GameBorder(viewModel: GameViewModel?) {
 @Preview(showBackground = true)
 @Composable
 fun GameScreenPreview() {
-    TinyWordsTheme {
+    TinyWordsTheme(darkTheme = false, dynamicColor = false) {
         GameScreen(viewModel = null)
     }
 }

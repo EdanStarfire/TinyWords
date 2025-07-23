@@ -420,13 +420,6 @@
     "part3Sound": "M"
   },
   {
-    "targetWord": "TOM",
-    "imageResName": "tom_image",
-    "part1Sound": "T",
-    "part2Sound": "O",
-    "part3Sound": "M"
-  },
-  {
     "targetWord": "MOW",
     "imageResName": "mow_image",
     "part1Sound": "M",

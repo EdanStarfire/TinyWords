@@ -60,14 +60,17 @@ class GameViewModel @Inject constructor(
     private val _feedbackState = MutableStateFlow<GameFeedback>(GameFeedback.None)
     val feedbackState: StateFlow<GameFeedback> = _feedbackState.asStateFlow()
 
-    // 3. Score/streak
+    // 3. Score/streak/high scores
     private val _score = MutableStateFlow(0)
     val score: StateFlow<Int> = _score.asStateFlow()
-    private val _scoreDelta = MutableStateFlow<Int?>(null)
-    val scoreDelta: StateFlow<Int?> = _scoreDelta.asStateFlow()
-
     private val _streak = MutableStateFlow(0)
     val streak: StateFlow<Int> = _streak.asStateFlow()
+    private val _scoreHigh = MutableStateFlow(0)
+    val scoreHigh: StateFlow<Int> = _scoreHigh.asStateFlow()
+    private val _streakHigh = MutableStateFlow(0)
+    val streakHigh: StateFlow<Int> = _streakHigh.asStateFlow()
+    private val _scoreDelta = MutableStateFlow<Int?>(null)
+    val scoreDelta: StateFlow<Int?> = _scoreDelta.asStateFlow()
 
     // 4. Hint status
     // Example: 0 = No hint, 1 = Tier 1 hint active (e.g. highlight letters), 2 = Tier 2 hint (e.g. show word)
@@ -107,16 +110,18 @@ class GameViewModel @Inject constructor(
     init {
         loadSpokenContent()
 
-        // Load score/streak from DataStore
+        // Load score/streak/high scores from DataStore
         viewModelScope.launch {
-            scoreStreakRepo.score.collect {
-                _score.value = it
-            }
+            scoreStreakRepo.score.collect { _score.value = it }
         }
         viewModelScope.launch {
-            scoreStreakRepo.streak.collect {
-                _streak.value = it
-            }
+            scoreStreakRepo.streak.collect { _streak.value = it }
+        }
+        viewModelScope.launch {
+            scoreStreakRepo.scoreHigh.collect { _scoreHigh.value = it }
+        }
+        viewModelScope.launch {
+            scoreStreakRepo.streakHigh.collect { _streakHigh.value = it }
         }
 
         // Load settings from DataStore
@@ -223,6 +228,15 @@ class GameViewModel @Inject constructor(
             _streak.value = newStreak
             viewModelScope.launch { scoreStreakRepo.setScore(newScore) }
             viewModelScope.launch { scoreStreakRepo.setStreak(newStreak) }
+            // Update high scores if needed
+            if (newScore > _scoreHigh.value) {
+                _scoreHigh.value = newScore
+                viewModelScope.launch { scoreStreakRepo.setScoreHigh(newScore) }
+            }
+            if (newStreak > _streakHigh.value) {
+                _streakHigh.value = newStreak
+                viewModelScope.launch { scoreStreakRepo.setStreakHigh(newStreak) }
+            }
             _scoreDelta.value = pts
             viewModelScope.launch {
                 kotlinx.coroutines.delay(2000)
@@ -401,6 +415,8 @@ class GameViewModel @Inject constructor(
     fun resetGame() {
         _score.value = 0
         _streak.value = 0
+        _scoreHigh.value = 0
+        _streakHigh.value = 0
         viewModelScope.launch { scoreStreakRepo.reset() }
         _hintLevel.value = 0
         _isHintButtonEnabled.value = true
