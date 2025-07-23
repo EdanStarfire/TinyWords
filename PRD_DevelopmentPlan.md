@@ -108,7 +108,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 4.2: Landscape Layout Implementation**
     *   [x] Implement main game and border UI in landscape orientation, verifying that all key elements are faithfully arranged and scale/position as required. (Manual test confirmed 2025-07-22)
     *   [x] Ensure all border buttons, feedback, and indicators function correctly in both orientations (see GameUX §3.1, layout specifics). (Manual test confirmed 2025-07-22)
-*   **Task 4.3: Image Assets** ([ ] (Post-MVP or iterative) Replace placeholders. For MVP, placeholders are fine.)
+*   **Task 4.3: Image Assets** ([x] All main word images are now loaded. Placeholders fully replaced for MVP target word set. Further art polish is post-MVP.)
     *   [ ] Abstract or document the process for preparing non-placeholder/illustration assets post-MVP so art/sound handoff is clear.
 
 ## Phase 5: Refinement & Testing
@@ -121,6 +121,12 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 5.3: UI Polish & Animations**
     *   [x] Improve default font for child readability and letterform distinction (e.g. Comic Neue Bold—clearer I/l differentiation)
     *   [ ] Settings toggles update UI/game immediately as toggled (make idempotent and live, not on OK only, from 3.7)
+    *   [ ] Improved icons for buttons and full layout.
+    *   [ ] Score progress bar (% to high score + % to high streak and then marking them as they pass)
+    *   [ ] Re-lay out image choice to 2 horizontal/1 horizontal to support slightly bigger images
+    *   [ ] Reskin the entire app
+    *   [ ] Finalize font sizing and layouts
+    *   [ ] Reskin options modal + the reset modal
 *   **Task 5.4: Code Cleanup & Documentation**
 
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
