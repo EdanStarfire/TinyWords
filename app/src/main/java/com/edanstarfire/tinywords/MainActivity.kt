@@ -42,6 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -80,28 +83,100 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         contentScale = androidx.compose.ui.layout.ContentScale.Crop
     )
     if (isLandscape) {
-        // Arrange areas horizontally
         androidx.compose.foundation.layout.Row(
-            modifier = modifier.fillMaxSize().padding(8.dp),
+            modifier = modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 2.dp),
             horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
         ) {
+            // Left: Score only
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier.weight(2f).fillMaxHeight()
+            ) {
+                // Show score & streak at top left in landscape
+                if (viewModel != null) {
+                    val score by viewModel.score.collectAsState()
+                    val scoreHigh by viewModel.scoreHigh.collectAsState()
+                    val streak by viewModel.streak.collectAsState()
+                    val streakHigh by viewModel.streakHigh.collectAsState()
+                    androidx.compose.material3.Text(
+                        text = "Score: $score  (Record: $scoreHigh)",
+                        fontSize = 20.sp,
+                        modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 4.dp, start = 8.dp)
+                    )
+                    androidx.compose.material3.Text(
+                        text = "Streak: $streak  (Best: $streakHigh)",
+                        fontSize = 18.sp,
+                        modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 34.dp, start = 8.dp)
+                    )
+                }
+            }
+            // Center: Target above choices
             androidx.compose.foundation.layout.Column(
-                modifier = Modifier.weight(3f).fillMaxHeight(),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                modifier = Modifier.weight(6f).fillMaxHeight(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
             ) {
                 TargetWordArea(viewModel)
-            }
-            androidx.compose.foundation.layout.Column(
-                modifier = Modifier.weight(5f).fillMaxHeight(),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-            ) {
+                if (!isLandscape) Spacer(modifier = Modifier.height(24.dp))
                 ImageChoicesArea(viewModel)
             }
-            androidx.compose.foundation.layout.Column(
-                modifier = Modifier.weight(2f).fillMaxHeight(),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            // Right: Options/buttons column
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier.weight(2f).fillMaxHeight()
             ) {
-                GameBorder(viewModel)
+                // Vertical options/buttons only
+                if (viewModel != null) {
+                    val feedbackState by viewModel.feedbackState.collectAsState()
+                    val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
+                    var settingsDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+                    androidx.compose.foundation.layout.Column(
+                        modifier = Modifier
+                            .align(androidx.compose.ui.Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
+                        horizontalAlignment = androidx.compose.ui.Alignment.End
+                    ) {
+                        // Options Button top
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                            contentDescription = stringResource(id = R.string.button_options),
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clickable {
+                                    viewModel.cancelAutoAdvanceTimer()
+                                    settingsDialogOpen = true
+                                }
+                        )
+                        // Next Button, only if correct
+                        if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
+                            androidx.compose.foundation.Image(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
+                                contentDescription = "Next Word",
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clickable { viewModel.requestNextWordManually() }
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.size(80.dp))
+                        }
+                        // Hint Button bottom
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
+                            contentDescription = "Help",
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
+                                .alpha(if (isHintEnabled) 1f else 0.4f)
+                        )
+                        if (settingsDialogOpen) {
+                            SettingsDialog(
+                                currentSettings = viewModel.gameSettings.collectAsState().value,
+                                onDismiss = { settingsDialogOpen = false },
+                                onSettingsChange = { viewModel.updateSettings(it) },
+                                onResetGame = { viewModel.resetGame() }
+                            )
+                        }
+                    }
+                }
             }
         }
         return
@@ -168,10 +243,10 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                             } else append(c)
                         }
                     },
-                    fontSize = 72.sp,
+                    fontSize = 120.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(if (androidx.compose.ui.platform.LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) 0.dp else 16.dp)
                         .clickable { viewModel.pronounceWord(target) }
                 )
             } else {
@@ -225,7 +300,8 @@ fun ImageChoice(
         ) {
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
-                    .padding(12.dp)
+                    .padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                    .fillMaxWidth()
                     .aspectRatio(1f),
                 contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
@@ -477,10 +553,11 @@ fun GameBorder(viewModel: GameViewModel?) {
         val scoreDelta by viewModel.scoreDelta.collectAsState()
         val feedbackState by viewModel.feedbackState.collectAsState()
         val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
+        val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+        val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
         androidx.compose.foundation.layout.Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxSize()
                 .padding(8.dp),
         ) {
             // +N popup above the score
@@ -513,30 +590,88 @@ fun GameBorder(viewModel: GameViewModel?) {
             )
 
 
-            // Help button (bottom-center)
-            androidx.compose.foundation.Image(
-                painter = androidx.compose.ui.res.painterResource(id = R.drawable.placeholder_1),
-                contentDescription = "Help",
-                modifier = Modifier
-                    .size(60.dp)
-                    .align(androidx.compose.ui.Alignment.BottomStart)
-                    .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
-                    .alpha(if (isHintEnabled) 1f else 0.4f)
-            )
-
-            // Options/settings button (bottom-end)
             var settingsDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-            androidx.compose.foundation.Image(
-                painter = androidx.compose.ui.res.painterResource(id = R.drawable.placeholder_1),
-                contentDescription = stringResource(id = R.string.button_options),
-                modifier = Modifier
-                    .size(60.dp)
-                    .align(androidx.compose.ui.Alignment.BottomEnd)
-                    .clickable {
-                        viewModel.cancelAutoAdvanceTimer()
-                        settingsDialogOpen = true
+            if (!isLandscape) {
+                androidx.compose.foundation.layout.Row(
+                    modifier = Modifier
+                        .align(androidx.compose.ui.Alignment.BottomCenter)
+                        .fillMaxWidth(),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                ) {
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
+                        contentDescription = "Help",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
+                            .alpha(if (isHintEnabled) 1f else 0.4f)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
+    androidx.compose.foundation.Image(
+        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
+        contentDescription = "Next Word",
+        modifier = Modifier
+            .size(80.dp)
+            .align(androidx.compose.ui.Alignment.CenterVertically)
+            .clickable { viewModel.requestNextWordManually() }
+    )
+} else {
+    Spacer(modifier = Modifier.size(80.dp))
+}
+Spacer(modifier = Modifier.weight(1f))
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                        contentDescription = stringResource(id = R.string.button_options),
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clickable {
+                                viewModel.cancelAutoAdvanceTimer()
+                                settingsDialogOpen = true
+                            }
+                    )
+                }
+            } else {
+                // LANDSCAPE: stack on right edge, top (options), center (next), bottom (hint)
+                androidx.compose.foundation.layout.Column(
+                    modifier = Modifier.align(androidx.compose.ui.Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                ) {
+                    // Options Button top
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                        contentDescription = stringResource(id = R.string.button_options),
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clickable {
+                                viewModel.cancelAutoAdvanceTimer()
+                                settingsDialogOpen = true
+                            }
+                    )
+                    // Next Button center
+                    if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
+                            contentDescription = "Next Word",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clickable { viewModel.requestNextWordManually() }
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(80.dp))
                     }
-            )
+                    // Hint Button bottom
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
+                        contentDescription = "Help",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
+                            .alpha(if (isHintEnabled) 1f else 0.4f)
+                    )
+                }
+            }
             if (settingsDialogOpen) {
                 SettingsDialog(
                     currentSettings = viewModel.gameSettings.collectAsState().value,
@@ -546,19 +681,7 @@ fun GameBorder(viewModel: GameViewModel?) {
                 )
             }
 
-            // Next Word button or timer (center, after correct)
-            if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-                val isTimerRunning by viewModel.isTimerRunning.collectAsState()
-                val timerValue by viewModel.timerValueSeconds.collectAsState()
-                androidx.compose.material3.Button(
-                    onClick = { viewModel.requestNextWordManually() },
-                    modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
-                ) {
-                    val label = if (isTimerRunning && timerValue > 0) "Next ${timerValue}s" else "Next Word"
-                    androidx.compose.material3.Text(label)
-                }
-            }
-        }
+                    }
     } else {
         androidx.compose.material3.Text(text = "GameBorder", modifier = Modifier.padding(16.dp))
     }
