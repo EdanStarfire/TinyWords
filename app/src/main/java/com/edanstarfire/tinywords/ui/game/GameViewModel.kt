@@ -347,7 +347,12 @@ class GameViewModel @Inject constructor(
 
         encouragementJob?.cancel()
         if (isTtsReady.value) {
-            ttsHelper.speak(word, pitch = pitch, rate = rate)
+            // Lowercase only if the text is a real word (target or image), not feedback
+            val spoken = when {
+                word.length > 1 && word.uppercase() == word -> word.lowercase()
+                else -> word
+            }
+            ttsHelper.speak(spoken, pitch = pitch, rate = rate)
         } else {
             Log.w("GameViewModel", "Attempted to pronounceWord, but TTS is not ready. Word: $word")
         }

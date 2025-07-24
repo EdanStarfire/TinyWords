@@ -1,75 +1,70 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last updated: 2025-07-17
+Last updated: 2025-07-24
 
 Purpose & Context
 
 TinyWords is an educational Android game focused on phonics, word recognition, and image association. Core gameplay presents “word challenges” with images and TTS feedback, using Compose UI and centralized game logic.
 
-Build, Lint, and Test
+Quick Navigation & File References
+
+- Use this section to quickly find relevant files, folders, and code entrypoints:
+    - App entry: app/src/main/java/com/edanstarfire/tinywords/MainActivity.kt
+    - Core game logic: app/src/main/java/com/edanstarfire/tinywords/ui/game/GameViewModel.kt
+    - Challenge generation: app/src/main/java/com/edanstarfire/tinywords/WordChallengeGenerator.kt
+    - TTS helper/util: app/src/main/java/com/edanstarfire/tinywords/tts/TtsHelper.kt
+    - Asset JSON: app/src/main/assets/word_definitions.json
+    - All word/placeholder images: app/src/main/res/drawable/ (use *image.png, placeholder_*.png)
+    - Settings, game/data persistence: app/src/main/java/com/edanstarfire/tinywords/GameSettingsPreferences.kt, ScoreStreakPreferences.kt
+    - UI theme/colors/typography: app/src/main/java/com/edanstarfire/tinywords/ui/theme/
+    - Unit tests: app/src/test/java/ (mirrors logic locations)
+    - Instrumented (device/UI) tests: app/src/androidTest/java/
+    - Dependencies: gradle/libs.versions.toml (always add/update here)
+
+Folder Structure & Orientation
+
+- app/src/main/java/com/edanstarfire/tinywords/: All main app classes
+    - tts/: Text-to-Speech helpers (use TtsHelper, don’t call TTS APIs directly)
+    - ui/: Compose UI, separated by feature (game/, theme/, etc.)
+- app/src/main/res/drawable/: Images/assets; all images must conform to *image.png naming and be referenced in asset JSON/tests
+- app/src/test/java/ and .../androidTest/java/: Mirror main folder logic for tests
+
+Build, Lint, and Test (run only if requested)
 
 - Build app: ./gradlew assembleDebug
-- Run app (Android Studio): Open in Android Studio and run the app on an emulator or device.
-- Run all unit tests: ./gradlew testDebugUnitTest
-- Run all instrumented tests: ./gradlew connectedDebugAndroidTest (requires emulator or device)
+- Run unit tests: ./gradlew testDebugUnitTest
+- Run instrumented tests: ./gradlew connectedDebugAndroidTest (requires emulator/device)
 - Lint: ./gradlew lint
 
-Project Structure & Architecture
+Coding Guidelines & Structure
 
-- App: Android (Kotlin, Jetpack Compose, Hilt for DI, DataStore, ViewModel/StateFlow, TTS)
-- Core Logic:
-    - GameViewModel: Centralizes game state, event logic, and TTS orchestration. All game updates and UI flows should be routed via the ViewModel. UI must only observe StateFlow and must not trigger logic directly.
-    - WordChallengeGenerator: Handles word/challenge construction; supports deterministic/test mode for repeatable tests.
-    - TtsHelper (under tts/): Provides all Text-to-Speech capabilities. Always use TtsHelper for TTS logic; do not interact directly with TextToSpeech APIs.
-- Assets:
-    - Word list/definitions: app/src/main/assets/word_definitions.json
-    - Placeholder and word images: app/src/main/res/drawable/placeholder_1.png, placeholder_2.png, placeholder_3.png and CVC image set (follow naming convention *_image.png for all word images)
-- UI:
-    - Jetpack Compose-based; entrypoint in MainActivity sets all main content.
-    - UI components must remain logic-free, observing only the ViewModel state. All user actions must trigger events on the ViewModel.
-- Dependency Versions:
-    - All dependencies MUST be added or updated via gradle/libs.versions.toml. Do NOT add new library versions directly in build.gradle.kts files.
-- Settings:
-    - Persisted with Jetpack DataStore; toggling settings (e.g., pronounce target at start, auto-advance, TTS speed) updates game logic flows immediately. Update settings only through recommended ViewModel methods.
+- Always use Jetpack Compose for all UI. Never introduce Activity/Fragment XML layouts.
+- UI code: Must not contain logic. Compose components strictly observe ViewModel StateFlow, and trigger events (never direct logic calls).
+- Logic, TTS, progression, and persistence: All flows through GameViewModel, WordChallengeGenerator, or helpers. Never wire dependencies manually—use Hilt DI for all non-static dependencies.
+- Settings: Only modified via ViewModel methods. Backed by Jetpack DataStore, instant/live update to all state as settings change.
+- TTS: All TTS API calls go through TtsHelper; trigger only from ViewModel (never directly/composable). Do not TTS the target word at challenge start unless setting is enabled.
+- Assets: Always name images *image.png. Update references in JSON and tests (see WordDefinitionTest for coverage requirements).
+- Tests: For all new logic, add both unit (core logic, deterministic) and instrumented (UI/flows) where possible. Use deterministic generator mode for stable test data.
+- Dependencies: Only add/change via gradle/libs.versions.toml. Never direct in build.gradle.kts.
 
-TTS & Target Word Rules
+Getting Oriented Quickly
 
-- At challenge start: Only pronounce the target word if the "Pronounce Target Word at Start" setting is enabled (see ViewModel and Compose logic for correct implementation).
-- Do NOT call TTS for the target word automatically from Compose unless the setting is ON.
-- All hint, feedback, and manual pronunciations must flow through ViewModel event methods.
-- All TTS calls must go through TtsHelper via the ViewModel—never use TextToSpeech APIs directly or in Compose.
+- Review GameViewModel for central game state/events.
+- WordChallengeGenerator for word logic, construction, and generator settings.
+- TtsHelper for all TTS logic.
+- Look to PRD_DevelopmentPlan.md and PRD_GameUX.md for complete task, UX, and logic sequence requirements. 
+- Check assets/, res/drawable/, and word_definitions.json for word/image/setting/asset references and expected conventions.
 
-Best Practices for Agents and Contributors
+Gotchas & Coding Conventions
 
-- Use Hilt for Dependency Injection throughout. Do NOT use manual dependency wiring or service locators.
-- When adding/changing words or images, use consistent naming, and update all references and tests (see WordDefinitionTest for required image coverage).
-- Always extend code by following the Model-View-ViewModel(Device)-DataStore-testable pattern; never introduce UI logic or resource handling outside of these flows.
-- For all new logic, provide both unit and (where appropriate) instrumented tests. Tests that require stable challenge data MUST use deterministic generator mode. See PRD_DevelopmentPlan.md for test strategy.
+- Always use the Model-View-ViewModel(DataStore)-testable pattern. Never place logic or state in Compose/Activity/Fragment.
+- Hilt DI is mandatory for injectable logic/helpers. No service locators or manual DI.
+- All state that drives UI must live in the ViewModel and be exposed as StateFlow. Do not trigger navigation or UI changes directly from Compose.
+- Never manipulate settings, resources, or TTS directly from UI; always go through ViewModel and helpers.
+- Resource/image/test references must be updated together—image changes require test updates; test refs require asset coverage.
+- Commit messages: 1-2 sentence summary, details below blank line, bot/assistant tag as below, reference checklist/PRD task where possible.
 
-Automated Agent and LLM-specific Rules
-
-- Do NOT run or suggest automatic lint, build, debugging, or test commands—these actions should only be run if explicitly requested by the user. Claude Code is often developing for an external/linked build environment.
-- Do NOT add documentation files other than this one unless directly requested. Always summarize new architecture or resource patterns in CLAUDE.md.
-- If you make changes to game logic, architecture, resource handling, or persistent patterns, update this file with a concise summary of new conventions and rationale.
-
-Getting Oriented / Quick Reference
-
-- Review GameViewModel for game state and orchestration; WordChallengeGenerator for challenge/resource creation; and TtsHelper for TTS access.
-- PRD_DevelopmentPlan.md and PRD_GameUX.md define logic, sequence, and UX requirements—always align features to these docs.
-- When handling TTS, settings, asset, or gameplay changes, follow the established MVVM/DataStore/testable pattern.
-
-Version Control, Commit, and PR Conventions
-
-- Use git for all version control.
-- Propose commits for each significant or atomic change. Practice small, focused commits.
-- Commit message:
-    - First line: Simple, clear statement (max 1-2 sentences).
-    - Detailed explanation as needed below, separated by a blank line.
-    - Bot or assistant commits: add "🤖 Generated with [Claude Code](https://claude.ai/code)" and co-author tag as seen in previous auto-generated commits.
-- Open PRs following established commit messaging. Add references to features/issues addressed and checklist item numbers.
-- Do NOT add documentation files other than this one unless directly requested.
-
-Reference Table (file locations)
+Reference Table (files/locations)
 
 | Area              | Path/Pattern                                                            |
 |-------------------|------------------------------------------------------------------------|

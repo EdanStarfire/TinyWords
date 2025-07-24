@@ -138,9 +138,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
 
-*   [ ] TTS pronounces POP as an acronym instead of 'pop': Fix by lowercasing target words before sending them to TTS (only for target words, not general TTS messages). Implementation must ensure the GameViewModel and any word pronunciation logic applies lowercasing strictly and only when passing target challenge words to TTS (not for feedback or UI messages). All other messages (such as 'Correct!', 'Try again!') must retain original casing.
+*   [x] TTS pronounces POP as an acronym instead of 'pop': Fixed by lowercasing only words that are fully uppercase (acronyms) and more than one letter before sending them to TTS, ensuring target/image words are pronounced correctly and general phrases/messages retain their intended casing.
 *   [x] Prevent the words from being pronounced when the device is rotated.
-*   [ ] Ensure the word is pronounced on the first display of the app.
+*   [x] Ensure the word is pronounced on the first display of the app (if setting enabled to do so).
 *   [x] Stop the game from auto-progressing when the app is backgrounded.
 *   [ ] Explore using the phonetic alphabet for sound matching (PRD section 7 & undecided/logic).
 *   [ ] Explore indices instead of letters for sound matching (PRD section 7 & undecided/logic).
