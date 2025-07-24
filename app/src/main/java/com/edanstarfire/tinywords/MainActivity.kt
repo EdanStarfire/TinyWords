@@ -14,6 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.AnimatedVisibility
@@ -45,6 +52,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Arrangement
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -272,6 +280,9 @@ fun ImageChoice(
     onClick: () -> Unit
 ) {
     val alpha = if (isDisabled) 0.4f else 1f
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val borderRadiusPx = with(density) { 20.dp.toPx() }
+    val borderWidthPx = with(density) { 5.dp.toPx() }
     val borderColor = when {
         isSelected && isCorrect -> androidx.compose.ui.graphics.Color(0xFF388E3C)
         isSelected && !isCorrect -> androidx.compose.ui.graphics.Color(0xFFD32F2F)
@@ -284,6 +295,10 @@ fun ImageChoice(
         animationSpec = tween(durationMillis = 500)
     )
     androidx.compose.material3.Surface(
+        shape = RoundedCornerShape(20.dp),
+        border = androidx.compose.foundation.BorderStroke(5.dp, borderColor),
+        tonalElevation = 2.dp,
+        onClick = if (enabled && !isDisabled) onClick else ({}),
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .alpha(alpha)
@@ -291,12 +306,20 @@ fun ImageChoice(
                 if (isSelected && !isCorrect && animatedShake.value > 0f) {
                     translationX = (kotlin.math.sin(animatedShake.value * 6 * Math.PI) * shakeOffset).toFloat()
                 }
+            }
+            .drawWithContent {
+                val pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f), 0f)
+                drawRoundRect(
+                    color = borderColor,
+                    size = size,
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(borderRadiusPx, borderRadiusPx),
+                    style = Stroke(width = borderWidthPx, pathEffect = pathEffect)
+                )
+                drawContent()
             },
-        tonalElevation = 2.dp,
-        onClick = if (enabled && !isDisabled) onClick else ({}),
-        border = androidx.compose.foundation.BorderStroke(3.dp, borderColor),
     ) {
         androidx.compose.foundation.layout.Column(
+            modifier = Modifier.padding(vertical = 8.dp),
             horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
         ) {
             androidx.compose.foundation.layout.Box(
@@ -315,6 +338,7 @@ fun ImageChoice(
                     )
                 } else {
                     Text(text = word, fontSize = 25.sp)
+                    Spacer(modifier = Modifier.height(6.dp))
                 }
                 // --- Correct/checkmark/try again overlay icons ---
                 if (isSelected && isCorrect) {
@@ -383,7 +407,6 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
             // 2x1 layout: first two centered across, third below
             if (isLandscape) {
                 androidx.compose.foundation.layout.Row(
-                    //Modifier.fillMaxWidth().padding(vertical = 24.dp),
                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
                 ) {
                     data class ImageChoiceData(val word: String, @androidx.annotation.DrawableRes val res: Int)
@@ -426,7 +449,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     }
                 }
             } else androidx.compose.foundation.layout.Column(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
             ) {
                 data class ImageChoiceData(
