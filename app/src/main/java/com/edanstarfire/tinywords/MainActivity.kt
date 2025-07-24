@@ -117,7 +117,7 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
             ) {
                 TargetWordArea(viewModel)
                 if (!isLandscape) Spacer(modifier = Modifier.height(24.dp))
-                ImageChoicesArea(viewModel)
+                ImageChoicesArea(viewModel, isLandscape = isLandscape)
             }
             // Right: Options/buttons column
             androidx.compose.foundation.layout.Box(
@@ -189,19 +189,20 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
     ) {
         androidx.compose.foundation.layout.Column(
-            modifier = Modifier.weight(2f).fillMaxWidth(),
+            modifier = Modifier.weight(2.3f).fillMaxWidth(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
         ) {
+            Spacer(modifier = Modifier.height(24.dp))
             TargetWordArea(viewModel)
         }
         androidx.compose.foundation.layout.Column(
             modifier = Modifier.weight(6f).fillMaxWidth(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
         ) {
-            ImageChoicesArea(viewModel)
+            ImageChoicesArea(viewModel, isLandscape = false)
         }
         androidx.compose.foundation.layout.Column(
-            modifier = Modifier.weight(2f).fillMaxWidth()
+            modifier = Modifier.weight(1.7f).fillMaxWidth()
         ) {
             GameBorder(viewModel)
         }
@@ -367,7 +368,7 @@ fun ImageChoice(
 }
 
 @Composable
-fun ImageChoicesArea(viewModel: GameViewModel?) {
+fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
     if (viewModel != null) {
         val currentChallengeState by viewModel.currentChallenge.collectAsState()
         val currentChallenge = currentChallengeState
@@ -379,56 +380,168 @@ fun ImageChoicesArea(viewModel: GameViewModel?) {
         }
         val disabledWords by viewModel.disabledWords.collectAsState()
         if (currentChallenge != null) {
-            androidx.compose.foundation.layout.Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp),
-                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceEvenly
+            // 2x1 layout: first two centered across, third below
+            if (isLandscape) {
+                androidx.compose.foundation.layout.Row(
+                    //Modifier.fillMaxWidth().padding(vertical = 24.dp),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                ) {
+                    data class ImageChoiceData(val word: String, @androidx.annotation.DrawableRes val res: Int)
+                    val all = listOf(
+                        ImageChoiceData(currentChallenge.correctImageWord, currentChallenge.correctImageRes),
+                        ImageChoiceData(currentChallenge.incorrectImageWord1, currentChallenge.incorrectImageRes1),
+                        ImageChoiceData(currentChallenge.incorrectImageWord2, currentChallenge.incorrectImageRes2)
+                    )
+                    val items = currentChallenge.choiceOrder.map { all[it] }
+                    for (item in items) {
+                        androidx.compose.foundation.layout.Box(
+                            modifier = Modifier.weight(1f).padding(8.dp)
+                        ) {
+                            ImageChoice(
+                                word = item.word,
+                                res = item.res,
+                                enabled = true,
+                                isCorrect = item.word == currentChallenge.correctImageWord,
+                                isSelected = (chosenWord == item.word) || (disabledWords.contains(item.word) && item.word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
+                                isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(item.word) && chosenWord != currentChallenge.correctImageWord,
+                                showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
+                                    (item.word in disabledWords) ||
+                                    (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
+                                differingIndex = if (
+                                    feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
+                                    (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == item.word)) ||
+                                    (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(item.word))
+                                ) {
+                                    val tgt = currentChallenge.targetWord
+                                    val incorrect1 = currentChallenge.incorrectImageWord1
+                                    val incorrect2 = currentChallenge.incorrectImageWord2
+                                    tgt.indices.firstOrNull { idx ->
+                                        (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
+                                                (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
+                                    }
+                                } else null,
+                                onClick = { viewModel.processPlayerChoice(item.word) }
+                            )
+                        }
+                    }
+                }
+            } else androidx.compose.foundation.layout.Column(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
             ) {
-                // Avoid Triple usage; use a local data class for clarity
-                data class ImageChoiceData(val word: String, @androidx.annotation.DrawableRes val res: Int)
-                val all = listOf(
-                    ImageChoiceData(currentChallenge.correctImageWord, currentChallenge.correctImageRes),
-                    ImageChoiceData(currentChallenge.incorrectImageWord1, currentChallenge.incorrectImageRes1),
-                    ImageChoiceData(currentChallenge.incorrectImageWord2, currentChallenge.incorrectImageRes2)
+                data class ImageChoiceData(
+                    val word: String,
+                    @androidx.annotation.DrawableRes val res: Int
                 )
-                val items = currentChallenge.choiceOrder.map { all[it] } // use fixed order from challenge
-                for (item in items) {
-                    val word = item.word
-                    val res = item.res
-                    androidx.compose.foundation.layout.Box(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        ImageChoice(
-                            word = word,
-                            res = res,
-                            enabled = true,
-                            isCorrect = word == currentChallenge.correctImageWord,
-                            isSelected = (chosenWord == word) || (disabledWords.contains(word) && word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
-                            isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(word) && chosenWord != currentChallenge.correctImageWord,
-                            showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
-                                (word in disabledWords) ||
-                                (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
-                            differingIndex = if (
-                                feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
-                                (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == word)) ||
-                                (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(word))
+
+                val all = listOf(
+                    ImageChoiceData(
+                        currentChallenge.correctImageWord,
+                        currentChallenge.correctImageRes
+                    ),
+                    ImageChoiceData(
+                        currentChallenge.incorrectImageWord1,
+                        currentChallenge.incorrectImageRes1
+                    ),
+                    ImageChoiceData(
+                        currentChallenge.incorrectImageWord2,
+                        currentChallenge.incorrectImageRes2
+                    )
+                )
+                val items = currentChallenge.choiceOrder.map { all[it] }
+                androidx.compose.foundation.layout.Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                ) {
+                    for (i in 0..1) {
+                        if (i < items.size) {
+                            val item = items[i]
+                            androidx.compose.foundation.layout.Box(
+                                modifier = Modifier.weight(1f).padding(8.dp)
                             ) {
-                                val tgt = currentChallenge.targetWord
-                                val incorrect1 = currentChallenge.incorrectImageWord1
-                                val incorrect2 = currentChallenge.incorrectImageWord2
-                                tgt.indices.firstOrNull { idx ->
-                                    (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
-                                    (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
-                                }
-                            } else null,
-                            onClick = { viewModel.processPlayerChoice(word) }
-                        )
+                                ImageChoice(
+                                    word = item.word,
+                                    res = item.res,
+                                    enabled = true,
+                                    isCorrect = item.word == currentChallenge.correctImageWord,
+                                    isSelected = (chosenWord == item.word) || (disabledWords.contains(
+                                        item.word
+                                    ) && item.word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
+                                    isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(
+                                        item.word
+                                    ) && chosenWord != currentChallenge.correctImageWord,
+                                    showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
+                                            (item.word in disabledWords) ||
+                                            (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
+                                    differingIndex = if (
+                                        feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
+                                        (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == item.word)) ||
+                                        (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(
+                                            item.word
+                                        ))
+                                    ) {
+                                        val tgt = currentChallenge.targetWord
+                                        val incorrect1 = currentChallenge.incorrectImageWord1
+                                        val incorrect2 = currentChallenge.incorrectImageWord2
+                                        tgt.indices.firstOrNull { idx ->
+                                            (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
+                                                    (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
+                                        }
+                                    } else null,
+                                    onClick = { viewModel.processPlayerChoice(item.word) }
+                                )
+                            }
+                        }
+                    }
+                }
+                if (items.size > 2) {
+                    androidx.compose.foundation.layout.Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                    ) {
+                        androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(0.5f))
+                        androidx.compose.foundation.layout.Box(
+                            modifier = Modifier.weight(1f)
+                                .padding(top = 24.dp, start = 8.dp, end = 8.dp)
+                        ) {
+                            val item = items[2]
+                            ImageChoice(
+                                word = item.word,
+                                res = item.res,
+                                enabled = true,
+                                isCorrect = item.word == currentChallenge.correctImageWord,
+                                isSelected = (chosenWord == item.word) || (disabledWords.contains(
+                                    item.word
+                                ) && item.word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
+                                isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(
+                                    item.word
+                                ) && chosenWord != currentChallenge.correctImageWord,
+                                showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
+                                        (item.word in disabledWords) ||
+                                        (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
+                                differingIndex = if (
+                                    feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
+                                    (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == item.word)) ||
+                                    (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(
+                                        item.word
+                                    ))
+                                ) {
+                                    val tgt = currentChallenge.targetWord
+                                    val incorrect1 = currentChallenge.incorrectImageWord1
+                                    val incorrect2 = currentChallenge.incorrectImageWord2
+                                    tgt.indices.firstOrNull { idx ->
+                                        (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
+                                                (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
+                                    }
+                                } else null,
+                                onClick = { viewModel.processPlayerChoice(item.word) }
+                            )
+                        }
+                        androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(0.5f))
+
                     }
                 }
             }
-        } else {
-            Text(text = "…", modifier = Modifier.padding(16.dp))
         }
     } else {
         Text(text = "ImageChoicesArea", modifier = Modifier.padding(16.dp))
