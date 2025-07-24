@@ -130,8 +130,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [ ] Settings toggles update UI/game immediately as toggled (make idempotent and live, not on OK only, from 3.7)
     *   [x] All main button and background drawables loaded for MVP; further icon/layout polish post-MVP.
     *   [ ] Score progress bar (% to high score + % to high streak and then marking them as they pass)
-    *   [ ] Re-lay out image choice to 2 horizontal/1 horizontal to support slightly bigger images
-    *   [ ] Reskin the entire app
+    *   [x] Re-lay out image choice to 2 horizontal/1 horizontal and finalize all borders, spacing, and cartoon/correctness highlight for MVP. Dashed/stateful borders, margin/padding fixes, and all feedback placement are complete. (2025-07-24)
+    *   [x] Reskin the entire app
     *   [x] Target word sizing landscape/portrait, no-gap logic, and image-choice layout margins finalized for MVP (July 2025).
     *   [ ] Reskin options modal + the reset modal
 *   **Task 5.4: Code Cleanup & Documentation**
@@ -139,7 +139,6 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
 
 *   [ ] TTS pronounces POP as an acronym instead of 'pop': Fix by lowercasing target words before sending them to TTS (only for target words, not general TTS messages). Implementation must ensure the GameViewModel and any word pronunciation logic applies lowercasing strictly and only when passing target challenge words to TTS (not for feedback or UI messages). All other messages (such as 'Correct!', 'Try again!') must retain original casing.
-
 *   [x] Prevent the words from being pronounced when the device is rotated.
 *   [ ] Ensure the word is pronounced on the first display of the app.
 *   [x] Stop the game from auto-progressing when the app is backgrounded.
