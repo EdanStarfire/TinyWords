@@ -337,7 +337,7 @@ fun ImageChoice(
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
-                    Text(text = word, fontSize = 25.sp)
+                    Text(text = word, fontSize = 35.sp)
                     Spacer(modifier = Modifier.height(6.dp))
                 }
                 // --- Correct/checkmark/try again overlay icons ---
@@ -383,7 +383,7 @@ fun ImageChoice(
                         } else append(c)
                     }
                 } else buildAnnotatedString { append(" ") },
-                fontSize = 20.sp,
+                fontSize = 35.sp,
                 modifier = Modifier
                     .padding(top = 8.dp)
             )
