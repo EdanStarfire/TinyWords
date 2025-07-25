@@ -34,6 +34,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
         *   [x] `startAutoAdvanceTimer()` / `cancelAutoAdvanceTimer()`
         *   [x] `updateSettings(newSettings: GameSettings)`
     *   [x] Update WordChallengeGenerator to disable randomness for testing purposes.
+    *   [x] **2025-07-25: Bugfix – Auto-Advance interval is preserved on toggle:**
+        * Fix: Toggling auto-advance OFF does not clear the stored delay value. Toggling ON restores the previous delay, always enforcing minimum value. This is managed in GameViewModel and GameSettingsPreferences, not in UI state. Tested live and via instrumented test.
+
 
 ## Phase 2: UI Implementation - Main Game Screen (Portrait First with Jetpack Compose)
 

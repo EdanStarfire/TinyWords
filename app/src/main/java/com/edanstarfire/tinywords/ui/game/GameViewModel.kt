@@ -314,29 +314,35 @@ class GameViewModel @Inject constructor(
     // This function is now more about updating the _gameSettings StateFlow.
     // The collectLatest block on _gameSettings will handle reacting to the change.
     fun updateSettings(newSettings: GameSettings) {
-        viewModelScope.launch {
-            gameSettingsRepo.setSettings(newSettings)
-        }
-        Log.i("GameViewModel", "ViewModel: Updating game settings to: $newSettings")
         val oldSettings = _gameSettings.value
-        _gameSettings.value = newSettings
+        var persistSettings = newSettings
+        // Only persist the interval if user changes it or if auto-advance is enabled.
+        // If toggling auto-advance OFF, never overwrite or clear persisted interval value.
+        // If toggling ON or changing interval, always persist and enforce minimum.
+        val minDelay = 3
+        val lastInterval = oldSettings.autoAdvanceIntervalSeconds
 
-        // If auto-advance was just turned OFF and a timer was running, cancel it.
-        if (oldSettings.autoAdvance && !newSettings.autoAdvance && _isTimerRunning.value) {
+        val clampedInterval = if (newSettings.autoAdvanceIntervalSeconds < minDelay) minDelay else newSettings.autoAdvanceIntervalSeconds
+        persistSettings = if (!oldSettings.autoAdvance && newSettings.autoAdvance) {
+            newSettings.copy(autoAdvanceIntervalSeconds = if (clampedInterval < minDelay) minDelay else clampedInterval)
+        } else if (!newSettings.autoAdvance) {
+            // When toggling OFF, retain last interval from oldSettings
+            newSettings.copy(autoAdvanceIntervalSeconds = lastInterval)
+        } else {
+            // Normal case: interval must still be clamped
+            newSettings.copy(autoAdvanceIntervalSeconds = clampedInterval)
+        }
+        viewModelScope.launch {
+            gameSettingsRepo.setSettings(persistSettings)
+        }
+        Log.i("GameViewModel", "ViewModel: Updating game settings to: $persistSettings")
+        _gameSettings.value = persistSettings
+
+        if (oldSettings.autoAdvance && !persistSettings.autoAdvance && _isTimerRunning.value) {
             cancelAutoAdvanceTimer()
             Log.i("GameViewModel", "Auto-advance turned off during a running timer. Timer cancelled.")
         }
-        // If auto-advance was just turned ON, and the player is currently in a state
-        // where they have just answered correctly (and no timer is running because it was previously off),
-        // we might want to start the timer.
-        // This case is tricky without knowing the exact game state (e.g. are we waiting after a correct answer?).
-        // For simplicity, the timer will start on the *next* correct answer if auto-advance is now on.
-        // Or, if you have a specific UI element (like a "Next Word" button that becomes a timer display),
-        // you could trigger `startAutoAdvanceTimer()` from the UI if `_feedbackState` is `Correct`
-        // and `newSettings.autoAdvance` is true and `!_isTimerRunning.value`.
-
-        // Current approach: Settings change primarily affects future timer starts
-        // or cancels an active one if auto-advance is disabled.
+        // All future state change triggers remain the same
     }
 
     fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null, asTargetWord: Boolean = false) {

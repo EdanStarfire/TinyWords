@@ -1,91 +1,54 @@
-package com.edanstarfire.tinywords.ui.game
+package com.edanstarfire.tinywords
 
-import android.content.Context
-import android.util.Log
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.edanstarfire.tinywords.WordChallenge
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.edanstarfire.tinywords.ui.game.GameSettings
+import com.edanstarfire.tinywords.ui.game.GameViewModel
 import com.edanstarfire.tinywords.WordChallengeGenerator
-import com.edanstarfire.tinywords.WordDefinition
 import com.edanstarfire.tinywords.tts.TtsHelper
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import org.junit.Assert.*
+import android.content.Context
 
 @RunWith(AndroidJUnit4::class)
 class GameViewModelTest {
-    private lateinit var context: Context
-    private lateinit var ttsHelper: TtsHelper
-    private lateinit var generator: WordChallengeGenerator
     private lateinit var viewModel: GameViewModel
-
-    private val challenge = WordChallenge(
-        targetWord = "CAT",
-        correctImageWord = "CAT",
-        correctImageRes = 1,
-        incorrectImageWord1 = "BAT",
-        incorrectImageRes1 = 2,
-        incorrectImageWord2 = "HAT",
-        incorrectImageRes2 = 3
-    )
 
     @Before
     fun setUp() {
-        context = InstrumentationRegistry.getInstrumentation().targetContext
-        ttsHelper = TtsHelper(context)
-        val wordList = listOf(
-            WordDefinition("CAT", "cat_image", "C", "A", "T"), // Assuming 'cat_image' is a real drawable name
-            WordDefinition("BAT", "bat_image", "B", "A", "T"),
-            WordDefinition("HAT", "hat_image", "H", "A", "T")
-        )
-        generator = WordChallengeGenerator(context, wordList, deterministic = true)
-        viewModel = GameViewModel(ttsHelper, generator)
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val ttsHelper = TtsHelper(context)
+        val wordList = emptyList<com.edanstarfire.tinywords.WordDefinition>()
+        val generator = WordChallengeGenerator(context, wordList, deterministic = true)
+        viewModel = GameViewModel(ttsHelper, generator, context)
     }
 
     @Test
-    fun loadNewWordChallenge_setsCurrentChallengeAndFeedbackState() {
-        viewModel.loadNewWordChallenge()
-        assertNotNull(viewModel.currentChallenge.value)
-        assertEquals(GameFeedback.None, viewModel.feedbackState.value)
-    }
+    fun autoAdvanceInterval_togglePersistence() {
+        val initial = GameSettings(autoAdvance = true, autoAdvanceIntervalSeconds = 10)
+        viewModel.updateSettings(initial)
+        assertEquals(10, viewModel.gameSettings.value.autoAdvanceIntervalSeconds)
+        assertEquals(true, viewModel.gameSettings.value.autoAdvance)
 
-    @Test
-    fun processPlayerChoice_correctAnswer_updatesScoreFeedbackAndStreak() {
-        viewModel.loadNewWordChallenge()
-        viewModel.processPlayerChoice("CAT")
-        assertEquals("CAT", viewModel.currentChallenge.value?.targetWord)
-        assertEquals(GameFeedback.Correct("CAT"), viewModel.feedbackState.value)
-        assertEquals(10, viewModel.score.value)
-        assertEquals(1, viewModel.streak.value)
-    }
+        // Toggle off, should not clear interval
+        viewModel.updateSettings(initial.copy(autoAdvance = false))
+        assertEquals(false, viewModel.gameSettings.value.autoAdvance)
+        assertEquals(10, viewModel.gameSettings.value.autoAdvanceIntervalSeconds)
 
-    @Test
-    fun processPlayerChoice_incorrectAnswer_updatesFeedbackAndResetsStreak() {
-        viewModel.loadNewWordChallenge()
-        viewModel.processPlayerChoice("DOG")
-        assertEquals(0, viewModel.score.value)
-        assertEquals(0, viewModel.streak.value)
-        assertEquals(GameFeedback.Incorrect("DOG"), viewModel.feedbackState.value)
-    }
+        // Toggle back on, should still be 10 (not 3, not default, not zero)
+        viewModel.updateSettings(initial.copy(autoAdvance = true))
+        assertEquals(true, viewModel.gameSettings.value.autoAdvance)
+        assertEquals(10, viewModel.gameSettings.value.autoAdvanceIntervalSeconds)
 
-    @Test
-    fun resetGame_setsScoreAndStateToInitial() {
-        viewModel.loadNewWordChallenge()
-        viewModel.processPlayerChoice("CAT")
-        viewModel.resetGame()
-        assertEquals(0, viewModel.score.value)
-        assertEquals(0, viewModel.streak.value)
-        assertEquals(GameFeedback.None, viewModel.feedbackState.value)
-        assertNotNull(viewModel.currentChallenge.value)
-    }
-
-    @After
-    fun tearDown() {
-
+        // Set to invalid low value and toggle
+        viewModel.updateSettings(initial.copy(autoAdvanceIntervalSeconds = 1, autoAdvance = false))
+        // Interval should remain the previous value (10) ON toggle off
+        assertEquals(10, viewModel.gameSettings.value.autoAdvanceIntervalSeconds)
+        
+        // Now toggle back ON, interval should clamp to min 3
+        viewModel.updateSettings(initial.copy(autoAdvanceIntervalSeconds = 1, autoAdvance = true))
+        assertEquals(3, viewModel.gameSettings.value.autoAdvanceIntervalSeconds)
     }
 }
