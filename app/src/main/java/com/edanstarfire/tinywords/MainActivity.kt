@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.graphicsLayer
@@ -248,17 +253,10 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                         )
                         // Next Button, only if correct
                         if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-                            androidx.compose.foundation.Image(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
-                                contentDescription = "Next Word",
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .clickable { viewModel.requestNextWordManually() }
-                            )
+                            NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
                         } else {
                             Spacer(modifier = Modifier.size(80.dp))
                         }
-                        // Hint Button bottom
                         androidx.compose.foundation.Image(
                             painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
                             contentDescription = "Help",
@@ -785,6 +783,27 @@ fun SettingsDialog(
 }
 
 @Composable
+fun NextButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val infiniteTransition = rememberInfiniteTransition(label = "PulseNextBtn")
+    val pulse by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ), label = "PulseNextBtn"
+    )
+    androidx.compose.foundation.Image(
+        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
+        contentDescription = "Next Word",
+        modifier = modifier
+            .size(80.dp)
+            .graphicsLayer { scaleX = pulse; scaleY = pulse }
+            .clickable { onClick() }
+    )
+}
+
+@Composable
 fun GameBorder(viewModel: GameViewModel?) {
     if (viewModel != null) {
         val streak by viewModel.streak.collectAsState()
@@ -812,21 +831,6 @@ fun GameBorder(viewModel: GameViewModel?) {
                         .padding(bottom = 4.dp)
                 )
             }
-            // Score (top-left)
-            val scoreHigh by viewModel.scoreHigh.collectAsState()
-            val streakHigh by viewModel.streakHigh.collectAsState()
-            androidx.compose.material3.Text(
-                text = "Score: $score  (Record: $scoreHigh)",
-                fontSize = 20.sp,
-                modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart)
-            )
-
-            // Streak counter (just below score)
-            androidx.compose.material3.Text(
-                text = "Streak: $streak  (Best: $streakHigh)",
-                fontSize = 18.sp,
-                modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 28.dp)
-            )
 
 
             var settingsDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
@@ -847,14 +851,7 @@ fun GameBorder(viewModel: GameViewModel?) {
                     )
                     Spacer(modifier = Modifier.then(Modifier.weight(1f)))
 if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-    androidx.compose.foundation.Image(
-        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
-        contentDescription = "Next Word",
-        modifier = Modifier
-            .size(80.dp)
-            .align(androidx.compose.ui.Alignment.CenterVertically)
-            .clickable { viewModel.requestNextWordManually() }
-    )
+    NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterVertically)) { viewModel.requestNextWordManually() }
 } else {
     Spacer(modifier = Modifier.size(80.dp))
 }
@@ -890,16 +887,10 @@ Spacer(modifier = Modifier.then(Modifier.weight(1f)))
                     )
                     // Next Button center
                     if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-                        androidx.compose.foundation.Image(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
-                            contentDescription = "Next Word",
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clickable { viewModel.requestNextWordManually() }
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.size(80.dp))
-                    }
+    NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
+} else {
+    Spacer(modifier = Modifier.size(80.dp))
+}
                     // Hint Button bottom
                     androidx.compose.foundation.Image(
                         painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),

@@ -161,6 +161,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Reskin the entire app
     *   [x] Target word sizing landscape/portrait, no-gap logic, and image-choice layout margins finalized for MVP (July 2025).
     *   [ ] Reskin options modal + the reset modal
+    *   [x] Add pulsing animation to "Next Word" button, and remove all text-based score/streak counters from GameBorder for a cleaner, visual-only layout.
 *   **Task 5.4: Code Cleanup & Documentation**
 
 ## Corrections, Known Issues, and Pending Feature Tasks (pre-polish)
