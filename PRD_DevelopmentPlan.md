@@ -47,6 +47,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Composable for target word from `GameViewModel`.
     *   [x] Trigger TTS pronunciation of the target word via `GameViewModel` when it appears/changes.
     *   [x] Implement dynamic highlighting for Hint Tier 1, matching PRD logic (highlight the differing letter position among image choices for the current target word).
+    *   [x] **2025-07-25: Bugfix – Shrink target word font (portrait):**
+        * Target word font size reduced slightly in portrait mode to prevent bottom clipping; now displays cleanly without cutoff across devices."
 *   **Task 2.3: Image Choices Display & Interaction**
     *   [x] Reusable Composable for a single image choice.
     *   [x] Display three images from `GameViewModel`.
