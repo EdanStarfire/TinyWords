@@ -364,6 +364,15 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    fun spellWordForTts(word: String, pitch: Float? = null, rate: Float? = null) {
+        if (isTtsReady.value) {
+            val spaced = word.toCharArray().joinToString(" ") { it.toString().uppercase() }
+            ttsHelper.speak(spaced, pitch = pitch, rate = rate)
+        } else {
+            Log.w("GameViewModel", "Attempted to spell word, but TTS is not ready. Word: $word")
+        }
+    }
+
     // Call this if the player manually chooses to go to the next word
     // (e.g. presses a "Next Word" button when auto-advance is off or they want to skip the timer)
     fun requestNextWordManually() {
@@ -387,7 +396,7 @@ class GameViewModel @Inject constructor(
             _isHintButtonEnabled.value = _hintLevel.value < maxLevel
             hintCount++
             if (currentLevel == 0 && _currentChallenge.value?.targetWord != null) {
-                pronounceWord(_currentChallenge.value!!.targetWord)
+                spellWordForTts(_currentChallenge.value!!.targetWord)
             }
             if (_hintLevel.value == 2) {
                 // Tier 2: Eliminate one incorrect image (pick a word to disable)

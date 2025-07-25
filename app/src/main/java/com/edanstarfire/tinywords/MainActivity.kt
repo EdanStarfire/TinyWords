@@ -350,7 +350,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                             } else append(c)
                         }
                     },
-                    fontSize = 120.sp,
+                    fontSize = 115.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                     modifier = Modifier
                         .padding(if (androidx.compose.ui.platform.LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) 0.dp else 16.dp)

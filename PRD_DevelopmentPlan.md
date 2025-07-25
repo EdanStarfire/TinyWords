@@ -30,6 +30,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
         *   [x] `loadNewWordChallenge()` (pronounce new target word)
         *   [x] `processPlayerChoice(selectedWord: String)` (pronounce result/feedback)
         *   [x] `requestHint()`
+        *   [x] 2025-07-25: Enhanced Tier 1 to spell word by TTS instead of pronouncing full word.
         *   [x] `resetGame()`
         *   [x] `startAutoAdvanceTimer()` / `cancelAutoAdvanceTimer()`
         *   [x] `updateSettings(newSettings: GameSettings)`
@@ -79,7 +80,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [-] Optionally: add TTS confirmation prompt for reset (will not implement; not needed for MVP)
     *   [x] Border restart/reset options and dialog removed for clarity and responsive usability; all reset actions are via modal at end of Settings.
 *   **Task 3.3: "I Need Help" Button Functionality**
-    *   [x] Hint Tier 1 works (TargetWord letter highlight)
+    *   [x] Hint Tier 1 works (now spells word via TTS—e.g., "C A T" for CAT—and highlights letter in TargetWord, 2025-07-25)
     *   [x] Hint Tier 2 disables/greys out one distractor
     *   [x] Hint button enable/disable logic is correct after every game event
 *   **Task 3.4: "Next Word" Button**
