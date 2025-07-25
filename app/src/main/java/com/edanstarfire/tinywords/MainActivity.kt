@@ -356,7 +356,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                     modifier = Modifier
                         .padding(if (androidx.compose.ui.platform.LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) 0.dp else 16.dp)
-                        .clickable { viewModel.pronounceWord(target) }
+                        .clickable { viewModel.pronounceWord(target, asTargetWord = true) }
                 )
             } else {
                 androidx.compose.material3.Text(text = "…", modifier = Modifier.padding(16.dp))

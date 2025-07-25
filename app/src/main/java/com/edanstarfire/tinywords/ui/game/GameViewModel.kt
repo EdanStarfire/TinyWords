@@ -347,8 +347,10 @@ class GameViewModel @Inject constructor(
 
     fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null, asTargetWord: Boolean = false) {
         if (asTargetWord) {
-            if (lastPronouncedTarget == word) return
-            lastPronouncedTarget = word
+            //if (lastPronouncedTarget == word) return
+            //lastPronouncedTarget = word
+            spellWordForTts(word, pitch = pitch, rate = rate)
+            return
         }
 
         encouragementJob?.cancel()

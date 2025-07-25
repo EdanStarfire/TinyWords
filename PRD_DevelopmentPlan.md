@@ -146,10 +146,10 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Enable shake animation for all clicked image choices (both right and wrong picks). (Checkpoint: Now triggers shake on every selection, #2025-07-25)
     *   [x] Keep existing color feedback for correct/wrong but add universal shake effect on press.
 
-*   **Task 4.8: Target Word Spell-Out Button**
-    *   [ ] Add a button (speaker icon) adjacent to the target word.
-    *   [ ] When pressed, triggers TTS to spell out the target word, pronouncing each letter individually (e.g., C A T for CAT).
-    *   [ ] Uses TtsHelper and GameViewModel; no direct UI logic or TTS API use.
+*   **Task 4.8: Target Word Tap-to-Spell (Replaces Button)**
+    *   [x] Tapping the target word now triggers TTS to spell out the word letter-by-letter (e.g., C A T for CAT), using TtsHelper/GameViewModel.
+    *   [x] No additional button is implemented; spell-out occurs via direct word tap for improved child-friendly usability.
+    *   [x] This replaces the intended 'speaker icon' button and matches current product UX direction.
 
 ## Phase 5: Refinement & Testing
 
