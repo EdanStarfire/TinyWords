@@ -61,6 +61,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -387,21 +389,28 @@ fun ImageChoice(
         else -> androidx.compose.ui.graphics.Color.LightGray
     }
     // --- Animation: Shake on new incorrect tap ---
-    val shakeOffset = if (isSelected && !isCorrect) 12 else 0
+    var shakeTrigger by remember { mutableStateOf(0) }
+    val shakeOffset = 12
     val animatedShake = animateFloatAsState(
-        targetValue = if (isSelected && !isCorrect) 1f else 0f,
-        animationSpec = tween(durationMillis = 500)
+        targetValue = shakeTrigger.toFloat(),
+        animationSpec = tween(durationMillis = 500),
+        label = "Shake"
     )
     androidx.compose.material3.Surface(
         shape = RoundedCornerShape(20.dp),
         border = androidx.compose.foundation.BorderStroke(5.dp, borderColor),
         tonalElevation = 2.dp,
-        onClick = if (enabled && !isDisabled) onClick else ({}),
+        onClick = if (enabled && !isDisabled) {
+            {
+                shakeTrigger += 1
+                onClick()
+            }
+        } else ({}),
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .alpha(alpha)
             .graphicsLayer {
-                if (isSelected && !isCorrect && animatedShake.value > 0f) {
+                if (animatedShake.value > shakeTrigger - 1) {
                     translationX = (kotlin.math.sin(animatedShake.value * 6 * Math.PI) * shakeOffset).toFloat()
                 }
             }

@@ -143,8 +143,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 *   (Tasks remain largely the same)
 *   **Task 4.7: Choice Image Shake Animation**
-    *   [ ] Enable shake animation for all clicked image choices (both right and wrong picks).
-    *   [ ] Keep existing color feedback for correct/wrong but add universal shake effect on press.
+    *   [x] Enable shake animation for all clicked image choices (both right and wrong picks). (Checkpoint: Now triggers shake on every selection, #2025-07-25)
+    *   [x] Keep existing color feedback for correct/wrong but add universal shake effect on press.
 
 *   **Task 4.8: Target Word Spell-Out Button**
     *   [ ] Add a button (speaker icon) adjacent to the target word.
