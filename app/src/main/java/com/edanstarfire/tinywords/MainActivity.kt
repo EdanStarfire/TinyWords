@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.drawWithContent
@@ -80,6 +83,108 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun ScoreProgressBar(
+    score: Int,
+    highScore: Int,
+    isLandscape: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val progress = when {
+        highScore <= 0 -> 1f
+        score >= highScore -> 1f
+        else -> score.toFloat() / highScore
+    }
+    val progressBgColor = Color(0xFFF8EAF6) // Light pastel
+    val progressFillColor = Color(0xFFFF69B4) // Pink (Hot Pink)
+    val rainbowColors = listOf(
+        Color(0xFFFF1744), // Red
+        Color(0xFFFFEA00), // Yellow
+        Color(0xFF00E676), // Green
+        Color(0xFF2979FF), // Blue
+        Color(0xFFD500F9), // Violet
+    )
+    val rainbowBrushV = androidx.compose.ui.graphics.Brush.linearGradient(colors = rainbowColors, start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(0f,1000f))
+    val rainbowBrushH = androidx.compose.ui.graphics.Brush.linearGradient(colors = rainbowColors.reversed(), start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(1000f,0f))
+
+    if (isLandscape) {
+        Box(
+            modifier = modifier
+                .fillMaxHeight(0.85f)
+                .then(androidx.compose.ui.Modifier.width(32.dp)),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ) {
+            androidx.compose.foundation.Canvas(modifier = Modifier.matchParentSize()) {
+                // Draw light background
+                drawRoundRect(
+                    color = progressBgColor,
+                    size = size,
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx())
+                )
+                // Draw filled progress (vertical fill, bottom up)
+                if (progress > 0f) {
+                    drawRoundRect(
+                        color = progressFillColor,
+                        topLeft = androidx.compose.ui.geometry.Offset(0f, size.height * (1f - progress)),
+                        size = androidx.compose.ui.geometry.Size(size.width, size.height * progress),
+                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx())
+                    )
+                }
+                // Draw rainbow border stroke
+                drawRoundRect(
+                    brush = rainbowBrushV,
+                    size = size,
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx()),
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
+                )
+            }
+            Text(
+                text = "%d".format(score),
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier.align(androidx.compose.ui.Alignment.BottomCenter).padding(top = 8.dp)
+            )
+        }
+    } else {
+        Box(
+            modifier = modifier
+                .then(androidx.compose.ui.Modifier.fillMaxWidth(0.9f))
+                .then(androidx.compose.ui.Modifier.height(30.dp)),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ) {
+            androidx.compose.foundation.Canvas(modifier = Modifier.matchParentSize()) {
+                // Draw light background
+                drawRoundRect(
+                    color = progressBgColor,
+                    size = size,
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx())
+                )
+                // Draw filled progress (horizontal fill, left to right)
+                if (progress > 0f) {
+                    drawRoundRect(
+                        color = progressFillColor,
+                        size = androidx.compose.ui.geometry.Size(size.width * progress, size.height),
+                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx())
+                    )
+                }
+                // Draw rainbow border stroke
+                drawRoundRect(
+                    brush = rainbowBrushH,
+                    size = size,
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx()),
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
+                )
+            }
+            Text(
+                text = "%d".format(score),
+                fontSize = 18.sp,
+                color = Color.Black,
+                modifier = Modifier.align(androidx.compose.ui.Alignment.CenterStart).padding(start = 12.dp)
+            )
+        }
+    }
+}
+
+@Composable
 fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
@@ -91,35 +196,22 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         contentScale = androidx.compose.ui.layout.ContentScale.Crop
     )
     if (isLandscape) {
+        val score by viewModel?.score?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
         androidx.compose.foundation.layout.Row(
             modifier = modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 2.dp),
             horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
         ) {
             // Left: Score only
             androidx.compose.foundation.layout.Box(
-                modifier = Modifier.weight(2f).fillMaxHeight()
+                modifier = Modifier.fillMaxHeight().weight(2f),
+                contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
-                // Show score & streak at top left in landscape
-                if (viewModel != null) {
-                    val score by viewModel.score.collectAsState()
-                    val scoreHigh by viewModel.scoreHigh.collectAsState()
-                    val streak by viewModel.streak.collectAsState()
-                    val streakHigh by viewModel.streakHigh.collectAsState()
-                    androidx.compose.material3.Text(
-                        text = "Score: $score  (Record: $scoreHigh)",
-                        fontSize = 20.sp,
-                        modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 4.dp, start = 8.dp)
-                    )
-                    androidx.compose.material3.Text(
-                        text = "Streak: $streak  (Best: $streakHigh)",
-                        fontSize = 18.sp,
-                        modifier = Modifier.align(androidx.compose.ui.Alignment.TopStart).padding(top = 34.dp, start = 8.dp)
-                    )
-                }
+                ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = true, modifier = Modifier.align(androidx.compose.ui.Alignment.Center))
             }
             // Center: Target above choices
             androidx.compose.foundation.layout.Column(
-                modifier = Modifier.weight(6f).fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight().weight(6f),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
                 horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
             ) {
@@ -129,7 +221,7 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
             }
             // Right: Options/buttons column
             androidx.compose.foundation.layout.Box(
-                modifier = Modifier.weight(2f).fillMaxHeight()
+                modifier = Modifier.fillMaxHeight().weight(2f)
             ) {
                 // Vertical options/buttons only
                 if (viewModel != null) {
@@ -190,27 +282,35 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         return
     }
     // Portrait/Default
+    val score by viewModel?.score?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+    val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
     androidx.compose.foundation.layout.Column(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
     ) {
+        // Add progress bar at the top in portrait
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ) {
+            ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false)
+        }
         androidx.compose.foundation.layout.Column(
-            modifier = Modifier.weight(2.3f).fillMaxWidth(),
+            modifier = Modifier.then(Modifier.weight(2.3f)).fillMaxWidth(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
             TargetWordArea(viewModel)
         }
         androidx.compose.foundation.layout.Column(
-            modifier = Modifier.weight(6f).fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
         ) {
             ImageChoicesArea(viewModel, isLandscape = false)
         }
         androidx.compose.foundation.layout.Column(
-            modifier = Modifier.weight(1.7f).fillMaxWidth()
+            modifier = Modifier.then(Modifier.weight(1.7f)).fillMaxWidth()
         ) {
             GameBorder(viewModel)
         }
@@ -406,6 +506,9 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
         if (currentChallenge != null) {
             // 2x1 layout: first two centered across, third below
             if (isLandscape) {
+        val score by viewModel?.score?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+
                 androidx.compose.foundation.layout.Row(
                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
                 ) {
@@ -418,7 +521,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     val items = currentChallenge.choiceOrder.map { all[it] }
                     for (item in items) {
                         androidx.compose.foundation.layout.Box(
-                            modifier = Modifier.weight(1f).padding(8.dp)
+                            modifier = Modifier.then(Modifier.weight(1f)).padding(8.dp)
                         ) {
                             ImageChoice(
                                 word = item.word,
@@ -480,7 +583,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                         if (i < items.size) {
                             val item = items[i]
                             androidx.compose.foundation.layout.Box(
-                                modifier = Modifier.weight(1f).padding(8.dp)
+                                modifier = Modifier.then(Modifier.weight(1f)).padding(8.dp)
                             ) {
                                 ImageChoice(
                                     word = item.word,
@@ -524,7 +627,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     ) {
                         androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(0.5f))
                         androidx.compose.foundation.layout.Box(
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.then(Modifier.weight(1f))
                                 .padding(top = 24.dp, start = 8.dp, end = 8.dp)
                         ) {
                             val item = items[2]
@@ -742,7 +845,7 @@ fun GameBorder(viewModel: GameViewModel?) {
                             .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
                             .alpha(if (isHintEnabled) 1f else 0.4f)
                     )
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.then(Modifier.weight(1f)))
 if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
     androidx.compose.foundation.Image(
         painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
@@ -755,7 +858,7 @@ if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
 } else {
     Spacer(modifier = Modifier.size(80.dp))
 }
-Spacer(modifier = Modifier.weight(1f))
+Spacer(modifier = Modifier.then(Modifier.weight(1f)))
                     androidx.compose.foundation.Image(
                         painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
                         contentDescription = stringResource(id = R.string.button_options),

@@ -99,6 +99,16 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 ## Phase 4: Word Progression & Responsive Layout
 
+*   **Task 4.1: Word List & Progression Logic**
+    *   [x] Ensure each correct answer leads to a new (unique and valid) word challenge, ideally a one-letter change from the last correct word (see GameUX §4 §9, PRD §5).
+    *   [x] Randomize/shuffle the display order of all image/word choices each round so the correct answer is never in a fixed position.
+    *   [x] If word pool is exhausted or can't generate distinct challenge, handle gracefully and let user restart.
+    *   [x] Ensure no challenge presents the same word for multiple choices, even if duplicates exist in word list. (Handled by generator logic & duplicate-detection test) 
+*   **Task 4.2: Landscape Layout Implementation**
+    *   [x] Implement main game and border UI in landscape orientation, verifying that all key elements are faithfully arranged and scale/position as required. (Manual test confirmed 2025-07-22)
+    *   [x] Ensure all border buttons, feedback, and indicators function correctly in both orientations (see GameUX §3.1, layout specifics). (Manual test confirmed 2025-07-22)
+*   **Task 4.3: Image Assets** ([x] All main word images are now loaded. Placeholders fully replaced for MVP target word set. Further art polish is post-MVP.)
+    *   [x] All MVP images and drawables are loaded; landscape/portrait word-under-image UI, hit area, and overlap issues fixed July 2025. Further art polish and asset documentation are post-MVP.
 *   **Task 4.4: High Score Support and Persistence**
     *   [x] Track and persist high scores for both Streak and Score.
     *   [x] High scores persist across sessions (saved until reset).
@@ -106,17 +116,34 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] When a player surpasses the previous high score/streak, update and display as new high.
     *   [x] High score/streak is remembered until reset or mistake. Displayed alongside score/streak in UI for now.
 
+*   **Task 4.5: High Score Progress Bar + Display**
+    *   [x] Build and show a progress bar reflecting current score progress toward the high score.
+    *     [x] The progress bar should be near the full width of the screen on portrait mode horizontally.
+    *     [x] Portrait mode bars should fill left-to-right.
+    *     [x] For landscape mode, the progress bar should be a vertical bar in the GameBorder on the left side of the screen.
+    *     [x] Landscape mode bars should fill bottom-to-top.
+    *   [x] Rules of this visual indicator:
+    *     [x] In the case of a high score of 0 (reset), the progress can go from 0 (min) to 1 (max)
+    *     [x] Otherwise, if the high score is > the current score, the progress bar should go from 0 (min) to the High Score (max).
+    *       [x] In this case, the progress fill should be the current score value
+    *     [x] If the current score is > the high score, the progress bar should go from 0 (min) to current score (max)
+    *       [x] In this case, the progress bar should remain filled completely.
+    *     [x] At the far left of the progress bar should be a small area for a current score. It should support numbers up to 99,999.
+    *   [x] The rainbow border should remain visible around the progress bar at all times, at a thin stroke width (4.dp). The fill is now pink, the background light pastel. (2025-07-25)
+
+*   **Task 4.6: High Streak Progress Bar + Display**
+    *   [ ] Build and show a progress bar reflecting current streak progress toward the high streak.
+    *   [ ] Display alongside or underneath streak number in UI.
+
 *   (Tasks remain largely the same)
-*   **Task 4.1: Word List & Progression Logic**
-    *   [x] Ensure each correct answer leads to a new (unique and valid) word challenge, ideally a one-letter change from the last correct word (see GameUX §4 §9, PRD §5).
-    *   [x] Randomize/shuffle the display order of all image/word choices each round so the correct answer is never in a fixed position.
-    *   [x] If word pool is exhausted or can't generate distinct challenge, handle gracefully and let user restart.
-*   [x] Ensure no challenge presents the same word for multiple choices, even if duplicates exist in word list. (Handled by generator logic & duplicate-detection test) 
-*   **Task 4.2: Landscape Layout Implementation**
-    *   [x] Implement main game and border UI in landscape orientation, verifying that all key elements are faithfully arranged and scale/position as required. (Manual test confirmed 2025-07-22)
-    *   [x] Ensure all border buttons, feedback, and indicators function correctly in both orientations (see GameUX §3.1, layout specifics). (Manual test confirmed 2025-07-22)
-*   **Task 4.3: Image Assets** ([x] All main word images are now loaded. Placeholders fully replaced for MVP target word set. Further art polish is post-MVP.)
-    *   [x] All MVP images and drawables are loaded; landscape/portrait word-under-image UI, hit area, and overlap issues fixed July 2025. Further art polish and asset documentation are post-MVP.
+*   **Task 4.7: Choice Image Shake Animation**
+    *   [ ] Enable shake animation for all clicked image choices (both right and wrong picks).
+    *   [ ] Keep existing color feedback for correct/wrong but add universal shake effect on press.
+
+*   **Task 4.8: Target Word Spell-Out Button**
+    *   [ ] Add a button (speaker icon) adjacent to the target word.
+    *   [ ] When pressed, triggers TTS to spell out the target word, pronouncing each letter individually (e.g., C A T for CAT).
+    *   [ ] Uses TtsHelper and GameViewModel; no direct UI logic or TTS API use.
 
 ## Phase 5: Refinement & Testing
 
