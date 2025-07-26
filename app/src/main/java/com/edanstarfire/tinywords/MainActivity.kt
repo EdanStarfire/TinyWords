@@ -62,8 +62,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -194,7 +196,7 @@ fun ScoreProgressBar(
 
 @Composable
 fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
-    var settingsDialogOpen by remember { mutableStateOf(false) }
+    var settingsDialogOpen by rememberSaveable { mutableStateOf(false) }
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
     val bgRes = if (isLandscape) R.drawable.background_landscape else R.drawable.background_portait
@@ -648,6 +650,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialogContent(
     currentSettings: com.edanstarfire.tinywords.ui.game.GameSettings,
@@ -685,37 +688,68 @@ fun SettingsDialogContent(
             androidx.compose.foundation.layout.Column(
                 modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())
             ) {
-                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_auto_advance), modifier = Modifier.padding(vertical = 4.dp))
-                androidx.compose.material3.Switch(
-                    checked = autoAdvanceEnabled,
-                    onCheckedChange = { autoAdvanceEnabled = it },
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                if (autoAdvanceEnabled) {
-                    androidx.compose.material3.Text("Interval:", modifier = Modifier.padding(top = 4.dp, bottom = 2.dp))
-                    for (pair in autoAdvanceChoices) {
-                        val (value, label) = pair
-                        Row(modifier = Modifier.padding(bottom = 2.dp)) {
-                            androidx.compose.material3.RadioButton(
-                                selected = autoAdvanceInterval == value,
-                                onClick = { autoAdvanceInterval = value }
+                val timerOptions = listOf(0, 3, 5, 8, 15, 30)
+                val timerLabels = listOf("Off", "3", "5", "8", "15", "30")
+                var timerIndex by remember { mutableStateOf(timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }.coerceAtLeast(0)) }
+                androidx.compose.material3.Text("Auto-Advance Timer " + if (timerOptions[timerIndex]==0) "(Off)" else "(${timerOptions[timerIndex]}s)", modifier = Modifier.padding(bottom = 2.dp, top = 0.dp, start = 0.dp, end = 0.dp))
+                androidx.compose.foundation.layout.Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
+                    androidx.compose.material3.Slider(
+                        value = timerIndex.toFloat(),
+                        onValueChange = {
+                            timerIndex = it.roundToInt()
+                            val newVal = timerOptions[timerIndex]
+                            autoAdvanceEnabled = newVal != 0
+                            autoAdvanceInterval = if (newVal == 0) 0 else newVal
+                        },
+                        steps = timerOptions.size - 2,
+                        valueRange = 0f..(timerOptions.size - 1).toFloat(),
+                        modifier = Modifier.fillMaxWidth().height(18.dp),
+                        enabled = true,
+                        colors = androidx.compose.material3.SliderDefaults.colors(
+                            activeTrackColor = androidx.compose.ui.graphics.Color(0xFFFF69B4),
+                            inactiveTrackColor = androidx.compose.ui.graphics.Color.LightGray,
+                            thumbColor = androidx.compose.ui.graphics.Color(0xFFFF69B4),
+                            activeTickColor = androidx.compose.ui.graphics.Color.Transparent,
+                            inactiveTickColor = androidx.compose.ui.graphics.Color.Transparent
+                        ),
+                        track = { sliderState ->
+                            androidx.compose.material3.SliderDefaults.Track(
+                                sliderState = sliderState,
+                                thumbTrackGapSize = 0.dp
                             )
-                            androidx.compose.material3.Text(label)
                         }
-                    }
+                    )
                 }
-                androidx.compose.material3.Text(stringResource(id = R.string.setting_label_show_words), modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
-                androidx.compose.material3.Switch(
-                    checked = alwaysShowWords,
-                    onCheckedChange = { alwaysShowWords = it },
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                androidx.compose.material3.Text("Pronounce Target Word at Start", modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
-                androidx.compose.material3.Switch(
-                    checked = pronounceTargetAtStart,
-                    onCheckedChange = { pronounceTargetAtStart = it },
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                androidx.compose.foundation.layout.Row(
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                    modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                ) {
+                    androidx.compose.material3.Checkbox(
+                        checked = alwaysShowWords,
+                        onCheckedChange = { alwaysShowWords = it },
+                        colors = androidx.compose.material3.CheckboxDefaults.colors(
+                            checkedColor = androidx.compose.ui.graphics.Color(0xFFFF69B4), // pink
+                            checkmarkColor = androidx.compose.ui.graphics.Color.White
+                        ),
+                        modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                    )
+                    androidx.compose.material3.Text("Always Show Words")
+                }
+                androidx.compose.foundation.layout.Row(
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                    modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                ) {
+                    androidx.compose.material3.Checkbox(
+                        checked = pronounceTargetAtStart,
+                        onCheckedChange = { pronounceTargetAtStart = it },
+                        colors = androidx.compose.material3.CheckboxDefaults.colors(
+                            checkedColor = androidx.compose.ui.graphics.Color(0xFFFF69B4), // pink fallback
+                            checkmarkColor = androidx.compose.ui.graphics.Color.White
+                        ),
+                        modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                    )
+                    androidx.compose.material3.Text("Spell Target Word")
+                }
 
                 val showResetDialog = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
                 androidx.compose.material3.Button(
