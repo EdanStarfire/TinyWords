@@ -61,6 +61,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
@@ -193,6 +194,7 @@ fun ScoreProgressBar(
 
 @Composable
 fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
+    var settingsDialogOpen by remember { mutableStateOf(false) }
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
     val bgRes = if (isLandscape) R.drawable.background_landscape else R.drawable.background_portait
@@ -227,93 +229,58 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 ImageChoicesArea(viewModel, isLandscape = isLandscape)
             }
             // Right: Options/buttons column
-            androidx.compose.foundation.layout.Box(
-                modifier = Modifier.fillMaxHeight().weight(2f)
+            GameBorder(viewModel) { settingsDialogOpen = it }
+        }
+    } else {
+        // Portrait/Default
+        val score by viewModel?.score?.collectAsState()
+            ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+        val scoreHigh by viewModel?.scoreHigh?.collectAsState()
+            ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+        androidx.compose.foundation.layout.Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+        ) {
+            // Add progress bar at the top in portrait
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
-                // Vertical options/buttons only
-                if (viewModel != null) {
-                    val feedbackState by viewModel.feedbackState.collectAsState()
-                    val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
-                    var settingsDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                    androidx.compose.foundation.layout.Column(
-                        modifier = Modifier
-                            .align(androidx.compose.ui.Alignment.CenterEnd)
-                            .fillMaxHeight(),
-                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
-                        horizontalAlignment = androidx.compose.ui.Alignment.End
-                    ) {
-                        // Options Button top
-                        androidx.compose.foundation.Image(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
-                            contentDescription = stringResource(id = R.string.button_options),
-                            modifier = Modifier
-                                .size(60.dp)
-                                .clickable {
-                                    viewModel.cancelAutoAdvanceTimer()
-                                    settingsDialogOpen = true
-                                }
-                        )
-                        // Next Button, only if correct
-                        if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-                            NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
-                        } else {
-                            Spacer(modifier = Modifier.size(80.dp))
-                        }
-                        androidx.compose.foundation.Image(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
-                            contentDescription = "Help",
-                            modifier = Modifier
-                                .size(60.dp)
-                                .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
-                                .alpha(if (isHintEnabled) 1f else 0.4f)
-                        )
-                        if (settingsDialogOpen) {
-                            SettingsDialog(
-                                currentSettings = viewModel.gameSettings.collectAsState().value,
-                                onDismiss = { settingsDialogOpen = false },
-                                onSettingsChange = { viewModel.updateSettings(it) },
-                                onResetGame = { viewModel.resetGame() }
-                            )
-                        }
-                    }
-                }
+                ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false)
+            }
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.then(Modifier.weight(2.3f)).fillMaxWidth(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            ) {
+                TargetWordArea(viewModel)
+            }
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            ) {
+                ImageChoicesArea(viewModel, isLandscape = false)
+            }
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.fillMaxHeight().weight(1.7f)
+            ) {
+                GameBorder(viewModel) { settingsDialogOpen = it }
             }
         }
-        return
     }
-    // Portrait/Default
-    val score by viewModel?.score?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
-    val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
-    androidx.compose.foundation.layout.Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
-    ) {
-        // Add progress bar at the top in portrait
-        Box(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            contentAlignment = androidx.compose.ui.Alignment.Center
-        ) {
-            ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false)
-        }
-        androidx.compose.foundation.layout.Column(
-            modifier = Modifier.then(Modifier.weight(2.3f)).fillMaxWidth(),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-        ) {
-            TargetWordArea(viewModel)
-        }
-        androidx.compose.foundation.layout.Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-        ) {
-            ImageChoicesArea(viewModel, isLandscape = false)
-        }
-        androidx.compose.foundation.layout.Column(
-            modifier = Modifier.then(Modifier.weight(1.7f)).fillMaxWidth()
-        ) {
-            GameBorder(viewModel)
-        }
+    if (settingsDialogOpen && viewModel != null) {
+        ThemedSettingsModal(
+            onDismiss = { settingsDialogOpen = false },
+            content = {
+                SettingsDialogContent(
+                    currentSettings = viewModel.gameSettings.collectAsState().value,
+                    onSettingsChange = { viewModel.updateSettings(it) },
+                    onResetGame = { viewModel.resetGame() },
+                    onDismiss = { settingsDialogOpen = false }
+                )
+            }
+        )
     }
 }
 
@@ -682,11 +649,11 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
 }
 
 @Composable
-fun SettingsDialog(
+fun SettingsDialogContent(
     currentSettings: com.edanstarfire.tinywords.ui.game.GameSettings,
-    onDismiss: () -> Unit,
     onSettingsChange: (com.edanstarfire.tinywords.ui.game.GameSettings) -> Unit,
-    onResetGame: () -> Unit
+    onResetGame: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     val autoAdvanceChoices = listOf(
         Pair(3, stringResource(id = R.string.setting_timer_3_seconds)),
@@ -702,10 +669,19 @@ fun SettingsDialog(
     var pronounceTargetAtStart by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.pronounceTargetAtStart) }
     var ttsSpeed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.ttsSpeed) }
 
-    androidx.compose.material3.AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { androidx.compose.material3.Text(text = stringResource(id = R.string.settings_title)) },
-        text = {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier
+            .verticalScroll(androidx.compose.foundation.rememberScrollState())
+            .padding(28.dp)
+            .fillMaxWidth()
+            .heightIn(max = 520.dp) // prevents infinite height crash
+    ) {
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.settings_title),
+            style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
             androidx.compose.foundation.layout.Column(
                 modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())
             ) {
@@ -769,8 +745,11 @@ fun SettingsDialog(
                     )
                 }
             }
-        },
-        confirmButton = {
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                androidx.compose.material3.Text(text = stringResource(id = R.string.button_cancel))
+            }
             androidx.compose.material3.TextButton(onClick = {
                 val newSettings = currentSettings.copy(
                     autoAdvance = autoAdvanceEnabled,
@@ -782,14 +761,10 @@ fun SettingsDialog(
                 onSettingsChange(newSettings)
                 onDismiss()
             }) { androidx.compose.material3.Text(text = stringResource(id = R.string.button_ok)) }
-        },
-        dismissButton = {
-            androidx.compose.material3.TextButton(onClick = onDismiss) {
-                androidx.compose.material3.Text(text = stringResource(id = R.string.button_cancel))
-            }
         }
-    )
+    }
 }
+
 
 @Composable
 fun NextButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
@@ -813,7 +788,7 @@ fun NextButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-fun GameBorder(viewModel: GameViewModel?) {
+fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit) {
     if (viewModel != null) {
         val streak by viewModel.streak.collectAsState()
         val score by viewModel.score.collectAsState()
@@ -822,28 +797,28 @@ fun GameBorder(viewModel: GameViewModel?) {
         val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
         val configuration = androidx.compose.ui.platform.LocalConfiguration.current
         val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
-        androidx.compose.foundation.layout.Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-        ) {
-            // +N popup above the score
-            androidx.compose.animation.AnimatedVisibility(
-                visible = (scoreDelta ?: 0) > 0,
-                modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter).padding(start = 56.dp)
+        if (!isLandscape) {
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
             ) {
-                androidx.compose.material3.Text(
-                    text = "+${scoreDelta ?: 0}",
-                    fontSize = 22.sp,
-                    color = androidx.compose.ui.graphics.Color(0xFF388E3C),
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-            }
+                // +N popup above the score
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = (scoreDelta ?: 0) > 0,
+                    modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter)
+                        .padding(start = 56.dp)
+                ) {
+                    androidx.compose.material3.Text(
+                        text = "+${scoreDelta ?: 0}",
+                        fontSize = 22.sp,
+                        color = androidx.compose.ui.graphics.Color(0xFF388E3C),
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                }
 
 
-            var settingsDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-            if (!isLandscape) {
                 androidx.compose.foundation.layout.Row(
                     modifier = Modifier
                         .align(androidx.compose.ui.Alignment.BottomCenter)
@@ -859,70 +834,143 @@ fun GameBorder(viewModel: GameViewModel?) {
                             .alpha(if (isHintEnabled) 1f else 0.4f)
                     )
                     Spacer(modifier = Modifier.then(Modifier.weight(1f)))
-if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-    NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterVertically)) { viewModel.requestNextWordManually() }
-} else {
-    Spacer(modifier = Modifier.size(80.dp))
-}
-Spacer(modifier = Modifier.then(Modifier.weight(1f)))
-                    androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
-                        contentDescription = stringResource(id = R.string.button_options),
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clickable {
-                                viewModel.cancelAutoAdvanceTimer()
-                                settingsDialogOpen = true
-                            }
-                    )
-                }
-            } else {
-                // LANDSCAPE: stack on right edge, top (options), center (next), bottom (hint)
-                androidx.compose.foundation.layout.Column(
-                    modifier = Modifier.align(androidx.compose.ui.Alignment.CenterEnd)
-                        .fillMaxHeight(),
-                    verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
-                ) {
-                    // Options Button top
-                    androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
-                        contentDescription = stringResource(id = R.string.button_options),
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clickable {
-                                viewModel.cancelAutoAdvanceTimer()
-                                settingsDialogOpen = true
-                            }
-                    )
-                    // Next Button center
                     if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-    NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
-} else {
-    Spacer(modifier = Modifier.size(80.dp))
-}
-                    // Hint Button bottom
+                        NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterVertically)) { viewModel.requestNextWordManually() }
+                    } else {
+                        Spacer(modifier = Modifier.size(80.dp))
+                    }
+                    Spacer(modifier = Modifier.then(Modifier.weight(1f)))
                     androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
-                        contentDescription = "Help",
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                        contentDescription = stringResource(id = R.string.button_options),
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
-                            .alpha(if (isHintEnabled) 1f else 0.4f)
+                            .clickable {
+                                viewModel.cancelAutoAdvanceTimer()
+                                onDialogOpenChange(true)
+                            }
                     )
                 }
             }
-            if (settingsDialogOpen) {
-                SettingsDialog(
-                    currentSettings = viewModel.gameSettings.collectAsState().value,
-                    onDismiss = { settingsDialogOpen = false },
-                    onSettingsChange = { viewModel.updateSettings(it) },
-                    onResetGame = { viewModel.resetGame() }
-                )
-            }
+        } else {
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(8.dp),
+            ) {
+                // +N popup above the score
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = (scoreDelta ?: 0) > 0,
+                    modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter).padding(start = 56.dp)
+                ) {
+                    androidx.compose.material3.Text(
+                        text = "+${scoreDelta ?: 0}",
+                        fontSize = 22.sp,
+                        color = androidx.compose.ui.graphics.Color(0xFF388E3C),
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                }
 
+                // Vertical options/buttons only
+                if (viewModel != null) {
+                    val feedbackState by viewModel.feedbackState.collectAsState()
+                    val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
+                    androidx.compose.foundation.layout.Column(
+                        modifier = Modifier
+                            .align(androidx.compose.ui.Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
+                        horizontalAlignment = androidx.compose.ui.Alignment.End
+                    ) {
+                        // Options Button top
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                            contentDescription = stringResource(id = R.string.button_options),
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clickable {
+                                    viewModel.cancelAutoAdvanceTimer()
+                                    onDialogOpenChange(true)
+                                }
+                        )
+                        // Next Button, only if correct
+                        if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
+                            NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
+                        } else {
+                            Spacer(modifier = Modifier.size(80.dp))
+                        }
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
+                            contentDescription = "Help",
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clickable(enabled = isHintEnabled) { viewModel.requestHint() }
+                                .alpha(if (isHintEnabled) 1f else 0.4f)
+                        )
                     }
+                }
+            }
+        }
     } else {
         androidx.compose.material3.Text(text = "GameBorder", modifier = Modifier.padding(16.dp))
+    }
+}
+
+@Composable
+fun ThemedSettingsModal(
+    onDismiss: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    val density = LocalDensity.current
+    val borderRadiusPx = with(density) { 32.dp.toPx() }
+    val borderWidthPx = with(density) { 7.dp.toPx() }
+    val dash = 16f
+    val gap = 10f
+    val rainbow = listOf(
+        Color.Red, Color(0xFFFD9A04), Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red
+    )
+    fun Modifier.rainbowDashedBorder() = this.then(
+        Modifier.drawWithContent {
+            val sweep = androidx.compose.ui.graphics.Brush.sweepGradient(rainbow)
+            val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dash, gap), 0f)
+            drawRoundRect(
+                brush = sweep,
+                size = size,
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(borderRadiusPx, borderRadiusPx),
+                style = Stroke(width = borderWidthPx, pathEffect = pathEffect)
+            )
+            drawContent()
+        }
+    )
+    AnimatedVisibility(
+        visible = true,
+        enter = androidx.compose.animation.fadeIn(tween(210)) +
+            androidx.compose.animation.slideInVertically(tween(350), initialOffsetY = { it / 4 }),
+        exit = androidx.compose.animation.fadeOut(tween(210)) +
+            androidx.compose.animation.slideOutVertically(tween(210), targetOffsetY = { it / 4 })
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color(0xAA000000))
+                .clickable(onClick = onDismiss, indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() })
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(32.dp)
+                    .rainbowDashedBorder()
+                    .background(
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(32.dp)
+                    )
+                    .align(androidx.compose.ui.Alignment.Center)
+                    .fillMaxWidth(0.92f)
+                    .clickable(enabled = false, indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {}
+            ) {
+                content()
+            }
+        }
     }
 }
 
