@@ -151,11 +151,20 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] No additional button is implemented; spell-out occurs via direct word tap for improved child-friendly usability.
     *   [x] This replaces the intended 'speaker icon' button and matches current product UX direction.
 
+*   **Task 4.9: Finalize Game Settings - Reskin Restart Button**
+    *   [ ] Reskin the "Restart" button and confirmation prompt to match finalized game theme/colors.
+*   **Task 4.10: Settings Modal Tabs**
+    *   [ ] Update the settings modal to have three tabs: "Game" (current settings), "Sound" (controls for background music and TTS sound/volume), and "About" (short about page).
+*   **Task 4.11: Background Music Selection**
+    *   [ ] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
+    *   [ ] Build out sound settings: master volume, music volume, speaking volume, and music selection options.
+
 ## Phase 5: Refinement & Testing
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**
-    *   [ ] Test TTS pronunciation clarity and timing across different scenarios.
+    *   [x] Test TTS pronunciation clarity and timing across different scenarios.
     *   [ ] Adjust TTS parameters (pitch, rate) if necessary for better experience.
+    *     [ ] Slow down the spelling speed - it's pretty fast right now.
     *   [ ] (Post-MVP or iterative) Consider adding subtle, non-verbal sound effects for UI interactions (button clicks, animations) if desired, to complement TTS.
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
