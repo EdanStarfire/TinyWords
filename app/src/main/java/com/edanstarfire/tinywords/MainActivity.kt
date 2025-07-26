@@ -1,11 +1,13 @@
 package com.edanstarfire.tinywords
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.width
@@ -32,7 +34,14 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -61,11 +70,33 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
+import com.edanstarfire.tinywords.ui.game.GameFeedback
+import com.edanstarfire.tinywords.ui.game.GameSettings
 import kotlin.math.roundToInt
+import kotlin.math.sin
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -93,6 +124,36 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun ConfirmButton(
+    modifier: Modifier = Modifier,
+    fillColor: Color,
+    borderColors: List<Color>,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(
+            2.dp,
+            Brush.linearGradient(
+                colors = borderColors,
+                start = Offset.Zero,
+                end = Offset.Infinite
+            )
+        ),
+        color = fillColor,
+        modifier = modifier
+    ) {
+        TextButton(
+            onClick = onClick,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
 fun ScoreProgressBar(
     score: Int,
     highScore: Int,
@@ -113,29 +174,29 @@ fun ScoreProgressBar(
         Color(0xFF2979FF), // Blue
         Color(0xFFD500F9), // Violet
     )
-    val rainbowBrushV = androidx.compose.ui.graphics.Brush.linearGradient(colors = rainbowColors, start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(0f,1000f))
-    val rainbowBrushH = androidx.compose.ui.graphics.Brush.linearGradient(colors = rainbowColors.reversed(), start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(1000f,0f))
+    val rainbowBrushV = Brush.linearGradient(colors = rainbowColors, start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(0f,1000f))
+    val rainbowBrushH = Brush.linearGradient(colors = rainbowColors.reversed(), start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(1000f,0f))
 
     if (isLandscape) {
         Box(
             modifier = modifier
                 .fillMaxHeight(0.85f)
-                .then(androidx.compose.ui.Modifier.width(32.dp)),
-            contentAlignment = androidx.compose.ui.Alignment.Center
+                .then(Modifier.width(32.dp)),
+            contentAlignment = Alignment.Center
         ) {
-            androidx.compose.foundation.Canvas(modifier = Modifier.matchParentSize()) {
+            Canvas(modifier = Modifier.matchParentSize()) {
                 // Draw light background
                 drawRoundRect(
                     color = progressBgColor,
                     size = size,
-                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx())
+                    cornerRadius = CornerRadius(12.dp.toPx(),12.dp.toPx())
                 )
                 // Draw filled progress (vertical fill, bottom up)
                 if (progress > 0f) {
                     drawRoundRect(
                         color = progressFillColor,
                         topLeft = androidx.compose.ui.geometry.Offset(0f, size.height * (1f - progress)),
-                        size = androidx.compose.ui.geometry.Size(size.width, size.height * progress),
+                        size = Size(size.width, size.height * progress),
                         cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx())
                     )
                 }
@@ -144,24 +205,24 @@ fun ScoreProgressBar(
                     brush = rainbowBrushV,
                     size = size,
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx()),
-                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
+                    style = Stroke(width = 4.dp.toPx())
                 )
             }
             Text(
                 text = "%d".format(score),
                 fontSize = 16.sp,
                 color = Color.Black,
-                modifier = Modifier.align(androidx.compose.ui.Alignment.BottomCenter).padding(top = 8.dp)
+                modifier = Modifier.align(Alignment.BottomCenter).padding(top = 8.dp)
             )
         }
     } else {
         Box(
             modifier = modifier
-                .then(androidx.compose.ui.Modifier.fillMaxWidth(0.9f))
-                .then(androidx.compose.ui.Modifier.height(30.dp)),
-            contentAlignment = androidx.compose.ui.Alignment.Center
+                .then(Modifier.fillMaxWidth(0.9f))
+                .then(Modifier.height(30.dp)),
+            contentAlignment = Alignment.Center
         ) {
-            androidx.compose.foundation.Canvas(modifier = Modifier.matchParentSize()) {
+            Canvas(modifier = Modifier.matchParentSize()) {
                 // Draw light background
                 drawRoundRect(
                     color = progressBgColor,
@@ -181,14 +242,14 @@ fun ScoreProgressBar(
                     brush = rainbowBrushH,
                     size = size,
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx(),12.dp.toPx()),
-                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
+                    style = Stroke(width = 4.dp.toPx())
                 )
             }
             Text(
                 text = "%d".format(score),
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = Modifier.align(androidx.compose.ui.Alignment.CenterStart).padding(start = 12.dp)
+                modifier = Modifier.align(Alignment.CenterStart).padding(start = 12.dp)
             )
         }
     }
@@ -197,34 +258,35 @@ fun ScoreProgressBar(
 @Composable
 fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
     var settingsDialogOpen by rememberSaveable { mutableStateOf(false) }
-    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
-    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val bgRes = if (isLandscape) R.drawable.background_landscape else R.drawable.background_portait
-    androidx.compose.foundation.Image(
-        painter = androidx.compose.ui.res.painterResource(id = bgRes),
+    Image(
+        painter = painterResource(id = bgRes),
         contentDescription = null,
         modifier = Modifier.fillMaxSize(),
-        contentScale = androidx.compose.ui.layout.ContentScale.Crop
+        contentScale = ContentScale.Crop
     )
     if (isLandscape) {
-        val score by viewModel?.score?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
-        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
-        androidx.compose.foundation.layout.Row(
+        val score by viewModel?.score?.collectAsState() ?: remember { mutableStateOf(0) }
+        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: remember { mutableStateOf(0) }
+        Row(
             modifier = modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 2.dp),
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // Left: Score only
-            androidx.compose.foundation.layout.Box(
+            Box(
                 modifier = Modifier.fillMaxHeight().weight(2f),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
-                ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = true, modifier = Modifier.align(androidx.compose.ui.Alignment.Center))
+                ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = true, modifier = Modifier.align(
+                    Alignment.Center))
             }
             // Center: Target above choices
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier.fillMaxHeight().weight(6f),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
-                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TargetWordArea(viewModel)
                 if (!isLandscape) Spacer(modifier = Modifier.height(24.dp))
@@ -236,35 +298,35 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
     } else {
         // Portrait/Default
         val score by viewModel?.score?.collectAsState()
-            ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+            ?: remember { mutableStateOf(0) }
         val scoreHigh by viewModel?.scoreHigh?.collectAsState()
-            ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
-        androidx.compose.foundation.layout.Column(
+            ?: remember { mutableStateOf(0) }
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(8.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             // Add progress bar at the top in portrait
             Box(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false)
             }
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier.then(Modifier.weight(2.3f)).fillMaxWidth(),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                verticalArrangement = Arrangement.Center
             ) {
                 TargetWordArea(viewModel)
             }
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                verticalArrangement = Arrangement.Center
             ) {
                 ImageChoicesArea(viewModel, isLandscape = false)
             }
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier.fillMaxHeight().weight(1.7f)
             ) {
                 GameBorder(viewModel) { settingsDialogOpen = it }
@@ -303,36 +365,36 @@ fun TargetWordArea(viewModel: GameViewModel?) {
             }
         } else null
 
-        androidx.compose.runtime.LaunchedEffect(target, gameSettings.pronounceTargetAtStart) {
+        LaunchedEffect(target, gameSettings.pronounceTargetAtStart) {
             if (target != null && gameSettings.pronounceTargetAtStart) {
                 viewModel.pronounceWord(target, asTargetWord = true)
             }
         }
-        androidx.compose.foundation.layout.Box(
+        Box(
             modifier = Modifier.fillMaxWidth(),
-            contentAlignment = androidx.compose.ui.Alignment.Center
+            contentAlignment = Alignment.Center
         ) {
             if (target != null) {
-                androidx.compose.material3.Text(
+                Text(
                     text = buildAnnotatedString {
                         target.forEachIndexed { i, c ->
                             if (i == differingIndex) {
-                                withStyle(androidx.compose.ui.text.SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF388E3C))) { append(c) }
+                                withStyle(SpanStyle(color = Color(0xFF388E3C))) { append(c) }
                             } else append(c)
                         }
                     },
                     fontSize = 115.sp,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .padding(if (androidx.compose.ui.platform.LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) 0.dp else 16.dp)
+                        .padding(if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.dp else 16.dp)
                         .clickable { viewModel.pronounceWord(target, asTargetWord = true) }
                 )
             } else {
-                androidx.compose.material3.Text(text = "…", modifier = Modifier.padding(16.dp))
+                Text(text = "…", modifier = Modifier.padding(16.dp))
             }
         }
     } else {
-        androidx.compose.material3.Text(text = "TargetWordArea", modifier = Modifier.padding(16.dp))
+        Text(text = "TargetWordArea", modifier = Modifier.padding(16.dp))
     }
 }
 
@@ -349,13 +411,13 @@ fun ImageChoice(
     onClick: () -> Unit
 ) {
     val alpha = if (isDisabled) 0.4f else 1f
-    val density = androidx.compose.ui.platform.LocalDensity.current
+    val density = LocalDensity.current
     val borderRadiusPx = with(density) { 20.dp.toPx() }
     val borderWidthPx = with(density) { 5.dp.toPx() }
     val borderColor = when {
-        isSelected && isCorrect -> androidx.compose.ui.graphics.Color(0xFF388E3C)
-        isSelected && !isCorrect -> androidx.compose.ui.graphics.Color(0xFFD32F2F)
-        else -> androidx.compose.ui.graphics.Color.LightGray
+        isSelected && isCorrect -> Color(0xFF388E3C)
+        isSelected && !isCorrect -> Color(0xFFD32F2F)
+        else -> Color.LightGray
     }
     // --- Animation: Shake on new incorrect tap ---
     var shakeTrigger by remember { mutableStateOf(0) }
@@ -365,7 +427,7 @@ fun ImageChoice(
         animationSpec = tween(durationMillis = 500),
         label = "Shake"
     )
-    androidx.compose.material3.Surface(
+    Surface(
         shape = RoundedCornerShape(20.dp),
         border = androidx.compose.foundation.BorderStroke(5.dp, borderColor),
         tonalElevation = 2.dp,
@@ -380,7 +442,7 @@ fun ImageChoice(
             .alpha(alpha)
             .graphicsLayer {
                 if (animatedShake.value > shakeTrigger - 1) {
-                    translationX = (kotlin.math.sin(animatedShake.value * 6 * Math.PI) * shakeOffset).toFloat()
+                    translationX = (sin(animatedShake.value * 6 * Math.PI) * shakeOffset).toFloat()
                 }
             }
             .drawWithContent {
@@ -394,19 +456,19 @@ fun ImageChoice(
                 drawContent()
             },
     ) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(vertical = 8.dp),
-            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            androidx.compose.foundation.layout.Box(
+            Box(
                 modifier = Modifier
                     .padding(start = 12.dp, end = 12.dp, top = 12.dp)
                     .fillMaxWidth()
                     .aspectRatio(1f),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 if (res != 0) {
-                    val painter = androidx.compose.ui.res.painterResource(id = res)
+                    val painter = painterResource(id = res)
                     Image(
                         painter = painter,
                         contentDescription = word,
@@ -418,12 +480,12 @@ fun ImageChoice(
                 }
                 // --- Correct/checkmark/try again overlay icons ---
                 if (isSelected && isCorrect) {
-                    androidx.compose.animation.AnimatedVisibility(true) {
-                        androidx.compose.foundation.layout.Box(
+                    this@Column.AnimatedVisibility(true) {
+                        Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = androidx.compose.ui.Alignment.TopEnd
+                            contentAlignment = Alignment.TopEnd
                         ) {
-                            val checkMark = androidx.compose.ui.res.painterResource(id = com.edanstarfire.tinywords.R.drawable.correct_icon)
+                            val checkMark = painterResource(id = R.drawable.correct_icon)
                             Image(
                                 painter = checkMark,
                                 contentDescription = "Correct",
@@ -433,12 +495,12 @@ fun ImageChoice(
                         }
                     }
                 } else if (isSelected && !isCorrect) {
-                    androidx.compose.animation.AnimatedVisibility(true) {
-                        androidx.compose.foundation.layout.Box(
+                    this@Column.AnimatedVisibility(true) {
+                        Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = androidx.compose.ui.Alignment.TopEnd
+                            contentAlignment = Alignment.TopEnd
                         ) {
-                            val tryAgainIcon = androidx.compose.ui.res.painterResource(id = com.edanstarfire.tinywords.R.drawable.try_again_icon)
+                            val tryAgainIcon = painterResource(id = R.drawable.try_again_icon)
                             Image(
                                 painter = tryAgainIcon,
                                 contentDescription = "Try Again",
@@ -449,11 +511,11 @@ fun ImageChoice(
                     }
                 }
             }
-            androidx.compose.material3.Text(
+            Text(
                 text = if (showWordBelow) buildAnnotatedString {
                     word.forEachIndexed { i, c ->
                         if (i == differingIndex) {
-                            withStyle(androidx.compose.ui.text.SpanStyle(color = if (isCorrect) androidx.compose.ui.graphics.Color(0xFF388E3C) else androidx.compose.ui.graphics.Color(0xFFD32F2F))) {
+                            withStyle(SpanStyle(color = if (isCorrect) Color(0xFF388E3C) else Color(0xFFD32F2F))) {
                                 append(c)
                             }
                         } else append(c)
@@ -474,21 +536,21 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
         val currentChallenge = currentChallengeState
         val feedbackState by viewModel.feedbackState.collectAsState()
         val chosenWord: String? = when (feedbackState) {
-            is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct -> (feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Correct).chosenWord
-            is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect -> (feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord
+            is GameFeedback.Correct -> (feedbackState as GameFeedback.Correct).chosenWord
+            is GameFeedback.Incorrect -> (feedbackState as GameFeedback.Incorrect).chosenWord
             else -> null
         }
         val disabledWords by viewModel.disabledWords.collectAsState()
         if (currentChallenge != null) {
             // 2x1 layout: first two centered across, third below
             if (isLandscape) {
-        val score by viewModel?.score?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
-        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+        val score by viewModel?.score?.collectAsState() ?: remember { mutableStateOf(0) }
+        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: remember { mutableStateOf(0) }
 
-                androidx.compose.foundation.layout.Row(
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                Row(
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    data class ImageChoiceData(val word: String, @androidx.annotation.DrawableRes val res: Int)
+                    data class ImageChoiceData(val word: String, @DrawableRes val res: Int)
                     val all = listOf(
                         ImageChoiceData(currentChallenge.correctImageWord, currentChallenge.correctImageRes),
                         ImageChoiceData(currentChallenge.incorrectImageWord1, currentChallenge.incorrectImageRes1),
@@ -496,7 +558,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     )
                     val items = currentChallenge.choiceOrder.map { all[it] }
                     for (item in items) {
-                        androidx.compose.foundation.layout.Box(
+                        Box(
                             modifier = Modifier.then(Modifier.weight(1f)).padding(8.dp)
                         ) {
                             ImageChoice(
@@ -504,14 +566,14 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                 res = item.res,
                                 enabled = true,
                                 isCorrect = item.word == currentChallenge.correctImageWord,
-                                isSelected = (chosenWord == item.word) || (disabledWords.contains(item.word) && item.word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
-                                isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(item.word) && chosenWord != currentChallenge.correctImageWord,
+                                isSelected = (chosenWord == item.word) || (disabledWords.contains(item.word) && item.word != currentChallenge.correctImageWord && feedbackState !is GameFeedback.None),
+                                isDisabled = if (feedbackState is GameFeedback.Correct) false else disabledWords.contains(item.word) && chosenWord != currentChallenge.correctImageWord,
                                 showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
                                     (item.word in disabledWords) ||
-                                    (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
+                                    (feedbackState is GameFeedback.Correct),
                                 differingIndex = if (
-                                    feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
-                                    (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == item.word)) ||
+                                    feedbackState is GameFeedback.Correct ||
+                                    (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
                                     (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(item.word))
                                 ) {
                                     val tgt = currentChallenge.targetWord
@@ -527,13 +589,13 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                         }
                     }
                 }
-            } else androidx.compose.foundation.layout.Column(
+            } else Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 data class ImageChoiceData(
                     val word: String,
-                    @androidx.annotation.DrawableRes val res: Int
+                    @DrawableRes val res: Int
                 )
 
                 val all = listOf(
@@ -551,14 +613,14 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     )
                 )
                 val items = currentChallenge.choiceOrder.map { all[it] }
-                androidx.compose.foundation.layout.Row(
+                Row(
                     Modifier.fillMaxWidth(),
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     for (i in 0..1) {
                         if (i < items.size) {
                             val item = items[i]
-                            androidx.compose.foundation.layout.Box(
+                            Box(
                                 modifier = Modifier.then(Modifier.weight(1f)).padding(8.dp)
                             ) {
                                 ImageChoice(
@@ -568,16 +630,16 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                     isCorrect = item.word == currentChallenge.correctImageWord,
                                     isSelected = (chosenWord == item.word) || (disabledWords.contains(
                                         item.word
-                                    ) && item.word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
-                                    isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(
+                                    ) && item.word != currentChallenge.correctImageWord && feedbackState !is GameFeedback.None),
+                                    isDisabled = if (feedbackState is GameFeedback.Correct) false else disabledWords.contains(
                                         item.word
                                     ) && chosenWord != currentChallenge.correctImageWord,
                                     showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
                                             (item.word in disabledWords) ||
-                                            (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
+                                            (feedbackState is GameFeedback.Correct),
                                     differingIndex = if (
-                                        feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
-                                        (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == item.word)) ||
+                                        feedbackState is GameFeedback.Correct ||
+                                        (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
                                         (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(
                                             item.word
                                         ))
@@ -597,12 +659,12 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     }
                 }
                 if (items.size > 2) {
-                    androidx.compose.foundation.layout.Row(
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(0.5f))
-                        androidx.compose.foundation.layout.Box(
+                        Spacer(modifier = Modifier.weight(0.5f))
+                        Box(
                             modifier = Modifier.then(Modifier.weight(1f))
                                 .padding(top = 24.dp, start = 8.dp, end = 8.dp)
                         ) {
@@ -614,16 +676,16 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                 isCorrect = item.word == currentChallenge.correctImageWord,
                                 isSelected = (chosenWord == item.word) || (disabledWords.contains(
                                     item.word
-                                ) && item.word != currentChallenge.correctImageWord && feedbackState !is com.edanstarfire.tinywords.ui.game.GameFeedback.None),
-                                isDisabled = if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) false else disabledWords.contains(
+                                ) && item.word != currentChallenge.correctImageWord && feedbackState !is GameFeedback.None),
+                                isDisabled = if (feedbackState is GameFeedback.Correct) false else disabledWords.contains(
                                     item.word
                                 ) && chosenWord != currentChallenge.correctImageWord,
                                 showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
                                         (item.word in disabledWords) ||
-                                        (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct),
+                                        (feedbackState is GameFeedback.Correct),
                                 differingIndex = if (
-                                    feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct ||
-                                    (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect && ((feedbackState as com.edanstarfire.tinywords.ui.game.GameFeedback.Incorrect).chosenWord == item.word)) ||
+                                    feedbackState is GameFeedback.Correct ||
+                                    (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
                                     (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(
                                         item.word
                                     ))
@@ -639,7 +701,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                 onClick = { viewModel.processPlayerChoice(item.word) }
                             )
                         }
-                        androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(0.5f))
+                        Spacer(modifier = Modifier.weight(0.5f))
 
                     }
                 }
@@ -653,8 +715,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialogContent(
-    currentSettings: com.edanstarfire.tinywords.ui.game.GameSettings,
-    onSettingsChange: (com.edanstarfire.tinywords.ui.game.GameSettings) -> Unit,
+    currentSettings: GameSettings,
+    onSettingsChange: (GameSettings) -> Unit,
     onResetGame: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -671,116 +733,232 @@ fun SettingsDialogContent(
     val pronounceTargetAtStart = currentSettings.pronounceTargetAtStart
     val ttsSpeed = currentSettings.ttsSpeed
 
-    androidx.compose.foundation.layout.Column(
+    Column(
         modifier = Modifier
-            .verticalScroll(androidx.compose.foundation.rememberScrollState())
-            .padding(28.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(0.dp)
             .fillMaxWidth()
             .heightIn(max = 520.dp) // prevents infinite height crash
     ) {
-        androidx.compose.material3.Text(
-            text = stringResource(id = R.string.settings_title),
-            style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
+        var selectedTab by remember { mutableStateOf(0) }
+        val tabTitles = listOf("Game", "Sound", "About")
+        val tabAccentBgColors = listOf(
+            Color(0x22FF69B4), // Game - light pink
+            Color(0x223D90FF), // Sound - light blue
+            Color(0x22B566F8)  // About - light purple
         )
-
-            androidx.compose.foundation.layout.Column(
-                modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())
-            ) {
-                val timerOptions = listOf(0, 3, 5, 8, 15, 30)
-                val timerLabels = listOf("Off", "3", "5", "8", "15", "30")
-                val timerIndex = timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }.coerceAtLeast(0)
-                androidx.compose.material3.Text("Auto-Advance Timer " + if (timerOptions[timerIndex]==0) "(Off)" else "(${timerOptions[timerIndex]}s)", modifier = Modifier.padding(bottom = 2.dp, top = 0.dp, start = 0.dp, end = 0.dp))
-                androidx.compose.foundation.layout.Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
-                    androidx.compose.material3.Slider(
-                        value = timerIndex.toFloat(),
-                        onValueChange = {
-                            val index = it.roundToInt()
-                            val newVal = timerOptions[index]
-                            val newSettings = currentSettings.copy(
-                                autoAdvance = newVal != 0,
-                                autoAdvanceIntervalSeconds = if (newVal == 0) 0 else newVal
-                            )
-                            onSettingsChange(newSettings)
-                        },
-                        steps = timerOptions.size - 2,
-                        valueRange = 0f..(timerOptions.size - 1).toFloat(),
-                        modifier = Modifier.fillMaxWidth().height(18.dp),
-                        enabled = true,
-                        colors = androidx.compose.material3.SliderDefaults.colors(
-                            activeTrackColor = androidx.compose.ui.graphics.Color(0xFFFF69B4),
-                            inactiveTrackColor = androidx.compose.ui.graphics.Color.LightGray,
-                            thumbColor = androidx.compose.ui.graphics.Color(0xFFFF69B4),
-                            activeTickColor = androidx.compose.ui.graphics.Color.Transparent,
-                            inactiveTickColor = androidx.compose.ui.graphics.Color.Transparent
+        Row(
+            Modifier.fillMaxWidth().height(48.dp),
+        ) {
+            tabTitles.forEachIndexed { idx, title ->
+                val selected = idx == selectedTab
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable { selectedTab = idx }
+                        .background(
+                            if (selected) Color(0x22FF69B4) else Color.Transparent,
+                            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
                         ),
-                        track = { sliderState ->
-                            androidx.compose.material3.SliderDefaults.Track(
-                                sliderState = sliderState,
-                                thumbTrackGapSize = 0.dp
-                            )
-                        }
-                    )
-                }
-                androidx.compose.foundation.layout.Row(
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                    modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                    contentAlignment = Alignment.Center
                 ) {
-                    androidx.compose.material3.Checkbox(
-                        checked = alwaysShowWords,
-                        onCheckedChange = { onSettingsChange(currentSettings.copy(alwaysShowWords = it)) },
-                        colors = androidx.compose.material3.CheckboxDefaults.colors(
-                            checkedColor = androidx.compose.ui.graphics.Color(0xFFFF69B4), // pink
-                            checkmarkColor = androidx.compose.ui.graphics.Color.White
-                        ),
-                        modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                    Text(
+                        title,
+                        color = if (selected) Color(0xFFFF69B4) else Color.Black,
+                        fontWeight = if (selected) FontWeight.Bold else null
                     )
-                    androidx.compose.material3.Text("Always Show Words")
-                }
-                androidx.compose.foundation.layout.Row(
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                    modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
-                ) {
-                    androidx.compose.material3.Checkbox(
-                        checked = pronounceTargetAtStart,
-                        onCheckedChange = { onSettingsChange(currentSettings.copy(pronounceTargetAtStart = it)) },
-                        colors = androidx.compose.material3.CheckboxDefaults.colors(
-                            checkedColor = androidx.compose.ui.graphics.Color(0xFFFF69B4), // pink fallback
-                            checkmarkColor = androidx.compose.ui.graphics.Color.White
-                        ),
-                        modifier = Modifier.size(18.dp).padding(end = 8.dp)
-                    )
-                    androidx.compose.material3.Text("Spell Target Word")
-                }
-
-                val showResetDialog = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                androidx.compose.material3.Button(
-                    onClick = { showResetDialog.value = true },
-                    modifier = Modifier.padding(top = 32.dp)
-                ) {
-                    androidx.compose.material3.Text(stringResource(id = R.string.button_restart))
-                }
-                if (showResetDialog.value) {
-                    androidx.compose.material3.AlertDialog(
-                        onDismissRequest = { showResetDialog.value = false },
-                        title = { androidx.compose.material3.Text(stringResource(id = R.string.dialog_restart_title)) },
-                        text = { androidx.compose.material3.Text(stringResource(id = R.string.dialog_restart_message)) },
-                        confirmButton = {
-                            androidx.compose.material3.TextButton(onClick = {
-                                showResetDialog.value = false
-                                onResetGame()
-                            }) {
-                                androidx.compose.material3.Text(stringResource(id = R.string.button_restart))
-                            }
-                        },
-                        dismissButton = {
-                            androidx.compose.material3.TextButton(onClick = { showResetDialog.value = false }) {
-                                androidx.compose.material3.Text(stringResource(id = R.string.button_cancel))
-                            }
-                        }
-                    )
+                    if (selected) {
+                        Box(
+                            Modifier.align(Alignment.BottomCenter).height(4.dp).fillMaxWidth()
+                                .background(Color(0xFFFF69B4), RoundedCornerShape(2.dp))
+                        )
+                    }
                 }
             }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(tabAccentBgColors[selectedTab])
+        ) {
+            when (selectedTab) {
+                0 -> Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
+                ) {
+                    val timerOptions = listOf(0, 3, 5, 8, 15, 30)
+                    val timerLabels = listOf("Off", "3", "5", "8", "15", "30")
+                    val timerIndex =
+                        timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }
+                            .coerceAtLeast(0)
+                    Text(
+                        "Auto-Advance Timer " + if (timerOptions[timerIndex] == 0) "(Off)" else "(${timerOptions[timerIndex]}s)",
+                        modifier = Modifier.padding(
+                            bottom = 2.dp,
+                            top = 0.dp,
+                            start = 0.dp,
+                            end = 0.dp
+                        )
+                    )
+                    Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
+                        Slider(
+                            value = timerIndex.toFloat(),
+                            onValueChange = {
+                                val index = it.roundToInt()
+                                val newVal = timerOptions[index]
+                                val newSettings = currentSettings.copy(
+                                    autoAdvance = newVal != 0,
+                                    autoAdvanceIntervalSeconds = if (newVal == 0) 0 else newVal
+                                )
+                                onSettingsChange(newSettings)
+                            },
+                            steps = timerOptions.size - 2,
+                            valueRange = 0f..(timerOptions.size - 1).toFloat(),
+                            modifier = Modifier.fillMaxWidth().height(18.dp),
+                            enabled = true,
+                            colors = SliderDefaults.colors(
+                                activeTrackColor = Color(0xFFFF69B4),
+                                inactiveTrackColor = Color.LightGray,
+                                thumbColor = Color(0xFFFF69B4),
+                                activeTickColor = Color.Transparent,
+                                inactiveTickColor = Color.Transparent
+                            ),
+                            track = { sliderState ->
+                                SliderDefaults.Track(
+                                    sliderState = sliderState,
+                                    thumbTrackGapSize = 0.dp
+                                )
+                            }
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                    ) {
+                        Checkbox(
+                            checked = alwaysShowWords,
+                            onCheckedChange = {
+                                onSettingsChange(
+                                    currentSettings.copy(
+                                        alwaysShowWords = it
+                                    )
+                                )
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color(0xFFFF69B4), // pink
+                                checkmarkColor = Color.White
+                            ),
+                            modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                        )
+                        Text("Always Show Words")
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                    ) {
+                        Checkbox(
+                            checked = pronounceTargetAtStart,
+                            onCheckedChange = {
+                                onSettingsChange(
+                                    currentSettings.copy(
+                                        pronounceTargetAtStart = it
+                                    )
+                                )
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color(0xFFFF69B4), // pink fallback
+                                checkmarkColor = Color.White
+                            ),
+                            modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                        )
+                        Text("Spell Target Word")
+                    }
+
+                    var showResetConfirm by remember { mutableStateOf(false) }
+                    Box(Modifier.fillMaxWidth()) {
+                        val confirmPink = Color(0xFFFF69B4)
+                        val rainbowBorder = listOf(
+                            Color(0xFFFF1744),
+                            Color(0xFFFFEA00),
+                            Color(0xFF00E676),
+                            Color(0xFF2979FF),
+                            Color(0xFFD500F9)
+                        )
+                        if (!showResetConfirm) {
+                            ConfirmButton(
+                                fillColor = confirmPink,
+                                borderColors = rainbowBorder,
+                                modifier = Modifier.padding(top = 32.dp)
+                                    .align(Alignment.Center),
+                                onClick = { showResetConfirm = true },
+                            ) {
+                                Text(
+                                    "Reset Scores",
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        } else {
+                            Column(
+                                Modifier.padding(top = 32.dp).align(Alignment.Center),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    stringResource(id = R.string.dialog_restart_message),
+                                    modifier = Modifier.padding(bottom = 16.dp)
+                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxWidth(0.7f)
+                                ) {
+                                    ConfirmButton(
+                                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                                            .height(46.dp),
+                                        fillColor = confirmPink,
+                                        borderColors = rainbowBorder,
+                                        onClick = {
+                                            showResetConfirm = false
+                                            onResetGame()
+                                        }
+                                    ) {
+                                        Text(
+                                            stringResource(id = R.string.button_yes),
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    ConfirmButton(
+                                        modifier = Modifier.weight(1f).height(46.dp),
+                                        fillColor = Color(0xFFF3F3F3),
+                                        borderColors = rainbowBorder,
+                                        onClick = { showResetConfirm = false }
+                                    ) {
+                                        Text(
+                                            "No",
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                1 -> Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
+                ) {
+                    Text("Sound settings...", Modifier.padding(8.dp))
+                }
+
+                2 -> Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
+                ) {
+                    Text("About content...", Modifier.padding(8.dp))
+                }
+            }
+        }
     }
 }
 
@@ -796,8 +974,8 @@ fun NextButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
             repeatMode = RepeatMode.Reverse
         ), label = "PulseNextBtn"
     )
-    androidx.compose.foundation.Image(
-        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_next),
+    Image(
+        painter = painterResource(id = R.drawable.btn_next),
         contentDescription = "Next Word",
         modifier = modifier
             .size(80.dp)
@@ -814,38 +992,38 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
         val scoreDelta by viewModel.scoreDelta.collectAsState()
         val feedbackState by viewModel.feedbackState.collectAsState()
         val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
-        val configuration = androidx.compose.ui.platform.LocalConfiguration.current
-        val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         if (!isLandscape) {
-            androidx.compose.foundation.layout.Box(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp),
             ) {
                 // +N popup above the score
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = (scoreDelta ?: 0) > 0,
-                    modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter)
                         .padding(start = 56.dp)
                 ) {
-                    androidx.compose.material3.Text(
+                    Text(
                         text = "+${scoreDelta ?: 0}",
                         fontSize = 22.sp,
-                        color = androidx.compose.ui.graphics.Color(0xFF388E3C),
+                        color = Color(0xFF388E3C),
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                     )
                 }
 
 
-                androidx.compose.foundation.layout.Row(
+                Row(
                     modifier = Modifier
-                        .align(androidx.compose.ui.Alignment.BottomCenter)
+                        .align(Alignment.BottomCenter)
                         .fillMaxWidth(),
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
+                    Image(
+                        painter = painterResource(id = R.drawable.btn_hint),
                         contentDescription = "Help",
                         modifier = Modifier
                             .size(60.dp)
@@ -853,14 +1031,14 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                             .alpha(if (isHintEnabled) 1f else 0.4f)
                     )
                     Spacer(modifier = Modifier.then(Modifier.weight(1f)))
-                    if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-                        NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterVertically)) { viewModel.requestNextWordManually() }
+                    if (feedbackState is GameFeedback.Correct) {
+                        NextButton(modifier = Modifier.align(Alignment.CenterVertically)) { viewModel.requestNextWordManually() }
                     } else {
                         Spacer(modifier = Modifier.size(80.dp))
                     }
                     Spacer(modifier = Modifier.then(Modifier.weight(1f)))
-                    androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                    Image(
+                        painter = painterResource(id = R.drawable.btn_options),
                         contentDescription = stringResource(id = R.string.button_options),
                         modifier = Modifier
                             .size(60.dp)
@@ -872,20 +1050,20 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                 }
             }
         } else {
-            androidx.compose.foundation.layout.Box(
+            Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(8.dp),
             ) {
                 // +N popup above the score
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = (scoreDelta ?: 0) > 0,
-                    modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter).padding(start = 56.dp)
+                    modifier = Modifier.align(Alignment.TopCenter).padding(start = 56.dp)
                 ) {
-                    androidx.compose.material3.Text(
+                    Text(
                         text = "+${scoreDelta ?: 0}",
                         fontSize = 22.sp,
-                        color = androidx.compose.ui.graphics.Color(0xFF388E3C),
+                        color = Color(0xFF388E3C),
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                     )
@@ -895,16 +1073,16 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                 if (viewModel != null) {
                     val feedbackState by viewModel.feedbackState.collectAsState()
                     val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
-                    androidx.compose.foundation.layout.Column(
+                    Column(
                         modifier = Modifier
-                            .align(androidx.compose.ui.Alignment.CenterEnd)
+                            .align(Alignment.CenterEnd)
                             .fillMaxHeight(),
-                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
-                        horizontalAlignment = androidx.compose.ui.Alignment.End
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.End
                     ) {
                         // Options Button top
-                        androidx.compose.foundation.Image(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_options),
+                        Image(
+                            painter = painterResource(id = R.drawable.btn_options),
                             contentDescription = stringResource(id = R.string.button_options),
                             modifier = Modifier
                                 .size(60.dp)
@@ -914,13 +1092,13 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                                 }
                         )
                         // Next Button, only if correct
-                        if (feedbackState is com.edanstarfire.tinywords.ui.game.GameFeedback.Correct) {
-                            NextButton(modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
+                        if (feedbackState is GameFeedback.Correct) {
+                            NextButton(modifier = Modifier.align(Alignment.CenterHorizontally)) { viewModel.requestNextWordManually() }
                         } else {
                             Spacer(modifier = Modifier.size(80.dp))
                         }
-                        androidx.compose.foundation.Image(
-                            painter = androidx.compose.ui.res.painterResource(id = R.drawable.btn_hint),
+                        Image(
+                            painter = painterResource(id = R.drawable.btn_hint),
                             contentDescription = "Help",
                             modifier = Modifier
                                 .size(60.dp)
@@ -932,7 +1110,7 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
             }
         }
     } else {
-        androidx.compose.material3.Text(text = "GameBorder", modifier = Modifier.padding(16.dp))
+        Text(text = "GameBorder", modifier = Modifier.padding(16.dp))
     }
 }
 
@@ -951,7 +1129,7 @@ fun ThemedSettingsModal(
     )
     fun Modifier.rainbowDashedBorder() = this.then(
         Modifier.drawWithContent {
-            val sweep = androidx.compose.ui.graphics.Brush.sweepGradient(rainbow)
+            val sweep = Brush.sweepGradient(rainbow)
             val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dash, gap), 0f)
             drawRoundRect(
                 brush = sweep,
@@ -964,28 +1142,28 @@ fun ThemedSettingsModal(
     )
     AnimatedVisibility(
         visible = true,
-        enter = androidx.compose.animation.fadeIn(tween(210)) +
-            androidx.compose.animation.slideInVertically(tween(350), initialOffsetY = { it / 4 }),
-        exit = androidx.compose.animation.fadeOut(tween(210)) +
-            androidx.compose.animation.slideOutVertically(tween(210), targetOffsetY = { it / 4 })
+        enter = fadeIn(tween(210)) +
+                slideInVertically(tween(350), initialOffsetY = { it / 4 }),
+        exit = fadeOut(tween(210)) +
+                slideOutVertically(tween(210), targetOffsetY = { it / 4 })
     ) {
         Box(
             Modifier
                 .fillMaxSize()
                 .background(Color(0xAA000000))
-                .clickable(onClick = onDismiss, indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() })
+                .clickable(onClick = onDismiss, indication = null, interactionSource = remember { MutableInteractionSource() })
         ) {
             Box(
                 modifier = Modifier
-                    .padding(32.dp)
+                    .fillMaxWidth(0.8f)
+                    .fillMaxHeight(0.8f)
+                    .align(Alignment.Center)
                     .rainbowDashedBorder()
                     .background(
-                        color = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(32.dp)
                     )
-                    .align(androidx.compose.ui.Alignment.Center)
-                    .fillMaxWidth(0.92f)
-                    .clickable(enabled = false, indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {}
+                    .clickable(enabled = false, indication = null, interactionSource = remember { MutableInteractionSource() }) {}
             ) {
                 content()
             }

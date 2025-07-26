@@ -11,7 +11,7 @@
     <string name="word_bar">BAR</string>
 
     <!-- Button Labels -->
-    <string name="button_restart">Restart</string>
+    <string name="button_restart">Reset Scores</string>
     <string name="button_help">Help</string>
     <string name="button_options">Options</string>
     <string name="button_next_word">Next Word</string>
@@ -24,8 +24,7 @@
     <string name="feedback_correct">Correct!</string>
     <string name="feedback_try_again">Try Again</string>
     <string name="dialog_restart_title">Restart Game</string>
-    <string name="dialog_restart_message">Are you sure you want to restart the current game?
-    </string>
+    <string name="dialog_restart_message">Are you sure you want to reset the high scores?</string>
     <string name="label_streak_counter">Streak: %1$d</string> <!-- Example for formatted string -->
 
     <!-- Settings Screen/Dialog -->

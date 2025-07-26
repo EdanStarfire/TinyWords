@@ -152,9 +152,12 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] This replaces the intended 'speaker icon' button and matches current product UX direction.
 
 *   **Task 4.9: Finalize Game Settings - Reskin Restart Button**
-    *   [ ] Reskin the "Restart" button and confirmation prompt to match finalized game theme/colors. (Instant-apply settings work; only this remains for settings area)
+    *   [x] Settings modal now uses tabbed layout (Game/Sound/About), tab bar is full-width, with current tab indicator and selectable header.
+    *   [x] Game settings now properly padded and scoped to 'Game' tab only (future Sound/About planned).
+    *   [x] Restart/reset confirmation prompt is fully reskinned: message changed, 'Reset Scores' button, themed rainbow Yes/No dialog, visually matches app theme for confirmation.
+    *   [ / ] The 'Reset Scores' action button & tab underline still need full final skinning: distinct tab underline color for each (Game: pink, Sound: blue, About: purple), unselected tabs lightly colored underline, section backgrounds to match. In progress, UI almost complete.
 *   **Task 4.10: Settings Modal Tabs**
-    *   [ ] Update the settings modal to have three tabs: "Game" (current settings), "Sound" (controls for background music and TTS sound/volume), and "About" (short about page).
+    *   [x] Three settings modal tabs ('Game', 'Sound', 'About') added atop modal with correct tab indicator, evenly divided header. Game tab is functional; Sound/About content blocks scaffolded and tab coloring/refinement in progress for polish.
 *   **Task 4.11: Background Music Selection**
     *   [ ] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [ ] Build out sound settings: master volume, music volume, speaking volume, and music selection options.
