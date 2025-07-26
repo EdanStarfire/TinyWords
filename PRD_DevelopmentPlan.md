@@ -152,7 +152,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] This replaces the intended 'speaker icon' button and matches current product UX direction.
 
 *   **Task 4.9: Finalize Game Settings - Reskin Restart Button**
-    *   [ ] Reskin the "Restart" button and confirmation prompt to match finalized game theme/colors.
+    *   [ ] Reskin the "Restart" button and confirmation prompt to match finalized game theme/colors. (Instant-apply settings work; only this remains for settings area)
 *   **Task 4.10: Settings Modal Tabs**
     *   [ ] Update the settings modal to have three tabs: "Game" (current settings), "Sound" (controls for background music and TTS sound/volume), and "About" (short about page).
 *   **Task 4.11: Background Music Selection**
@@ -169,7 +169,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
     *   [x] Improve default font for child readability and letterform distinction (e.g. Comic Neue Bold—clearer I/l differentiation)
-    *   [ ] Settings toggles update UI/game immediately as toggled (make idempotent and live, not on OK only, from 3.7)
+    *   [x] Settings toggles update UI/game immediately as toggled (idempotent and fully live; all toggles/sliders now update instantly, dialog no longer has OK/Cancel).
     *   [x] All main button and background drawables loaded for MVP; further icon/layout polish post-MVP.
     *   [ ] Score progress bar (% to high score + % to high streak and then marking them as they pass)
     *   [x] Re-lay out image choice to 2 horizontal/1 horizontal and finalize all borders, spacing, and cartoon/correctness highlight for MVP. Dashed/stateful borders, margin/padding fixes, and all feedback placement are complete. (2025-07-24)

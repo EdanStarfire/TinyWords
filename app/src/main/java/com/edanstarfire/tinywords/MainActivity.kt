@@ -665,12 +665,11 @@ fun SettingsDialogContent(
         Pair(10, stringResource(id = R.string.setting_timer_10_seconds)),
         Pair(30, "30 Seconds")
     )
-    var autoAdvanceEnabled by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.autoAdvance) }
-    var autoAdvanceInterval by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.autoAdvanceIntervalSeconds) }
-    var alwaysShowWords by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.alwaysShowWords) }
-    // For completeness: tts speed & pronounce-at-start toggles (hidden if not exposed in UI)
-    var pronounceTargetAtStart by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.pronounceTargetAtStart) }
-    var ttsSpeed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(currentSettings.ttsSpeed) }
+    val autoAdvanceEnabled = currentSettings.autoAdvance
+    val autoAdvanceInterval = currentSettings.autoAdvanceIntervalSeconds
+    val alwaysShowWords = currentSettings.alwaysShowWords
+    val pronounceTargetAtStart = currentSettings.pronounceTargetAtStart
+    val ttsSpeed = currentSettings.ttsSpeed
 
     androidx.compose.foundation.layout.Column(
         modifier = Modifier
@@ -690,16 +689,19 @@ fun SettingsDialogContent(
             ) {
                 val timerOptions = listOf(0, 3, 5, 8, 15, 30)
                 val timerLabels = listOf("Off", "3", "5", "8", "15", "30")
-                var timerIndex by remember { mutableStateOf(timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }.coerceAtLeast(0)) }
+                val timerIndex = timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }.coerceAtLeast(0)
                 androidx.compose.material3.Text("Auto-Advance Timer " + if (timerOptions[timerIndex]==0) "(Off)" else "(${timerOptions[timerIndex]}s)", modifier = Modifier.padding(bottom = 2.dp, top = 0.dp, start = 0.dp, end = 0.dp))
                 androidx.compose.foundation.layout.Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
                     androidx.compose.material3.Slider(
                         value = timerIndex.toFloat(),
                         onValueChange = {
-                            timerIndex = it.roundToInt()
-                            val newVal = timerOptions[timerIndex]
-                            autoAdvanceEnabled = newVal != 0
-                            autoAdvanceInterval = if (newVal == 0) 0 else newVal
+                            val index = it.roundToInt()
+                            val newVal = timerOptions[index]
+                            val newSettings = currentSettings.copy(
+                                autoAdvance = newVal != 0,
+                                autoAdvanceIntervalSeconds = if (newVal == 0) 0 else newVal
+                            )
+                            onSettingsChange(newSettings)
                         },
                         steps = timerOptions.size - 2,
                         valueRange = 0f..(timerOptions.size - 1).toFloat(),
@@ -726,7 +728,7 @@ fun SettingsDialogContent(
                 ) {
                     androidx.compose.material3.Checkbox(
                         checked = alwaysShowWords,
-                        onCheckedChange = { alwaysShowWords = it },
+                        onCheckedChange = { onSettingsChange(currentSettings.copy(alwaysShowWords = it)) },
                         colors = androidx.compose.material3.CheckboxDefaults.colors(
                             checkedColor = androidx.compose.ui.graphics.Color(0xFFFF69B4), // pink
                             checkmarkColor = androidx.compose.ui.graphics.Color.White
@@ -741,7 +743,7 @@ fun SettingsDialogContent(
                 ) {
                     androidx.compose.material3.Checkbox(
                         checked = pronounceTargetAtStart,
-                        onCheckedChange = { pronounceTargetAtStart = it },
+                        onCheckedChange = { onSettingsChange(currentSettings.copy(pronounceTargetAtStart = it)) },
                         colors = androidx.compose.material3.CheckboxDefaults.colors(
                             checkedColor = androidx.compose.ui.graphics.Color(0xFFFF69B4), // pink fallback
                             checkmarkColor = androidx.compose.ui.graphics.Color.White
@@ -779,23 +781,6 @@ fun SettingsDialogContent(
                     )
                 }
             }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            androidx.compose.material3.TextButton(onClick = onDismiss) {
-                androidx.compose.material3.Text(text = stringResource(id = R.string.button_cancel))
-            }
-            androidx.compose.material3.TextButton(onClick = {
-                val newSettings = currentSettings.copy(
-                    autoAdvance = autoAdvanceEnabled,
-                    autoAdvanceIntervalSeconds = if (autoAdvanceEnabled) autoAdvanceInterval else 0,
-                    alwaysShowWords = alwaysShowWords,
-                    pronounceTargetAtStart = pronounceTargetAtStart,
-                    ttsSpeed = ttsSpeed
-                )
-                onSettingsChange(newSettings)
-                onDismiss()
-            }) { androidx.compose.material3.Text(text = stringResource(id = R.string.button_ok)) }
-        }
     }
 }
 
