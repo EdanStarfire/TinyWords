@@ -73,7 +73,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Keep score and streak state correct and in sync after all player/game actions
     *   [x] Score persists through session (until reset)
     *   [x] Streak resets on incorrect, increments on correct
-    *   [x] Visual feedback for score increase (popup '+N' display); streak done via static counter; loss handled by main feedback. 
+    *   [x] Visual feedback for score increase (popup '+N' display) overlays ScoreProgressBar in both orientations (Box with min size), and is no longer in GameBorder; streak remains via static counter; loss handled by main feedback. 
 *   **Task 3.2: Restart Button Functionality**
     *   [x] Implement restart confirmation dialog ("Are you sure?") before reset; confirmation/reset flow is now exclusively in the Settings dialog footer, not in the border UI.
     *   [x] Reset all game state on restart (score, streak, progress, hints)
@@ -123,7 +123,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] High score/streak is remembered until reset or mistake. Displayed alongside score/streak in UI for now.
 
 *   **Task 4.5: High Score Progress Bar + Display**
-    *   [x] Build and show a progress bar reflecting current score progress toward the high score.
+    *   [x] Build and show a progress bar reflecting current score progress toward the high score. '+N' popup is overlaid above the progress bar and respects minimum visual area; fully responsive.
     *     [x] The progress bar should be near the full width of the screen on portrait mode horizontally.
     *     [x] Portrait mode bars should fill left-to-right.
     *     [x] For landscape mode, the progress bar should be a vertical bar in the GameBorder on the left side of the screen.
@@ -138,8 +138,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] The rainbow border uses RainbowFull, visible around all progress bars and confirmation dialogs. RainbowMain is removed. All borders/generic gradients now reference RainbowFull for consistency. (2025-07-27)
 
 *   **Task 4.6: High Streak Progress Bar + Display**
-    *   [ ] Build and show a progress bar reflecting current streak progress toward the high streak.
-    *   [ ] Display alongside or underneath streak number in UI.
+    *   [-] Build and show a progress bar reflecting current streak progress toward the high streak. (cancelled, not planned)
+    *   [-] Display alongside or underneath streak number in UI. (cancelled, not planned)
 
 *   (Tasks remain largely the same)
 *   **Task 4.7: Choice Image Shake Animation**

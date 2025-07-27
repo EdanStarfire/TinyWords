@@ -69,6 +69,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -161,6 +162,7 @@ fun ScoreProgressBar(
     score: Int,
     highScore: Int,
     isLandscape: Boolean,
+    scoreDelta: Int?,
     modifier: Modifier = Modifier
 ) {
     val progress = when {
@@ -211,6 +213,17 @@ fun ScoreProgressBar(
                 color = Color.Black,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(top = 8.dp)
             )
+            AnimatedVisibility(
+                visible = (scoreDelta ?: 0) > 0,
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Text(
+                    text = "+${scoreDelta ?: 0}",
+                    fontSize = 22.sp,
+                    color = SuccessGreen,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
         }
     } else {
         Box(
@@ -248,6 +261,17 @@ fun ScoreProgressBar(
                 color = Color.Black,
                 modifier = Modifier.align(Alignment.CenterStart).padding(start = 12.dp)
             )
+            AnimatedVisibility(
+                visible = (scoreDelta ?: 0) > 0,
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Text(
+                    text = "+${scoreDelta ?: 0}",
+                    fontSize = 22.sp,
+                    color = SuccessGreen,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
         }
     }
 }
@@ -276,8 +300,18 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 modifier = Modifier.fillMaxHeight().weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = true, modifier = Modifier.align(
-                    Alignment.Center))
+                val scoreDelta by viewModel?.scoreDelta?.collectAsState() ?: remember { mutableStateOf(null) }
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = true, scoreDelta = null, modifier = Modifier.align(Alignment.Center))
+                    this@Row.AnimatedVisibility(visible = (scoreDelta ?: 0) > 0, modifier = Modifier.align(Alignment.Center)) {
+                        Text(
+                            text = "+${scoreDelta ?: 0}",
+                            fontSize = 44.sp,
+                            color = SuccessGreen,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    }
+                }
             }
             // Center: Target above choices
             Column(
@@ -309,7 +343,18 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false)
+                val scoreDelta by viewModel?.scoreDelta?.collectAsState() ?: remember { mutableStateOf(null) }
+                Box(modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 54.dp), contentAlignment = Alignment.Center) {
+                    ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false, scoreDelta = null)
+                    this@Column.AnimatedVisibility(visible = (scoreDelta ?: 0) > 0, modifier = Modifier.align(Alignment.Center)) {
+                        Text(
+                            text = "+${scoreDelta ?: 0}",
+                            fontSize = 42.sp,
+                            color = SuccessGreen,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    }
+                }
             }
             Column(
                 modifier = Modifier.then(Modifier.weight(2.3f)).fillMaxWidth(),
@@ -383,7 +428,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                     fontSize = 115.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .padding(if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.dp else 16.dp)
+                        .padding(if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.dp else 0.dp)
                         .clickable { viewModel.pronounceWord(target, asTargetWord = true) }
                 )
             } else {
@@ -1078,20 +1123,6 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                     .fillMaxSize()
                     .padding(8.dp),
             ) {
-                // +N popup above the score
-                AnimatedVisibility(
-                    visible = (scoreDelta ?: 0) > 0,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                        .padding(start = 56.dp)
-                ) {
-                    Text(
-                        text = "+${scoreDelta ?: 0}",
-                        fontSize = 22.sp,
-                        color = SuccessGreen,
-                        modifier = Modifier
-                            .padding(bottom = 4.dp)
-                    )
-                }
 
 
                 Row(
@@ -1133,19 +1164,6 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                     .fillMaxHeight()
                     .padding(8.dp),
             ) {
-                // +N popup above the score
-                AnimatedVisibility(
-                    visible = (scoreDelta ?: 0) > 0,
-                    modifier = Modifier.align(Alignment.TopCenter).padding(start = 56.dp)
-                ) {
-                    Text(
-                        text = "+${scoreDelta ?: 0}",
-                        fontSize = 22.sp,
-                        color = SuccessGreen,
-                        modifier = Modifier
-                            .padding(bottom = 4.dp)
-                    )
-                }
 
                 // Vertical options/buttons only
                 if (viewModel != null) {
