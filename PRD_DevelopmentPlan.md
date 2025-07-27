@@ -135,7 +135,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *     [x] If the current score is > the high score, the progress bar should go from 0 (min) to current score (max)
     *       [x] In this case, the progress bar should remain filled completely.
     *     [x] At the far left of the progress bar should be a small area for a current score. It should support numbers up to 99,999.
-    *   [x] The rainbow border should remain visible around the progress bar at all times, at a thin stroke width (4.dp). The fill is now pink, the background light pastel. (2025-07-25)
+    *   [x] The rainbow border uses RainbowFull, visible around all progress bars and confirmation dialogs. RainbowMain is removed. All borders/generic gradients now reference RainbowFull for consistency. (2025-07-27)
 
 *   **Task 4.6: High Streak Progress Bar + Display**
     *   [ ] Build and show a progress bar reflecting current streak progress toward the high streak.
@@ -152,10 +152,11 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] This replaces the intended 'speaker icon' button and matches current product UX direction.
 
 *   **Task 4.9: Finalize Game Settings - Reskin Restart Button**
-    *   [x] Settings modal now uses tabbed layout (Game/Sound/About), tab bar is full-width, with current tab indicator and selectable header.
-    *   [x] Game settings now properly padded and scoped to 'Game' tab only (future Sound/About planned).
-    *   [x] Restart/reset confirmation prompt is fully reskinned: message changed, 'Reset Scores' button, themed rainbow Yes/No dialog, visually matches app theme for confirmation.
-    *   [ / ] The 'Reset Scores' action button & tab underline still need full final skinning: distinct tab underline color for each (Game: pink, Sound: blue, About: purple), unselected tabs lightly colored underline, section backgrounds to match. In progress, UI almost complete.
+    *   [x] Settings modal fully reskinned (2025-07-27): uses centralized color/theme/rainbow constants, modal and section backgrounds, rainbow borders, and all tab underlines/headers now reflect AccentPink, AccentBlue, AccentPurple.
+    *   [x] Tab bar is full-width, all backgrounds/underlines use constants, and all borders use RainbowFull. Confirm/cancel UI dialog uses centralized modal constants.
+    *   [x] Game settings properly padded/scoped; Reset confirmation dialog and all modal overlays now match full finalized design and palette.
+    *   [x] All previously unfinished modal, underline, and rainbow skinning tasks are complete.
+
 *   **Task 4.10: Settings Modal Tabs**
     *   [x] Three settings modal tabs ('Game', 'Sound', 'About') added atop modal with correct tab indicator, evenly divided header. Game tab is functional; Sound/About content blocks scaffolded and tab coloring/refinement in progress for polish.
 *   **Task 4.11: Background Music Selection**

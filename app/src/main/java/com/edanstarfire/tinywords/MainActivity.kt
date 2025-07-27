@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import com.edanstarfire.tinywords.ui.theme.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.unit.Dp
@@ -54,8 +55,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.edanstarfire.tinywords.ui.theme.TinyWordsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.edanstarfire.tinywords.ui.game.GameViewModel
-import androidx.compose.runtime.collectAsState  // <-- Import this
-import androidx.compose.runtime.getValue      // <-- Import this
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.alpha
@@ -165,15 +166,9 @@ fun ScoreProgressBar(
         score >= highScore -> 1f
         else -> score.toFloat() / highScore
     }
-    val progressBgColor = Color(0xFFF8EAF6) // Light pastel
-    val progressFillColor = Color(0xFFFF69B4) // Pink (Hot Pink)
-    val rainbowColors = listOf(
-        Color(0xFFFF1744), // Red
-        Color(0xFFFFEA00), // Yellow
-        Color(0xFF00E676), // Green
-        Color(0xFF2979FF), // Blue
-        Color(0xFFD500F9), // Violet
-    )
+    val progressBgColor = ProgressBgColor // Light pastel
+    val progressFillColor = ProgressFillColor // Pink (Hot Pink)
+    val rainbowColors = RainbowFull
     val rainbowBrushV = Brush.linearGradient(colors = rainbowColors, start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(0f,1000f))
     val rainbowBrushH = Brush.linearGradient(colors = rainbowColors.reversed(), start = androidx.compose.ui.geometry.Offset(0f,0f), end = androidx.compose.ui.geometry.Offset(1000f,0f))
 
@@ -361,7 +356,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
         val differingIndex = if (hintLevel >= 1 && target != null && incorrect1 != null && incorrect2 != null) {
             target.indices.firstOrNull { idx ->
                 (idx < incorrect1.length && target[idx] != incorrect1[idx]) ||
-                (idx < incorrect2.length && target[idx] != incorrect2[idx])
+                        (idx < incorrect2.length && target[idx] != incorrect2[idx])
             }
         } else null
 
@@ -379,7 +374,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                     text = buildAnnotatedString {
                         target.forEachIndexed { i, c ->
                             if (i == differingIndex) {
-                                withStyle(SpanStyle(color = Color(0xFF388E3C))) { append(c) }
+                                withStyle(SpanStyle(color = SuccessGreen)) { append(c) }
                             } else append(c)
                         }
                     },
@@ -415,8 +410,8 @@ fun ImageChoice(
     val borderRadiusPx = with(density) { 20.dp.toPx() }
     val borderWidthPx = with(density) { 5.dp.toPx() }
     val borderColor = when {
-        isSelected && isCorrect -> Color(0xFF388E3C)
-        isSelected && !isCorrect -> Color(0xFFD32F2F)
+        isSelected && isCorrect -> SuccessGreen
+        isSelected && !isCorrect -> FailRed
         else -> Color.LightGray
     }
     // --- Animation: Shake on new incorrect tap ---
@@ -515,7 +510,7 @@ fun ImageChoice(
                 text = if (showWordBelow) buildAnnotatedString {
                     word.forEachIndexed { i, c ->
                         if (i == differingIndex) {
-                            withStyle(SpanStyle(color = if (isCorrect) Color(0xFF388E3C) else Color(0xFFD32F2F))) {
+                            withStyle(SpanStyle(color = if (isCorrect) SuccessGreen else FailRed)) {
                                 append(c)
                             }
                         } else append(c)
@@ -544,8 +539,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
         if (currentChallenge != null) {
             // 2x1 layout: first two centered across, third below
             if (isLandscape) {
-        val score by viewModel?.score?.collectAsState() ?: remember { mutableStateOf(0) }
-        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: remember { mutableStateOf(0) }
+                val score by viewModel?.score?.collectAsState() ?: remember { mutableStateOf(0) }
+                val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: remember { mutableStateOf(0) }
 
                 Row(
                     horizontalArrangement = Arrangement.Center
@@ -569,8 +564,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                 isSelected = (chosenWord == item.word) || (disabledWords.contains(item.word) && item.word != currentChallenge.correctImageWord && feedbackState !is GameFeedback.None),
                                 isDisabled = if (feedbackState is GameFeedback.Correct) false else disabledWords.contains(item.word) && chosenWord != currentChallenge.correctImageWord,
                                 showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
-                                    (item.word in disabledWords) ||
-                                    (feedbackState is GameFeedback.Correct),
+                                        (item.word in disabledWords) ||
+                                        (feedbackState is GameFeedback.Correct),
                                 differingIndex = if (
                                     feedbackState is GameFeedback.Correct ||
                                     (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
@@ -590,8 +585,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                     }
                 }
             } else Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 data class ImageChoiceData(
                     val word: String,
@@ -733,229 +728,246 @@ fun SettingsDialogContent(
     val pronounceTargetAtStart = currentSettings.pronounceTargetAtStart
     val ttsSpeed = currentSettings.ttsSpeed
 
-    Column(
+    val tabAccentBgColors = listOf(
+        PastelPink, // Game - pink pastel
+        PastelBlue, // Sound - blue pastel
+        PastelPurple  // About - purple pastel
+    )
+    var selectedTab by remember { mutableStateOf(0) }
+    Box(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(0.dp)
-            .fillMaxWidth()
-            .heightIn(max = 520.dp) // prevents infinite height crash
+            .fillMaxSize()
+            .background(
+                color = tabAccentBgColors[selectedTab],
+                shape = RoundedCornerShape(32.dp)
+            )
     ) {
-        var selectedTab by remember { mutableStateOf(0) }
-        val tabTitles = listOf("Game", "Sound", "About")
-        val tabAccentBgColors = listOf(
-            Color(0x22FF69B4), // Game - light pink
-            Color(0x223D90FF), // Sound - light blue
-            Color(0x22B566F8)  // About - light purple
-        )
-        Row(
-            Modifier.fillMaxWidth().height(48.dp),
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(0.dp)
+                .fillMaxWidth()
+                .heightIn(max = 520.dp) // prevents infinite height crash
         ) {
-            tabTitles.forEachIndexed { idx, title ->
-                val selected = idx == selectedTab
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clickable { selectedTab = idx }
-                        .background(
-                            if (selected) Color(0x22FF69B4) else Color.Transparent,
-                            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        title,
-                        color = if (selected) Color(0xFFFF69B4) else Color.Black,
-                        fontWeight = if (selected) FontWeight.Bold else null
-                    )
-                    if (selected) {
+            val tabTitles = listOf("Game", "Sound", "About")
+
+            Row(
+                Modifier.fillMaxWidth().height(48.dp),
+            ) {
+                tabTitles.forEachIndexed { idx, title ->
+                    val selected = idx == selectedTab
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable { selectedTab = idx }
+                            .background(
+                                tabAccentBgColors[idx],
+                                when (idx) {
+                                    0 -> RoundedCornerShape(topStart = 32.dp, topEnd = 0.dp)
+                                    2 -> RoundedCornerShape(topStart = 0.dp, topEnd = 32.dp)
+                                    else -> RoundedCornerShape(0.dp)
+                                }
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            title,
+                            color = if (selected) when (idx) {
+                                0 -> AccentPink
+                                1 -> AccentBlue
+                                2 -> AccentPurple
+                                else -> Color.Black
+                            } else Color.Black,
+                            fontWeight = if (selected) FontWeight.Bold else null
+                        )
                         Box(
                             Modifier.align(Alignment.BottomCenter).height(4.dp).fillMaxWidth()
-                                .background(Color(0xFFFF69B4), RoundedCornerShape(2.dp))
+                                .background(
+                                    when (selectedTab) {
+                                        0 -> AccentPink
+                                        1 -> AccentBlue
+                                        2 -> AccentPurple
+                                        else -> AccentPink
+                                    }
+                                )
                         )
                     }
                 }
             }
-        }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(tabAccentBgColors[selectedTab])
-        ) {
-            when (selectedTab) {
-                0 -> Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
-                ) {
-                    val timerOptions = listOf(0, 3, 5, 8, 15, 30)
-                    val timerLabels = listOf("Off", "3", "5", "8", "15", "30")
-                    val timerIndex =
-                        timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }
-                            .coerceAtLeast(0)
-                    Text(
-                        "Auto-Advance Timer " + if (timerOptions[timerIndex] == 0) "(Off)" else "(${timerOptions[timerIndex]}s)",
-                        modifier = Modifier.padding(
-                            bottom = 2.dp,
-                            top = 0.dp,
-                            start = 0.dp,
-                            end = 0.dp
-                        )
-                    )
-                    Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
-                        Slider(
-                            value = timerIndex.toFloat(),
-                            onValueChange = {
-                                val index = it.roundToInt()
-                                val newVal = timerOptions[index]
-                                val newSettings = currentSettings.copy(
-                                    autoAdvance = newVal != 0,
-                                    autoAdvanceIntervalSeconds = if (newVal == 0) 0 else newVal
-                                )
-                                onSettingsChange(newSettings)
-                            },
-                            steps = timerOptions.size - 2,
-                            valueRange = 0f..(timerOptions.size - 1).toFloat(),
-                            modifier = Modifier.fillMaxWidth().height(18.dp),
-                            enabled = true,
-                            colors = SliderDefaults.colors(
-                                activeTrackColor = Color(0xFFFF69B4),
-                                inactiveTrackColor = Color.LightGray,
-                                thumbColor = Color(0xFFFF69B4),
-                                activeTickColor = Color.Transparent,
-                                inactiveTickColor = Color.Transparent
-                            ),
-                            track = { sliderState ->
-                                SliderDefaults.Track(
-                                    sliderState = sliderState,
-                                    thumbTrackGapSize = 0.dp
-                                )
-                            }
-                        )
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                when (selectedTab) {
+                    0 -> Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
                     ) {
-                        Checkbox(
-                            checked = alwaysShowWords,
-                            onCheckedChange = {
-                                onSettingsChange(
-                                    currentSettings.copy(
-                                        alwaysShowWords = it
-                                    )
-                                )
-                            },
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = Color(0xFFFF69B4), // pink
-                                checkmarkColor = Color.White
-                            ),
-                            modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                        val timerOptions = listOf(0, 3, 5, 8, 15, 30)
+                        val timerLabels = listOf("Off", "3", "5", "8", "15", "30")
+                        val timerIndex =
+                            timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }
+                                .coerceAtLeast(0)
+                        Text(
+                            "Auto-Advance Timer " + if (timerOptions[timerIndex] == 0) "(Off)" else "(${timerOptions[timerIndex]}s)",
+                            modifier = Modifier.padding(
+                                bottom = 2.dp,
+                                top = 0.dp,
+                                start = 0.dp,
+                                end = 0.dp
+                            )
                         )
-                        Text("Always Show Words")
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
-                    ) {
-                        Checkbox(
-                            checked = pronounceTargetAtStart,
-                            onCheckedChange = {
-                                onSettingsChange(
-                                    currentSettings.copy(
-                                        pronounceTargetAtStart = it
+                        Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
+                            Slider(
+                                value = timerIndex.toFloat(),
+                                onValueChange = {
+                                    val index = it.roundToInt()
+                                    val newVal = timerOptions[index]
+                                    val newSettings = currentSettings.copy(
+                                        autoAdvance = newVal != 0,
+                                        autoAdvanceIntervalSeconds = if (newVal == 0) 0 else newVal
                                     )
-                                )
-                            },
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = Color(0xFFFF69B4), // pink fallback
-                                checkmarkColor = Color.White
-                            ),
-                            modifier = Modifier.size(18.dp).padding(end = 8.dp)
-                        )
-                        Text("Spell Target Word")
-                    }
+                                    onSettingsChange(newSettings)
+                                },
+                                steps = timerOptions.size - 2,
+                                valueRange = 0f..(timerOptions.size - 1).toFloat(),
+                                modifier = Modifier.fillMaxWidth().height(18.dp),
+                                enabled = true,
+                                colors = SliderDefaults.colors(
+                                    activeTrackColor = ConfirmPink,
+                                    inactiveTrackColor = Color.LightGray,
+                                    thumbColor = AccentPink,
+                                    activeTickColor = Color.Transparent,
+                                    inactiveTickColor = Color.Transparent
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        thumbTrackGapSize = 0.dp
+                                    )
+                                }
+                            )
+                        }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                        ) {
+                            Checkbox(
+                                checked = alwaysShowWords,
+                                onCheckedChange = {
+                                    onSettingsChange(
+                                        currentSettings.copy(
+                                            alwaysShowWords = it
+                                        )
+                                    )
+                                },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = AccentPink, // pink
+                                    checkmarkColor = Color.White
+                                ),
+                                modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                            )
+                            Text("Always Show Words")
+                        }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                        ) {
+                            Checkbox(
+                                checked = pronounceTargetAtStart,
+                                onCheckedChange = {
+                                    onSettingsChange(
+                                        currentSettings.copy(
+                                            pronounceTargetAtStart = it
+                                        )
+                                    )
+                                },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = AccentPink, // pink fallback
+                                    checkmarkColor = Color.White
+                                ),
+                                modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                            )
+                            Text("Spell Target Word")
+                        }
 
-                    var showResetConfirm by remember { mutableStateOf(false) }
-                    Box(Modifier.fillMaxWidth()) {
-                        val confirmPink = Color(0xFFFF69B4)
-                        val rainbowBorder = listOf(
-                            Color(0xFFFF1744),
-                            Color(0xFFFFEA00),
-                            Color(0xFF00E676),
-                            Color(0xFF2979FF),
-                            Color(0xFFD500F9)
-                        )
-                        if (!showResetConfirm) {
-                            ConfirmButton(
-                                fillColor = confirmPink,
-                                borderColors = rainbowBorder,
-                                modifier = Modifier.padding(top = 32.dp)
-                                    .align(Alignment.Center),
-                                onClick = { showResetConfirm = true },
-                            ) {
-                                Text(
-                                    "Reset Scores",
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        } else {
-                            Column(
-                                Modifier.padding(top = 32.dp).align(Alignment.Center),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    stringResource(id = R.string.dialog_restart_message),
-                                    modifier = Modifier.padding(bottom = 16.dp)
-                                )
-                                Row(
-                                    horizontalArrangement = Arrangement.Center,
-                                    modifier = Modifier.fillMaxWidth(0.7f)
+                        var showResetConfirm by remember { mutableStateOf(false) }
+                        Box(Modifier.fillMaxWidth()) {
+                            val confirmPink = ConfirmPink
+                            val rainbowBorder = RainbowFull
+                            if (!showResetConfirm) {
+                                ConfirmButton(
+                                    fillColor = confirmPink,
+                                    borderColors = rainbowBorder,
+                                    modifier = Modifier.padding(top = 32.dp)
+                                        .align(Alignment.Center),
+                                    onClick = { showResetConfirm = true },
                                 ) {
-                                    ConfirmButton(
-                                        modifier = Modifier.weight(1f).padding(end = 8.dp)
-                                            .height(46.dp),
-                                        fillColor = confirmPink,
-                                        borderColors = rainbowBorder,
-                                        onClick = {
-                                            showResetConfirm = false
-                                            onResetGame()
+                                    Text(
+                                        "Reset Scores",
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            } else {
+                                Column(
+                                    Modifier.padding(top = 32.dp).align(Alignment.Center),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        stringResource(id = R.string.dialog_restart_message),
+                                        modifier = Modifier.padding(bottom = 16.dp)
+                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth(0.7f)
+                                    ) {
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).padding(end = 8.dp)
+                                                .height(46.dp),
+                                            fillColor = confirmPink,
+                                            borderColors = rainbowBorder,
+                                            onClick = {
+                                                showResetConfirm = false
+                                                onResetGame()
+                                            }
+                                        ) {
+                                            Text(
+                                                stringResource(id = R.string.button_yes),
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
                                         }
-                                    ) {
-                                        Text(
-                                            stringResource(id = R.string.button_yes),
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                    ConfirmButton(
-                                        modifier = Modifier.weight(1f).height(46.dp),
-                                        fillColor = Color(0xFFF3F3F3),
-                                        borderColors = rainbowBorder,
-                                        onClick = { showResetConfirm = false }
-                                    ) {
-                                        Text(
-                                            "No",
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.Bold
-                                        )
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).height(46.dp),
+                                            fillColor = ModalLightBg,
+                                            borderColors = rainbowBorder,
+                                            onClick = { showResetConfirm = false }
+                                        ) {
+                                            Text(
+                                                "No",
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                1 -> Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
-                ) {
-                    Text("Sound settings...", Modifier.padding(8.dp))
-                }
+                    1 -> Box(
+                        Modifier.fillMaxSize()
+                    ) {
+                        Text("Sound settings placeholder", Modifier.align(Alignment.Center))
+                    }
 
-                2 -> Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()).padding(28.dp)
-                ) {
-                    Text("About content...", Modifier.padding(8.dp))
+                    2 -> Box(
+                        Modifier.fillMaxSize()
+                    ) {
+                        Text("About page placeholder", Modifier.align(Alignment.Center))
+                    }
                 }
             }
         }
@@ -1009,7 +1021,7 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                     Text(
                         text = "+${scoreDelta ?: 0}",
                         fontSize = 22.sp,
-                        color = Color(0xFF388E3C),
+                        color = SuccessGreen,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                     )
@@ -1063,7 +1075,7 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
                     Text(
                         text = "+${scoreDelta ?: 0}",
                         fontSize = 22.sp,
-                        color = Color(0xFF388E3C),
+                        color = SuccessGreen,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                     )
@@ -1124,9 +1136,7 @@ fun ThemedSettingsModal(
     val borderWidthPx = with(density) { 7.dp.toPx() }
     val dash = 16f
     val gap = 10f
-    val rainbow = listOf(
-        Color.Red, Color(0xFFFD9A04), Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red
-    )
+    val rainbow = RainbowFull
     fun Modifier.rainbowDashedBorder() = this.then(
         Modifier.drawWithContent {
             val sweep = Brush.sweepGradient(rainbow)
@@ -1150,7 +1160,7 @@ fun ThemedSettingsModal(
         Box(
             Modifier
                 .fillMaxSize()
-                .background(Color(0xAA000000))
+                .background(ModalScrim)
                 .clickable(onClick = onDismiss, indication = null, interactionSource = remember { MutableInteractionSource() })
         ) {
             Box(
