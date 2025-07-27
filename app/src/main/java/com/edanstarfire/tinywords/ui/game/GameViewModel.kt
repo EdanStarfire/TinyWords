@@ -140,7 +140,6 @@ class GameViewModel @Inject constructor(
             _gameSettings.collect { settings ->
                 Log.i("GameViewModel", "Game settings updated: $settings")
                 playOrUpdateMusic(settings)
-                ttsHelper.setTtsVolume(settings.ttsVolume)
                 // If auto-advance was turned off while a timer was running, cancel it.
                 if (!settings.autoAdvance) {
                     cancelAutoAdvanceTimer()
@@ -389,6 +388,14 @@ class GameViewModel @Inject constructor(
     // --- Background Music Player ---
     private var bgMusicPlayer: android.media.MediaPlayer? = null
     private var lastLoadedTrack: String? = null
+
+    fun pauseBackgroundMusic() {
+        try { bgMusicPlayer?.pause() } catch (_: Exception) {}
+    }
+
+    fun resumeBackgroundMusic() {
+        try { if (bgMusicPlayer?.isPlaying == false) bgMusicPlayer?.start() } catch (_: Exception) {}
+    }
 
     private fun ensureMusicStoppedAndReleased() {
         try { bgMusicPlayer?.stop() } catch (_: Exception) {}

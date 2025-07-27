@@ -124,6 +124,12 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         gameViewModel.pauseAutoAdvanceTimer()
+        gameViewModel.pauseBackgroundMusic()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        gameViewModel.resumeBackgroundMusic()
     }
 }
 
@@ -1018,23 +1024,6 @@ fun SettingsDialogContent(
                                 },
                                 modifier = Modifier.fillMaxWidth(0.8f)
                             )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.height(28.dp).padding(top = 16.dp, bottom = 2.dp)
-                            ) {
-                                Checkbox(
-                                    checked = currentSettings.ttsEnabled,
-                                    onCheckedChange = {
-                                        onSettingsChange(currentSettings.copy(ttsEnabled = it))
-                                    },
-                                    colors = CheckboxDefaults.colors(
-                                        checkedColor = AccentBlue,
-                                        checkmarkColor = Color.White
-                                    ),
-                                    modifier = Modifier.size(18.dp).padding(end = 8.dp)
-                                )
-                                Text("TTS Spelling & Feedback")
-                            }
                             val trackOptions = listOf(
                                 "8bit" to "eightbit.mp3",
                                 "bedtime" to "bedtime.mp3",
@@ -1070,6 +1059,23 @@ fun SettingsDialogContent(
                                         )
                                     }
                                 }
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(top = 16.dp, bottom = 2.dp)
+                            ) {
+                                Checkbox(
+                                    checked = currentSettings.ttsEnabled,
+                                    onCheckedChange = {
+                                        onSettingsChange(currentSettings.copy(ttsEnabled = it))
+                                    },
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = AccentBlue,
+                                        checkmarkColor = Color.White
+                                    ),
+                                    modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                                )
+                                Text("TTS Spelling & Feedback")
                             }
                         }
                     }
