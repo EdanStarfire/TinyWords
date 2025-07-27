@@ -71,4 +71,18 @@ class TtsHelper @Inject constructor(
         }
         _isInitialized.value = false // Reflect that it's no longer initialized
     }
+
+    private var currentTtsVolume: Int = 100
+
+    fun setTtsVolume(volume: Int) {
+        currentTtsVolume = volume.coerceIn(0,100)
+        try {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager
+            if (audioManager != null) {
+                val max = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
+                val newVol = ((currentTtsVolume/100.0) * max).toInt().coerceIn(0,max)
+                audioManager.setStreamVolume(android.media.AudioManager.STREAM_MUSIC, newVol, 0)
+            }
+        } catch (_: Exception) {}
+    }
 }

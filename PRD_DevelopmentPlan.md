@@ -160,8 +160,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 4.10: Settings Modal Tabs**
     *   [x] Three settings modal tabs ('Game', 'Sound', 'About') added atop modal with correct tab indicator, evenly divided header. Game tab is functional; Sound/About content blocks scaffolded and tab coloring/refinement in progress for polish.
 *   **Task 4.11: Background Music Selection**
-    *   [ ] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
-    *   [ ] Build out sound settings: master volume, music volume, speaking volume, and music selection options.
+    *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
+    *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.
 
 ## Phase 5: Refinement & Testing
 

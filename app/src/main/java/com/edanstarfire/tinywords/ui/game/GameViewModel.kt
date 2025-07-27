@@ -139,6 +139,8 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             _gameSettings.collect { settings ->
                 Log.i("GameViewModel", "Game settings updated: $settings")
+                playOrUpdateMusic(settings)
+                ttsHelper.setTtsVolume(settings.ttsVolume)
                 // If auto-advance was turned off while a timer was running, cancel it.
                 if (!settings.autoAdvance) {
                     cancelAutoAdvanceTimer()
@@ -346,6 +348,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null, asTargetWord: Boolean = false) {
+        if (!_gameSettings.value.ttsEnabled) return
         if (asTargetWord) {
             //if (lastPronouncedTarget == word) return
             //lastPronouncedTarget = word
@@ -383,8 +386,45 @@ class GameViewModel @Inject constructor(
         loadNewWordChallenge()
     }
 
+    // --- Background Music Player ---
+    private var bgMusicPlayer: android.media.MediaPlayer? = null
+    private var lastLoadedTrack: String? = null
+
+    private fun ensureMusicStoppedAndReleased() {
+        try { bgMusicPlayer?.stop() } catch (_: Exception) {}
+        try { bgMusicPlayer?.release() } catch (_: Exception) {}
+        bgMusicPlayer = null
+    }
+
+    private fun playOrUpdateMusic(settings: GameSettings) {
+        val volume = (settings.musicVolume.coerceIn(0, 100) / 200f) // UI 0-100 -> 0-0.5
+        val musicRes = getRawResIdForTrack(settings.bgMusicTrack)
+        if (settings.musicVolume == 0 || musicRes == 0) {
+            ensureMusicStoppedAndReleased()
+            return
+        }
+        if (bgMusicPlayer == null || lastLoadedTrack != settings.bgMusicTrack) {
+            ensureMusicStoppedAndReleased()
+            if (musicRes != 0) {
+                bgMusicPlayer = android.media.MediaPlayer.create(appContext, musicRes)
+                bgMusicPlayer?.isLooping = true
+                lastLoadedTrack = settings.bgMusicTrack
+            }
+        }
+        try { bgMusicPlayer?.setVolume(volume, volume) } catch (_: Exception) {}
+        if (bgMusicPlayer?.isPlaying != true) {
+            try { bgMusicPlayer?.start() } catch (_: Exception) {}
+        }
+    }
+
+    private fun getRawResIdForTrack(track: String): Int {
+        val resName = track.removeSuffix(".mp3").removeSuffix(".wav")
+        return appContext.resources.getIdentifier(resName, "raw", appContext.packageName)
+    }
+
     override fun onCleared() {
         super.onCleared()
+        ensureMusicStoppedAndReleased()
         autoAdvanceJob?.cancel() // Ensure timer is cancelled when ViewModel is cleared
         encouragementJob?.cancel()
         Log.i("GameViewModel", "GameViewModel cleared.")
@@ -464,5 +504,9 @@ data class GameSettings(
     val autoAdvanceIntervalSeconds: Int = 30,
     val hintLevelAllowed: Int = 2, // e.g., 0=none, 1=highlight, 2=show word
     val alwaysShowWords: Boolean = false,
-    val pronounceTargetAtStart: Boolean = false
+    val pronounceTargetAtStart: Boolean = false,
+    val musicVolume: Int = 100, // 0-100 (UI; 0=off)
+    val ttsVolume: Int = 100, // 0-100 (UI)
+    val bgMusicTrack: String = "chill.mp3",
+    val ttsEnabled: Boolean = true
 )

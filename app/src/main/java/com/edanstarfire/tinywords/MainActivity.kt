@@ -76,6 +76,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -960,7 +962,71 @@ fun SettingsDialogContent(
                     1 -> Box(
                         Modifier.fillMaxSize()
                     ) {
-                        Text("Sound settings placeholder", Modifier.align(Alignment.Center))
+                        Column(Modifier.align(Alignment.TopCenter).padding(16.dp)) {
+                            Text("Background Music Volume", fontWeight = FontWeight.Bold)
+                            Slider(
+                                value = currentSettings.musicVolume.toFloat(),
+                                valueRange = 0f..100f,
+                                steps = 99,
+                                onValueChange = {
+                                    onSettingsChange(currentSettings.copy(musicVolume = it.toInt()))
+                                },
+                                modifier = Modifier.fillMaxWidth(0.8f)
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.height(28.dp).padding(top = 16.dp, bottom = 2.dp)
+                            ) {
+                                Checkbox(
+                                    checked = currentSettings.ttsEnabled,
+                                    onCheckedChange = {
+                                        onSettingsChange(currentSettings.copy(ttsEnabled = it))
+                                    },
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = AccentBlue,
+                                        checkmarkColor = Color.White
+                                    ),
+                                    modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                                )
+                                Text("TTS Spelling & Feedback")
+                            }
+                            val trackOptions = listOf(
+                                "8bit" to "eightbit.mp3",
+                                "bedtime" to "bedtime.mp3",
+                                "bounce" to "bounce.mp3",
+                                "chill" to "chill.mp3",
+                                "electric" to "electric.mp3",
+                                "epic" to "epic.mp3",
+                                "island" to "island.mp3",
+                                "mystery" to "mystery.mp3"
+                            )
+                            var expanded by remember { mutableStateOf(false) }
+                            Text("Background Track", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.8f)
+                                    .padding(vertical = 4.dp)
+                                    .background(Color.LightGray, RoundedCornerShape(8.dp))
+                                    .clickable { expanded = !expanded }
+                            ) {
+                                val selectedLabel = trackOptions.find { it.second == currentSettings.bgMusicTrack }?.first ?: currentSettings.bgMusicTrack.removeSuffix(".mp3")
+                                Text(selectedLabel, modifier = Modifier.padding(12.dp))
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    trackOptions.forEach { (label, resName) ->
+                                        DropdownMenuItem(
+                                            text = { Text(label) },
+                                            onClick = {
+                                                onSettingsChange(currentSettings.copy(bgMusicTrack = resName))
+                                                expanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     2 -> Box(
