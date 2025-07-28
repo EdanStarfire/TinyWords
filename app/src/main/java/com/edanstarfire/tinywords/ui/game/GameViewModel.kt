@@ -349,15 +349,13 @@ class GameViewModel @Inject constructor(
     fun pronounceWord(word: String, pitch: Float? = null, rate: Float? = null, asTargetWord: Boolean = false) {
         if (!_gameSettings.value.ttsEnabled) return
         if (asTargetWord) {
-            //if (lastPronouncedTarget == word) return
-            //lastPronouncedTarget = word
             spellWordForTts(word, pitch = pitch, rate = rate)
             return
         }
 
         encouragementJob?.cancel()
+        spellJob?.cancel()
         if (isTtsReady.value) {
-            // Lowercase only if the text is a real word (target or image), not feedback
             val spoken = when {
                 word.length > 1 && word.uppercase() == word -> word.lowercase()
                 else -> word
@@ -368,12 +366,19 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    private var spellJob: Job? = null
+
     fun spellWordForTts(word: String, pitch: Float? = null, rate: Float? = null) {
-        if (isTtsReady.value) {
-            val spaced = word.toCharArray().joinToString(" ") { it.toString().uppercase() }
-            ttsHelper.speak(spaced, pitch = pitch, rate = rate)
-        } else {
-            Log.w("GameViewModel", "Attempted to spell word, but TTS is not ready. Word: $word")
+        spellJob?.cancel()
+        spellJob = viewModelScope.launch {
+            if (isTtsReady.value) {
+                for ((i, c) in word.withIndex()) {
+                    ttsHelper.speak(c.uppercaseChar().toString(), pitch = pitch, rate = rate)
+                    if (i < word.lastIndex) delay(750L)
+                }
+            } else {
+                Log.w("GameViewModel", "Attempted to spell word, but TTS is not ready. Word: $word")
+            }
         }
     }
 

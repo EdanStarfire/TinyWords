@@ -168,7 +168,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**
     *   [x] Test TTS pronunciation clarity and timing across different scenarios.
     *   [ ] Adjust TTS parameters (pitch, rate) if necessary for better experience.
-    *     [ ] Slow down the spelling speed - it's pretty fast right now.
+    *     [x] Slow down the spelling speed - it's pretty fast right now. (2025-07-28): Now each letter is spoken by TTS with a ~750ms pause between, implemented via coroutine per-letter in GameViewModel.)
     *   [ ] (Post-MVP or iterative) Consider adding subtle, non-verbal sound effects for UI interactions (button clicks, animations) if desired, to complement TTS.
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
