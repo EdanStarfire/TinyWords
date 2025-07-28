@@ -1025,14 +1025,14 @@ fun SettingsDialogContent(
                                 modifier = Modifier.fillMaxWidth(0.8f)
                             )
                             val trackOptions = listOf(
-                                "8bit" to "eightbit.mp3",
-                                "bedtime" to "bedtime.mp3",
-                                "bounce" to "bounce.mp3",
-                                "chill" to "chill.mp3",
-                                "electric" to "electric.mp3",
-                                "epic" to "epic.mp3",
-                                "island" to "island.mp3",
-                                "mystery" to "mystery.mp3"
+                                "8-bit" to "eightbit.mp3",
+                                "Bedtime" to "bedtime.mp3",
+                                "Bounce" to "bounce.mp3",
+                                "Chill" to "chill.mp3",
+                                "Electric" to "electric.mp3",
+                                "Epic" to "epic.mp3",
+                                "Island" to "island.mp3",
+                                "Mystery" to "mystery.mp3"
                             )
                             var expanded by remember { mutableStateOf(false) }
                             Text("Background Track", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))

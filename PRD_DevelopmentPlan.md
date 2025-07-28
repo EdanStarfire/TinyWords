@@ -162,6 +162,8 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 4.11: Background Music Selection**
     *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.
+*   **Task 4.12: App Icon Migration**
+    *   [x] Migrated app icon to a new custom asset, placed app_icon.png in all mipmap-* folders for proper device support and updated manifest reference. Ensured all new icon files are included in git and handled mipmap-anydpi guidance.
 
 ## Phase 5: Refinement & Testing
 
