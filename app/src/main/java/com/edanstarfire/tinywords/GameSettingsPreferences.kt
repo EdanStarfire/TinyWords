@@ -37,7 +37,7 @@ class GameSettingsRepository(private val context: Context) {
             pronounceTargetAtStart = prefs[GameSettingsPrefsKeys.PRONOUNCE_TARGET_AT_START] ?: false,
             musicVolume = prefs[GameSettingsPrefsKeys.MUSIC_VOLUME] ?: 100,
             ttsVolume = prefs[GameSettingsPrefsKeys.TTS_VOLUME] ?: 100,
-            bgMusicTrack = prefs[GameSettingsPrefsKeys.BG_MUSIC_TRACK] ?: "default_bg_music.mp3",
+            bgMusicTrack = prefs[GameSettingsPrefsKeys.BG_MUSIC_TRACK] ?: "chill.mp3",
             ttsEnabled = prefs[GameSettingsPrefsKeys.TTS_ENABLED] ?: true
         )
     }

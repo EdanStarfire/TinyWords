@@ -74,6 +74,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -306,10 +308,20 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 modifier = Modifier.fillMaxHeight().weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                val scoreDelta by viewModel?.scoreDelta?.collectAsState() ?: remember { mutableStateOf(null) }
+                val scoreDelta by viewModel?.scoreDelta?.collectAsState()
+                    ?: remember { mutableStateOf(null) }
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = true, scoreDelta = null, modifier = Modifier.align(Alignment.Center))
-                    this@Row.AnimatedVisibility(visible = (scoreDelta ?: 0) > 0, modifier = Modifier.align(Alignment.Center)) {
+                    ScoreProgressBar(
+                        score = score,
+                        highScore = scoreHigh,
+                        isLandscape = true,
+                        scoreDelta = null,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                    this@Row.AnimatedVisibility(
+                        visible = (scoreDelta ?: 0) > 0,
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
                         Text(
                             text = "+${scoreDelta ?: 0}",
                             fontSize = 44.sp,
@@ -325,9 +337,20 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TargetWordArea(viewModel)
-                if (!isLandscape) Spacer(modifier = Modifier.height(24.dp))
-                ImageChoicesArea(viewModel, isLandscape = isLandscape)
+                Row(
+                    modifier = Modifier.fillMaxWidth().weight(3f),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TargetWordArea(viewModel)
+                }
+                Row(
+                    modifier = Modifier.fillMaxHeight().weight(5f),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    ImageChoicesArea(viewModel, isLandscape = isLandscape)
+                }
             }
             // Right: Options/buttons column
             GameBorder(viewModel) { settingsDialogOpen = it }
@@ -363,19 +386,19 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 }
             }
             Column(
-                modifier = Modifier.then(Modifier.weight(2.3f)).fillMaxWidth(),
+                modifier = Modifier.then(Modifier.weight(0.7f)).fillMaxWidth(),
                 verticalArrangement = Arrangement.Center
             ) {
                 TargetWordArea(viewModel)
             }
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxHeight().weight(2.8f),
                 verticalArrangement = Arrangement.Center
             ) {
                 ImageChoicesArea(viewModel, isLandscape = false)
             }
             Column(
-                modifier = Modifier.fillMaxHeight().weight(1.7f)
+                modifier = Modifier.fillMaxHeight().weight(0.5f)
             ) {
                 GameBorder(viewModel) { settingsDialogOpen = it }
             }
@@ -511,7 +534,8 @@ fun ImageChoice(
             Box(
                 modifier = Modifier
                     .padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
+                    .sizeIn(maxWidth = 150.dp, maxHeight = 150.dp)
                     .aspectRatio(1f),
                 contentAlignment = Alignment.Center
             ) {
@@ -669,7 +693,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                         if (i < items.size) {
                             val item = items[i]
                             Box(
-                                modifier = Modifier.then(Modifier.weight(1f)).padding(8.dp)
+                                modifier = Modifier.then(Modifier.weight(1f)).padding(8.dp),
+                                contentAlignment = Alignment.Center
                             ) {
                                 ImageChoice(
                                     word = item.word,
@@ -714,7 +739,8 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                         Spacer(modifier = Modifier.weight(0.5f))
                         Box(
                             modifier = Modifier.then(Modifier.weight(1f))
-                                .padding(top = 24.dp, start = 8.dp, end = 8.dp)
+                                .padding(top = 24.dp, start = 8.dp, end = 8.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             val item = items[2]
                             ImageChoice(

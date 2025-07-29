@@ -162,6 +162,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 4.11: Background Music Selection**
     *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.
+    *   [x] Change default background music track to 'chill.mp3'.
 *   **Task 4.12: App Icon Migration**
     *   [x] Migrated app icon to a new custom asset, placed app_icon.png in all mipmap-* folders for proper device support and updated manifest reference. Ensured all new icon files are included in git and handled mipmap-anydpi guidance.
 
@@ -215,7 +216,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 **Workflow Note:**
 - Always update and check-in PRD_DevelopmentPlan.md before every code commit to ensure plan/actual status stays in sync.
-
+- 2025-07-29: minSdkVersion lowered to 30 for device compatibility; major fixes to image/word/choice scaling logic in MainActivity.kt for landscape and portrait on both phones and tablets. Responsive UI should now behave as intended on all QA devices.
 **Tracking Legend:**
 
 *   `[ ]` - To Do
