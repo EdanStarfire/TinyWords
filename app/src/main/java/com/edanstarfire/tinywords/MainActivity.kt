@@ -812,7 +812,7 @@ fun SettingsDialogContent(
         PastelBlue, // Sound - blue pastel
         PastelPurple  // About - purple pastel
     )
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by rememberSaveable { mutableStateOf(0) }
     Box(
         modifier = Modifier
             .fillMaxSize()
