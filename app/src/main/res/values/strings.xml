@@ -45,4 +45,11 @@
     <!-- Dynamic content descriptions for choice images might be constructed in code
          e.g., "Image representing the word [WORD]" -->
     <string name="cd_choice_image_template">Image representing the word %1$s</string>
+    <string name="about_summary">I built this for my daughter, so it is 100% optimized for her love of rainbows, cute things, and cats.
+\n
+\nAI Usage Disclosure:
+\nGame and experience mine, but AI was used in making this app (images, music, and coding assistance).
+\n
+\nGame Source:
+\nhttps://github.com/EdanStarfire/TinyWords</string>
 </resources>

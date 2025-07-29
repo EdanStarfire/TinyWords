@@ -158,7 +158,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] All previously unfinished modal, underline, and rainbow skinning tasks are complete.
 
 *   **Task 4.10: Settings Modal Tabs**
-    *   [x] Three settings modal tabs ('Game', 'Sound', 'About') added atop modal with correct tab indicator, evenly divided header. Game tab is functional; Sound/About content blocks scaffolded and tab coloring/refinement in progress for polish.
+    *   [x] Three settings modal tabs ('Game', 'Sound', 'About') added atop modal with correct tab indicator, evenly divided header.
+    *   [x] About tab now loads a multi-line app summary and AI usage disclosure from string resources; supports line breaks/display for large body text in Compose UI.
+    *   [x] Game tab is functional; Sound/About content blocks scaffolded and tab coloring/refinement now complete.
 *   **Task 4.11: Background Music Selection**
     *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.

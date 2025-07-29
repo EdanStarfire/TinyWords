@@ -911,7 +911,7 @@ fun SettingsDialogContent(
                                 },
                                 steps = timerOptions.size - 2,
                                 valueRange = 0f..(timerOptions.size - 1).toFloat(),
-                                modifier = Modifier.fillMaxWidth().height(18.dp),
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
                                 enabled = true,
                                 colors = SliderDefaults.colors(
                                     activeTrackColor = ConfirmPink,
@@ -1039,16 +1039,30 @@ fun SettingsDialogContent(
                     1 -> Box(
                         Modifier.fillMaxSize()
                     ) {
-                        Column(Modifier.align(Alignment.TopCenter).padding(16.dp)) {
+                        Column(Modifier.fillMaxSize().align(Alignment.TopCenter).padding(28.dp)) {
                             Text("Background Music Volume", fontWeight = FontWeight.Bold)
                             Slider(
                                 value = currentSettings.musicVolume.toFloat(),
                                 valueRange = 0f..100f,
-                                steps = 99,
+                                steps = 19,
                                 onValueChange = {
                                     onSettingsChange(currentSettings.copy(musicVolume = it.toInt()))
                                 },
-                                modifier = Modifier.fillMaxWidth(0.8f)
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
+                                colors = SliderDefaults.colors(
+                                    activeTrackColor = ConfirmPink,
+                                    inactiveTrackColor = Color.LightGray,
+                                    thumbColor = AccentPink,
+                                    activeTickColor = Color.Transparent,
+                                    inactiveTickColor = Color.Transparent
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        thumbTrackGapSize = 0.dp
+                                    )
+                                }
+
                             )
                             val trackOptions = listOf(
                                 "8-bit" to "eightbit.mp3",
@@ -1064,7 +1078,7 @@ fun SettingsDialogContent(
                             Text("Background Track", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
                             Box(
                                 modifier = Modifier
-                                    .fillMaxWidth(0.8f)
+                                    .fillMaxWidth()
                                     .padding(vertical = 4.dp)
                                     .background(Color.LightGray, RoundedCornerShape(8.dp))
                                     .clickable { expanded = !expanded }
@@ -1109,7 +1123,13 @@ fun SettingsDialogContent(
                     2 -> Box(
                         Modifier.fillMaxSize()
                     ) {
-                        Text("About page placeholder", Modifier.align(Alignment.Center))
+                        Text(
+                            text = stringResource(R.string.about_summary),
+                            fontSize = 10.sp,
+                            modifier = Modifier.align(Alignment.TopCenter).padding(28.dp),
+                            softWrap = true,
+                            maxLines = Int.MAX_VALUE
+                        )
                     }
                 }
             }
