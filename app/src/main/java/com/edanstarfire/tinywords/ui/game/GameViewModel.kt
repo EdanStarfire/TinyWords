@@ -372,9 +372,10 @@ class GameViewModel @Inject constructor(
         spellJob?.cancel()
         spellJob = viewModelScope.launch {
             if (isTtsReady.value) {
+                val currentSettings = gameSettings.value
                 for ((i, c) in word.withIndex()) {
                     ttsHelper.speak(c.uppercaseChar().toString(), pitch = pitch, rate = rate)
-                    if (i < word.lastIndex) delay(750L)
+                    if (i < word.lastIndex) delay(currentSettings.letterSpellingDelayMs.toLong())
                 }
             } else {
                 Log.w("GameViewModel", "Attempted to spell word, but TTS is not ready. Word: $word")
@@ -520,5 +521,6 @@ data class GameSettings(
     val musicVolume: Int = 100, // 0-100 (UI; 0=off)
     val ttsVolume: Int = 100, // 0-100 (UI)
     val bgMusicTrack: String = "chill.mp3",
-    val ttsEnabled: Boolean = true
+    val ttsEnabled: Boolean = true,
+    val letterSpellingDelayMs: Int = 750 // 500-2000ms in 250ms increments
 )

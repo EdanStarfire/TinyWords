@@ -1064,6 +1064,36 @@ fun SettingsDialogContent(
                                 }
 
                             )
+                            
+                            Text("Letter Spelling Delay", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
+                            val delayOptions = listOf(500, 750, 1000, 1250, 1500, 1750, 2000)
+                            val delayIndex = delayOptions.indexOfFirst { it == currentSettings.letterSpellingDelayMs }.coerceAtLeast(0)
+                            Text("${currentSettings.letterSpellingDelayMs}ms", fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
+                            Slider(
+                                value = delayIndex.toFloat(),
+                                onValueChange = {
+                                    val index = it.roundToInt()
+                                    val newDelay = delayOptions[index]
+                                    onSettingsChange(currentSettings.copy(letterSpellingDelayMs = newDelay))
+                                },
+                                steps = delayOptions.size - 2,
+                                valueRange = 0f..(delayOptions.size - 1).toFloat(),
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
+                                colors = SliderDefaults.colors(
+                                    activeTrackColor = AccentBlue,
+                                    inactiveTrackColor = Color.LightGray,
+                                    thumbColor = AccentBlue,
+                                    activeTickColor = Color.Transparent,
+                                    inactiveTickColor = Color.Transparent
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        thumbTrackGapSize = 0.dp
+                                    )
+                                }
+                            )
+                            
                             val trackOptions = listOf(
                                 "8-bit" to "eightbit.mp3",
                                 "Bedtime" to "bedtime.mp3",

@@ -22,6 +22,7 @@ object GameSettingsPrefsKeys {
     val TTS_VOLUME = intPreferencesKey("tts_volume")
     val BG_MUSIC_TRACK = androidx.datastore.preferences.core.stringPreferencesKey("bg_music_track")
     val TTS_ENABLED = booleanPreferencesKey("tts_enabled")
+    val LETTER_SPELLING_DELAY_MS = intPreferencesKey("letter_spelling_delay_ms")
 }
 
 val Context.gameSettingsDataStore by preferencesDataStore(name = "game_settings_prefs")
@@ -38,7 +39,8 @@ class GameSettingsRepository(private val context: Context) {
             musicVolume = prefs[GameSettingsPrefsKeys.MUSIC_VOLUME] ?: 100,
             ttsVolume = prefs[GameSettingsPrefsKeys.TTS_VOLUME] ?: 100,
             bgMusicTrack = prefs[GameSettingsPrefsKeys.BG_MUSIC_TRACK] ?: "chill.mp3",
-            ttsEnabled = prefs[GameSettingsPrefsKeys.TTS_ENABLED] ?: true
+            ttsEnabled = prefs[GameSettingsPrefsKeys.TTS_ENABLED] ?: true,
+            letterSpellingDelayMs = prefs[GameSettingsPrefsKeys.LETTER_SPELLING_DELAY_MS] ?: 750
         )
     }
 
@@ -54,6 +56,7 @@ class GameSettingsRepository(private val context: Context) {
             it[GameSettingsPrefsKeys.TTS_VOLUME] = settings.ttsVolume
             it[GameSettingsPrefsKeys.BG_MUSIC_TRACK] = settings.bgMusicTrack
             it[GameSettingsPrefsKeys.TTS_ENABLED] = settings.ttsEnabled
+            it[GameSettingsPrefsKeys.LETTER_SPELLING_DELAY_MS] = settings.letterSpellingDelayMs
         }
     }
 }

@@ -165,6 +165,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.
     *   [x] Change default background music track to 'chill.mp3'.
+    *   [x] Add letter spelling delay slider to Sound settings tab (2025-07-31): Users can now adjust the delay between letters when words are spelled out via TTS, ranging from 500ms to 2000ms in 250ms increments.
 *   **Task 4.12: App Icon Migration**
     *   [x] Migrated app icon to a new custom asset, placed app_icon.png in all mipmap-* folders for proper device support and updated manifest reference. Ensured all new icon files are included in git and handled mipmap-anydpi guidance.
 
@@ -172,8 +173,9 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**
     *   [x] Test TTS pronunciation clarity and timing across different scenarios.
-    *   [ ] Adjust TTS parameters (pitch, rate) if necessary for better experience.
+    *   [x] Adjust TTS parameters (pitch, rate) if necessary for better experience.
     *     [x] Slow down the spelling speed - it's pretty fast right now. (2025-07-28): Now each letter is spoken by TTS with a ~750ms pause between, implemented via coroutine per-letter in GameViewModel.)
+    *     [x] Make letter spelling delay user-configurable (2025-07-31): Added slider in Audio settings tab allowing users to adjust delay between letters from 500ms to 2000ms in 250ms increments. Default remains 750ms.
     *   [ ] (Post-MVP or iterative) Consider adding subtle, non-verbal sound effects for UI interactions (button clicks, animations) if desired, to complement TTS.
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
