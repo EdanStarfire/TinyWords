@@ -1066,6 +1066,7 @@ fun SettingsDialogContent(
 
                             )
 
+                            Text("Background Track", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
                             val trackOptions = listOf(
                                 "8-bit" to "eightbit.mp3",
                                 "Bedtime" to "bedtime.mp3",
@@ -1076,32 +1077,33 @@ fun SettingsDialogContent(
                                 "Island" to "island.mp3",
                                 "Mystery" to "mystery.mp3"
                             )
-                            var expanded by remember { mutableStateOf(false) }
-                            Text("Background Track", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                                    .background(Color.LightGray, RoundedCornerShape(8.dp))
-                                    .clickable { expanded = !expanded }
-                            ) {
-                                val selectedLabel = trackOptions.find { it.second == currentSettings.bgMusicTrack }?.first ?: currentSettings.bgMusicTrack.removeSuffix(".mp3")
-                                Text(selectedLabel, modifier = Modifier.padding(12.dp))
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    trackOptions.forEach { (label, resName) ->
-                                        DropdownMenuItem(
-                                            text = { Text(label) },
-                                            onClick = {
-                                                onSettingsChange(currentSettings.copy(bgMusicTrack = resName))
-                                                expanded = false
-                                            }
-                                        )
-                                    }
+                            val trackIndex = trackOptions.indexOfFirst { it.second == currentSettings.bgMusicTrack }.coerceAtLeast(0)
+                            val selectedLabel = trackOptions[trackIndex].first
+                            Text(selectedLabel, fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
+                            Slider(
+                                value = trackIndex.toFloat(),
+                                onValueChange = {
+                                    val index = it.roundToInt()
+                                    val newTrack = trackOptions[index].second
+                                    onSettingsChange(currentSettings.copy(bgMusicTrack = newTrack))
+                                },
+                                steps = trackOptions.size - 2,
+                                valueRange = 0f..(trackOptions.size - 1).toFloat(),
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
+                                colors = SliderDefaults.colors(
+                                    activeTrackColor = AccentBlue,
+                                    inactiveTrackColor = Color.LightGray,
+                                    thumbColor = AccentBlue,
+                                    activeTickColor = Color.Transparent,
+                                    inactiveTickColor = Color.Transparent
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        thumbTrackGapSize = 0.dp
+                                    )
                                 }
-                            }
+                            )
                         }
 
                     2 -> Column(

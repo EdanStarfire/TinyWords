@@ -177,10 +177,18 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Tab colors updated: Pink (Game), Blue (Music), Green (Speech), Purple (About)
     *   [x] Fixed layout issues preventing unwanted scrolling in settings tabs
 *   **Task 4.11: Background Music Selection**
-    *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
+    *   [x] Implement background music selection and playbook for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.
     *   [x] Change default background music track to 'chill.mp3'.
     *   [x] Add letter spelling delay slider to Sound settings tab (2025-07-31): Users can now adjust the delay between letters when words are spelled out via TTS, ranging from 500ms to 2000ms in 250ms increments.
+    *   [x] **2025-08-01: Enhanced background music selection UI with discrete slider:**
+        *   [x] **Replaced DropdownMenu with Slider**: Converted dropdown selection to discrete slider for consistent design pattern
+        *   [x] **Real-time track switching**: Music changes immediately as user drags slider (no dropdown interactions needed)
+        *   [x] **Consistent theming**: Uses `AccentBlue` colors to match Music tab aesthetic
+        *   [x] **Typography consistency**: Current track name displayed in 12sp font below title (matching TTS Speed pattern)
+        *   [x] **Maintains all 8 tracks**: 8-bit, Bedtime, Bounce, Chill, Electric, Epic, Island, Mystery options preserved
+        *   [x] **Index-based selection**: Discrete slider with 6 steps between 8 track options for precise control
+        *   [x] **Improved mobile UX**: Slider interactions more touch-friendly than dropdown menus
 *   **Task 4.12: App Icon Migration**
     *   [x] Migrated app icon to a new custom asset, placed app_icon.png in all mipmap-* folders for proper device support and updated manifest reference. Ensured all new icon files are included in git and handled mipmap-anydpi guidance.
 
