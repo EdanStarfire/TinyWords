@@ -15,6 +15,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -1333,6 +1334,60 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
 }
 
 @Composable
+fun CloseButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val density = LocalDensity.current
+    val size = 30.dp // 75% of original 40dp
+    val borderWidth = 2.dp
+    val cornerRadius = 8.dp
+    
+    Surface(
+        shape = RoundedCornerShape(cornerRadius),
+        border = BorderStroke(
+            borderWidth,
+            Brush.linearGradient(
+                colors = RainbowFull,
+                start = Offset.Zero,
+                end = Offset.Infinite
+            )
+        ),
+        color = ConfirmPink,
+        modifier = modifier.size(size)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable { onClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            Canvas(modifier = Modifier.size(15.dp)) {
+                val strokeWidth = 2.5.dp.toPx()
+                val canvasWidth = 15.dp.toPx()
+                val canvasHeight = 15.dp.toPx()
+                
+                // Draw X lines with AccentPink color
+                drawLine(
+                    color = AccentPink,
+                    start = Offset(0f, 0f),
+                    end = Offset(canvasWidth, canvasHeight),
+                    strokeWidth = strokeWidth,
+                    cap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+                drawLine(
+                    color = AccentPink,
+                    start = Offset(canvasWidth, 0f),
+                    end = Offset(0f, canvasHeight),
+                    strokeWidth = strokeWidth,
+                    cap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ThemedSettingsModal(
     onDismiss: () -> Unit,
     content: @Composable () -> Unit
@@ -1369,6 +1424,7 @@ fun ThemedSettingsModal(
                 .background(ModalScrim)
                 .clickable(onClick = onDismiss, indication = null, interactionSource = remember { MutableInteractionSource() })
         ) {
+            // Main modal content
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -1382,6 +1438,14 @@ fun ThemedSettingsModal(
                     .clickable(enabled = false, indication = null, interactionSource = remember { MutableInteractionSource() }) {}
             ) {
                 content()
+                
+                // Close button positioned in top-right corner, slightly overlapping the modal border  
+                CloseButton(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .offset(x = 12.dp, y = (-12).dp)
+                )
             }
         }
     }

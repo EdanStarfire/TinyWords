@@ -191,6 +191,23 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
         *   [x] Version automatically updates in UI when build version is changed
         *   [x] Positioned version display in bottom-right corner of About settings tab
 
+*   **Task 4.14: Settings Modal Close Button**
+    *   [x] **2025-08-01: Enhanced settings modal with dedicated close button:**
+        *   [x] **CloseButton Composable**: Custom-designed close button component
+            *   [x] Size: 30dp × 30dp rounded square (75% size for subtle appearance)
+            *   [x] Styling: Pink background (`ConfirmPink`) with rainbow border (`RainbowFull`)
+            *   [x] Icon: Custom Canvas-drawn X with `AccentPink` color (matches game tab underline)
+            *   [x] Proportions: 15dp × 15dp X icon with 2.5dp stroke width for visual balance
+        *   [x] **Modal Integration**: Added close button to `ThemedSettingsModal`
+            *   [x] Positioning: Top-right corner with optimized overlap (3/4 inside, 1/4 outside modal border)
+            *   [x] Offset: `(x = 12.dp, y = -12.dp)` for proper text clearance and visual balance
+            *   [x] Functionality: Triggers `onDismiss()` callback for consistent modal dismissal
+        *   [x] **Technical Implementation**:
+            *   [x] Added `androidx.compose.foundation.layout.offset` import
+            *   [x] Custom Canvas drawing with hardcoded dimensions for compilation stability
+            *   [x] Color consistency using established theme palette (`AccentPink`, `ConfirmPink`, `RainbowFull`)
+        *   [x] **UX Enhancement**: Provides intuitive close option beyond clicking outside modal area
+
 ## Phase 5: Refinement & Testing
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**
