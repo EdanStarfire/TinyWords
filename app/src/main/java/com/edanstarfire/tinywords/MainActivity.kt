@@ -167,17 +167,17 @@ fun ConfirmButton(
 }
 
 @Composable
-fun ScoreProgressBar(
-    score: Int,
-    highScore: Int,
+fun StreakProgressBar(
+    currentStreak: Int,
+    highStreak: Int,
     isLandscape: Boolean,
-    scoreDelta: Int?,
+    streakDelta: Int?,
     modifier: Modifier = Modifier
 ) {
     val progress = when {
-        highScore <= 0 -> 1f
-        score >= highScore -> 1f
-        else -> score.toFloat() / highScore
+        highStreak <= 0 -> 1f
+        currentStreak >= highStreak -> 1f
+        else -> currentStreak.toFloat() / highStreak
     }
     val progressBgColor = ProgressBgColor // Light pastel
     val progressFillColor = ProgressFillColor // Pink (Hot Pink)
@@ -217,19 +217,19 @@ fun ScoreProgressBar(
                 )
             }
             Text(
-                text = "%d".format(score),
+                text = "%d".format(currentStreak),
                 fontSize = 16.sp,
                 color = Color.Black,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(top = 8.dp)
             )
             AnimatedVisibility(
-                visible = (scoreDelta ?: 0) > 0,
+                visible = (streakDelta ?: 0) != 0,
                 modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
-                    text = "+${scoreDelta ?: 0}",
+                    text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
                     fontSize = 22.sp,
-                    color = SuccessGreen,
+                    color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
@@ -265,19 +265,19 @@ fun ScoreProgressBar(
                 )
             }
             Text(
-                text = "%d".format(score),
+                text = "%d".format(currentStreak),
                 fontSize = 18.sp,
                 color = Color.Black,
                 modifier = Modifier.align(Alignment.CenterStart).padding(start = 12.dp)
             )
             AnimatedVisibility(
-                visible = (scoreDelta ?: 0) > 0,
+                visible = (streakDelta ?: 0) != 0,
                 modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
-                    text = "+${scoreDelta ?: 0}",
+                    text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
                     fontSize = 22.sp,
-                    color = SuccessGreen,
+                    color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
@@ -298,8 +298,8 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         contentScale = ContentScale.Crop
     )
     if (isLandscape) {
-        val score by viewModel?.score?.collectAsState() ?: remember { mutableStateOf(0) }
-        val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: remember { mutableStateOf(0) }
+        val currentStreak by viewModel?.streak?.collectAsState() ?: remember { mutableStateOf(0) }
+        val highStreak by viewModel?.streakHigh?.collectAsState() ?: remember { mutableStateOf(0) }
         Row(
             modifier = modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 2.dp),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -309,24 +309,24 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 modifier = Modifier.fillMaxHeight().weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                val scoreDelta by viewModel?.scoreDelta?.collectAsState()
+                val streakDelta by viewModel?.streakDelta?.collectAsState()
                     ?: remember { mutableStateOf(null) }
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    ScoreProgressBar(
-                        score = score,
-                        highScore = scoreHigh,
+                    StreakProgressBar(
+                        currentStreak = currentStreak,
+                        highStreak = highStreak,
                         isLandscape = true,
-                        scoreDelta = null,
+                        streakDelta = null,
                         modifier = Modifier.align(Alignment.Center)
                     )
                     this@Row.AnimatedVisibility(
-                        visible = (scoreDelta ?: 0) > 0,
+                        visible = (streakDelta ?: 0) != 0,
                         modifier = Modifier.align(Alignment.Center)
                     ) {
                         Text(
-                            text = "+${scoreDelta ?: 0}",
+                            text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
                             fontSize = 44.sp,
-                            color = SuccessGreen,
+                            color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
@@ -358,9 +358,9 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
         }
     } else {
         // Portrait/Default
-        val score by viewModel?.score?.collectAsState()
+        val currentStreak by viewModel?.streak?.collectAsState()
             ?: remember { mutableStateOf(0) }
-        val scoreHigh by viewModel?.scoreHigh?.collectAsState()
+        val highStreak by viewModel?.streakHigh?.collectAsState()
             ?: remember { mutableStateOf(0) }
         Column(
             modifier = modifier
@@ -373,14 +373,14 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                val scoreDelta by viewModel?.scoreDelta?.collectAsState() ?: remember { mutableStateOf(null) }
+                val streakDelta by viewModel?.streakDelta?.collectAsState() ?: remember { mutableStateOf(null) }
                 Box(modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 54.dp), contentAlignment = Alignment.Center) {
-                    ScoreProgressBar(score = score, highScore = scoreHigh, isLandscape = false, scoreDelta = null)
-                    this@Column.AnimatedVisibility(visible = (scoreDelta ?: 0) > 0, modifier = Modifier.align(Alignment.Center)) {
+                    StreakProgressBar(currentStreak = currentStreak, highStreak = highStreak, isLandscape = false, streakDelta = null)
+                    this@Column.AnimatedVisibility(visible = (streakDelta ?: 0) != 0, modifier = Modifier.align(Alignment.Center)) {
                         Text(
-                            text = "+${scoreDelta ?: 0}",
+                            text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
                             fontSize = 42.sp,
-                            color = SuccessGreen,
+                            color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
@@ -617,9 +617,6 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
         if (currentChallenge != null) {
             // 2x1 layout: first two centered across, third below
             if (isLandscape) {
-                val score by viewModel?.score?.collectAsState() ?: remember { mutableStateOf(0) }
-                val scoreHigh by viewModel?.scoreHigh?.collectAsState() ?: remember { mutableStateOf(0) }
-
                 Row(
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -1237,7 +1234,7 @@ fun GameBorder(viewModel: GameViewModel?, onDialogOpenChange: (Boolean) -> Unit)
     if (viewModel != null) {
         val streak by viewModel.streak.collectAsState()
         val score by viewModel.score.collectAsState()
-        val scoreDelta by viewModel.scoreDelta.collectAsState()
+        val streakDelta by viewModel.streakDelta.collectAsState()
         val feedbackState by viewModel.feedbackState.collectAsState()
         val isHintEnabled by viewModel.isHintButtonEnabled.collectAsState()
         val configuration = LocalConfiguration.current

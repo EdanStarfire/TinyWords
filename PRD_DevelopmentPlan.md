@@ -136,10 +136,21 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *       [x] In this case, the progress bar should remain filled completely.
     *     [x] At the far left of the progress bar should be a small area for a current score. It should support numbers up to 99,999.
     *   [x] The rainbow border uses RainbowFull, visible around all progress bars and confirmation dialogs. RainbowMain is removed. All borders/generic gradients now reference RainbowFull for consistency. (2025-07-27)
+    *   **NOTE (2025-08-01): Score-based progress bar deprecated in favor of streak-based system (Task 4.6). The scoring logic resets score to 0 on any incorrect answer, making score progress representation less meaningful than streak progress. Score-based progress bar can be restored if scoring logic changes in future iterations.**
 
-*   **Task 4.6: High Streak Progress Bar + Display**
-    *   [-] Build and show a progress bar reflecting current streak progress toward the high streak. (cancelled, not planned)
-    *   [-] Display alongside or underneath streak number in UI. (cancelled, not planned)
+*   **Task 4.6: Streak-Based Progress Bar System**
+    *   [x] **2025-08-01: Complete overhaul of progress bar to represent streaks instead of scores:**
+        *   [x] Renamed `ScoreProgressBar` → `StreakProgressBar` with streak-focused parameters
+        *   [x] Progress calculation now uses `currentStreak / highStreak` instead of `score / highScore`
+        *   [x] Display text shows current streak number instead of score value
+        *   [x] Updated all call sites in both landscape and portrait orientations
+        *   [x] **Delta feedback system redesigned for streak tracking:**
+            *   [x] Replaced `scoreDelta` with `streakDelta` in ViewModel and UI
+            *   [x] Correct answers show `+1` in green (always +1 for streak increment)
+            *   [x] Incorrect answers show `-N` in red (where N is the lost streak count)
+            *   [x] Color-coded feedback: SuccessGreen for gains, FailRed for losses
+            *   [x] Updated visibility logic to show both positive and negative deltas
+        *   [x] **Rationale**: The scoring system essentially tracked streaks anyway since score resets to 0 on any incorrect answer, making streak-based progress representation much more intuitive and meaningful for users.
 
 *   (Tasks remain largely the same)
 *   **Task 4.7: Choice Image Shake Animation**

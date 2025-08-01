@@ -69,8 +69,8 @@ class GameViewModel @Inject constructor(
     val scoreHigh: StateFlow<Int> = _scoreHigh.asStateFlow()
     private val _streakHigh = MutableStateFlow(0)
     val streakHigh: StateFlow<Int> = _streakHigh.asStateFlow()
-    private val _scoreDelta = MutableStateFlow<Int?>(null)
-    val scoreDelta: StateFlow<Int?> = _scoreDelta.asStateFlow()
+    private val _streakDelta = MutableStateFlow<Int?>(null)
+    val streakDelta: StateFlow<Int?> = _streakDelta.asStateFlow()
 
     // 4. Hint status
     // Example: 0 = No hint, 1 = Tier 1 hint active (e.g. highlight letters), 2 = Tier 2 hint (e.g. show word)
@@ -238,10 +238,10 @@ class GameViewModel @Inject constructor(
                 _streakHigh.value = newStreak
                 viewModelScope.launch { scoreStreakRepo.setStreakHigh(newStreak) }
             }
-            _scoreDelta.value = pts
+            _streakDelta.value = 1 // Always +1 for correct answers
             viewModelScope.launch {
                 kotlinx.coroutines.delay(2000)
-                _scoreDelta.value = null
+                _streakDelta.value = null
             }
             _disabledWords.value = emptySet() // Reset on correct
             if (_gameSettings.value.autoAdvance) {
@@ -251,10 +251,19 @@ class GameViewModel @Inject constructor(
             }
         } else {
             _feedbackState.value = GameFeedback.Incorrect(selectedWord)
+            val previousStreak = _streak.value
             _streak.value = 0
             _score.value = 0
             viewModelScope.launch { scoreStreakRepo.setStreak(0) }
             viewModelScope.launch { scoreStreakRepo.setScore(0) }
+            // Show negative streak delta (lost streak)
+            if (previousStreak > 0) {
+                _streakDelta.value = -previousStreak
+                viewModelScope.launch {
+                    kotlinx.coroutines.delay(2000)
+                    _streakDelta.value = null
+                }
+            }
             // Add this word to the set of disabled words
             _disabledWords.value = _disabledWords.value + selectedWord
             incorrectCount++
