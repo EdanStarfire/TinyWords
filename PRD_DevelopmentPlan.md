@@ -216,6 +216,26 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
             *   [x] Color consistency using established theme palette (`AccentPink`, `ConfirmPink`, `RainbowFull`)
         *   [x] **UX Enhancement**: Provides intuitive close option beyond clicking outside modal area
 
+*   **Task 4.15: Exit Game Button with Confirmation**
+    *   [x] **2025-08-01: Added Exit Game functionality to settings modal:**
+        *   [x] **Exit Game Button**: Added dedicated exit button in Game tab of settings modal
+            *   [x] Styling: Uses `ModalLightBg` background with rainbow border for visual distinction from Reset Scores
+            *   [x] Functionality: Cleanly exits application using `android.os.Process.killProcess(android.os.Process.myPid())`
+            *   [x] Safety: Dismisses settings modal before exit to prevent UI state issues
+        *   [x] **Responsive Layout Design**:
+            *   [x] **Portrait Mode**: Exit Game button positioned below Reset Scores button vertically
+            *   [x] **Landscape Mode**: Exit Game and Reset Scores share same horizontal row for space efficiency
+            *   [x] Consistent 16dp spacing between buttons in landscape, 16dp top padding for Exit Game in portrait
+        *   [x] **Confirmation Dialog System**:
+            *   [x] Added `showExitConfirm` state management alongside existing `showResetConfirm`
+            *   [x] Exit confirmation displays "Are you sure you want to exit the game?" message
+            *   [x] Yes/No buttons with consistent styling (ModalLightBg for Yes, ConfirmPink for No)
+            *   [x] **Mutual Exclusion**: Both buttons hide when either confirmation dialog is active (prevents confusion)
+        *   [x] **State Management Enhancement**:
+            *   [x] Refactored settings modal button logic with proper if/else if/else structure
+            *   [x] Consistent behavior across portrait and landscape orientations
+            *   [x] Maintains existing Reset Scores functionality while adding Exit Game capability
+
 ## Phase 5: Refinement & Testing
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**

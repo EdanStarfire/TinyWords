@@ -974,26 +974,18 @@ fun SettingsDialogContent(
                         }
 
                         var showResetConfirm by remember { mutableStateOf(false) }
-                        Box(Modifier.fillMaxWidth()) {
+                        var showExitConfirm by remember { mutableStateOf(false) }
+                        val configuration = LocalConfiguration.current
+                        val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                        
+                        if (isLandscape) {
+                            // Landscape: Reset Scores and Exit Game in same row
                             val confirmPink = ConfirmPink
                             val rainbowBorder = RainbowFull
-                            if (!showResetConfirm) {
-                                ConfirmButton(
-                                    fillColor = confirmPink,
-                                    borderColors = rainbowBorder,
-                                    modifier = Modifier.padding(top = 32.dp)
-                                        .align(Alignment.Center),
-                                    onClick = { showResetConfirm = true },
-                                ) {
-                                    Text(
-                                        "Reset Scores",
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            } else {
+                            
+                            if (showResetConfirm) {
                                 Column(
-                                    Modifier.padding(top = 32.dp).align(Alignment.Center),
+                                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Text(
@@ -1028,6 +1020,208 @@ fun SettingsDialogContent(
                                         ) {
                                             Text(
                                                 "No",
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+                            } else if (showExitConfirm) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        "Are you sure you want to exit the game?",
+                                        modifier = Modifier.padding(bottom = 16.dp)
+                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth(0.7f)
+                                    ) {
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).padding(end = 8.dp)
+                                                .height(46.dp),
+                                            fillColor = ModalLightBg,
+                                            borderColors = rainbowBorder,
+                                            onClick = {
+                                                showExitConfirm = false
+                                                onDismiss()
+                                                android.os.Process.killProcess(android.os.Process.myPid())
+                                            }
+                                        ) {
+                                            Text(
+                                                stringResource(id = R.string.button_yes),
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).height(46.dp),
+                                            fillColor = confirmPink,
+                                            borderColors = rainbowBorder,
+                                            onClick = { showExitConfirm = false }
+                                        ) {
+                                            Text(
+                                                "No",
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+                            } else {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+                                ) {
+                                    ConfirmButton(
+                                        fillColor = confirmPink,
+                                        borderColors = rainbowBorder,
+                                        modifier = Modifier.weight(1f),
+                                        onClick = { showResetConfirm = true },
+                                    ) {
+                                        Text(
+                                            "Reset Scores",
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    ConfirmButton(
+                                        fillColor = ModalLightBg,
+                                        borderColors = rainbowBorder,
+                                        modifier = Modifier.weight(1f),
+                                        onClick = { showExitConfirm = true },
+                                    ) {
+                                        Text(
+                                            "Exit Game",
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            // Portrait: Reset Scores above Exit Game
+                            val confirmPink = ConfirmPink
+                            val rainbowBorder = RainbowFull
+                            
+                            if (showResetConfirm) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        stringResource(id = R.string.dialog_restart_message),
+                                        modifier = Modifier.padding(bottom = 16.dp)
+                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth(0.7f)
+                                    ) {
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).padding(end = 8.dp)
+                                                .height(46.dp),
+                                            fillColor = confirmPink,
+                                            borderColors = rainbowBorder,
+                                            onClick = {
+                                                showResetConfirm = false
+                                                onResetGame()
+                                            }
+                                        ) {
+                                            Text(
+                                                stringResource(id = R.string.button_yes),
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).height(46.dp),
+                                            fillColor = ModalLightBg,
+                                            borderColors = rainbowBorder,
+                                            onClick = { showResetConfirm = false }
+                                        ) {
+                                            Text(
+                                                "No",
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+                            } else if (showExitConfirm) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        "Are you sure you want to exit the game?",
+                                        modifier = Modifier.padding(bottom = 16.dp)
+                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.fillMaxWidth(0.7f)
+                                    ) {
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).padding(end = 8.dp)
+                                                .height(46.dp),
+                                            fillColor = ModalLightBg,
+                                            borderColors = rainbowBorder,
+                                            onClick = {
+                                                showExitConfirm = false
+                                                onDismiss()
+                                                android.os.Process.killProcess(android.os.Process.myPid())
+                                            }
+                                        ) {
+                                            Text(
+                                                stringResource(id = R.string.button_yes),
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        ConfirmButton(
+                                            modifier = Modifier.weight(1f).height(46.dp),
+                                            fillColor = confirmPink,
+                                            borderColors = rainbowBorder,
+                                            onClick = { showExitConfirm = false }
+                                        ) {
+                                            Text(
+                                                "No",
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+                            } else {
+                                Column(modifier = Modifier.fillMaxWidth()) {
+                                    Box(Modifier.fillMaxWidth()) {
+                                        ConfirmButton(
+                                            fillColor = confirmPink,
+                                            borderColors = rainbowBorder,
+                                            modifier = Modifier.padding(top = 32.dp)
+                                                .align(Alignment.Center),
+                                            onClick = { showResetConfirm = true },
+                                        ) {
+                                            Text(
+                                                "Reset Scores",
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                    
+                                    // Exit Game button below Reset Scores in portrait
+                                    Box(Modifier.fillMaxWidth()) {
+                                        ConfirmButton(
+                                            fillColor = ModalLightBg,
+                                            borderColors = rainbowBorder,
+                                            modifier = Modifier.padding(top = 16.dp)
+                                                .align(Alignment.Center),
+                                            onClick = { showExitConfirm = true },
+                                        ) {
+                                            Text(
+                                                "Exit Game",
                                                 color = Color.Black,
                                                 fontWeight = FontWeight.Bold
                                             )
