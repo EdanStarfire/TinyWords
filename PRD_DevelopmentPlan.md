@@ -236,6 +236,32 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
             *   [x] Consistent behavior across portrait and landscape orientations
             *   [x] Maintains existing Reset Scores functionality while adding Exit Game capability
 
+*   **Task 4.16: Comprehensive Settings Modal Slider Theming System**
+    *   [x] **2025-08-01: Complete overhaul of slider appearance and implementation across all settings tabs:**
+        *   [x] **Theme-Matched Color System**: Each tab's sliders now match their respective background themes
+            *   [x] **Game Tab (Pink)**: `MediumPink` active track, `AccentPink` thumb, `PastelPink` tick marks
+            *   [x] **Music Tab (Blue)**: `MediumBlue` active track, `AccentBlue` thumb, `PastelBlue` tick marks  
+            *   [x] **Speech Tab (Green)**: `MediumGreen` active track, `SuccessGreen` thumb, `PastelGreen` tick marks
+            *   [x] All tabs use `Color.LightGray` for inactive track color for consistent contrast
+        *   [x] **New Color Palette Additions**:
+            *   [x] Added `MediumBlue` (`0xFF83C4FE`) - Music tab medium blue for active tracks
+            *   [x] Added `MediumGreen` (`0xFF66BB6A`) - Speech tab medium green for active tracks
+            *   [x] Added `PastelGreen` (`0xFFA5D6A7`) - Speech tab light green for tick marks
+            *   [x] Added `MediumPink` (`0xFFFFB3DA`) - Game tab medium pink for active tracks
+        *   [x] **Tick Mark System for Discrete Sliders**:
+            *   [x] **Auto-Advance Timer**: 6 discrete values (Off, 3s, 5s, 8s, 15s, 30s) with visible pink tick marks
+            *   [x] **Background Track Selection**: 8 music tracks with visible blue tick marks for precise selection
+            *   [x] **TTS Speed**: 8 discrete speeds (0.25x to 2.0x) with visible green tick marks
+            *   [x] **Letter Spelling Delay**: 7 discrete delays (500ms to 2000ms) with visible green tick marks
+            *   [x] **Background Music Volume**: Continuous slider without tick marks (intentional)
+        *   [x] **Clean Code Architecture**:
+            *   [x] **Single-source-of-truth**: Thumb colors specified only in main `Slider.colors` parameter for visibility
+            *   [x] **Track override pattern**: Track/tick colors specified only in `SliderDefaults.Track` override
+            *   [x] **Eliminated redundancy**: Removed ~50+ lines of duplicate color specifications
+            *   [x] **Zero thumb gap**: Consistent `thumbTrackGapSize = 0.dp` across all sliders
+        *   [x] **Fixed Visibility Issues**: Resolved thumb color display problems through proper parameter placement
+        *   [x] **Consistent Implementation**: All 5 sliders follow identical clean pattern for maintainability
+
 ## Phase 5: Refinement & Testing
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**

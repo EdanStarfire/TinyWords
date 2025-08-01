@@ -916,15 +916,17 @@ fun SettingsDialogContent(
                                 modifier = Modifier.fillMaxWidth().height(22.dp),
                                 enabled = true,
                                 colors = SliderDefaults.colors(
-                                    activeTrackColor = ConfirmPink,
-                                    inactiveTrackColor = Color.LightGray,
-                                    thumbColor = AccentPink,
-                                    activeTickColor = Color.Transparent,
-                                    inactiveTickColor = Color.Transparent
+                                    thumbColor = AccentPink
                                 ),
                                 track = { sliderState ->
                                     SliderDefaults.Track(
                                         sliderState = sliderState,
+                                        colors = SliderDefaults.colors(
+                                            activeTrackColor = MediumPink,
+                                            inactiveTrackColor = Color.LightGray,
+                                            activeTickColor = PastelPink,
+                                            inactiveTickColor = MediumPink
+                                        ),
                                         thumbTrackGapSize = 0.dp
                                     )
                                 }
@@ -1245,19 +1247,20 @@ fun SettingsDialogContent(
                                 },
                                 modifier = Modifier.fillMaxWidth().height(22.dp),
                                 colors = SliderDefaults.colors(
-                                    activeTrackColor = ConfirmPink,
-                                    inactiveTrackColor = Color.LightGray,
-                                    thumbColor = AccentPink,
-                                    activeTickColor = Color.Transparent,
-                                    inactiveTickColor = Color.Transparent
+                                    thumbColor = AccentBlue
                                 ),
                                 track = { sliderState ->
                                     SliderDefaults.Track(
                                         sliderState = sliderState,
+                                        colors = SliderDefaults.colors(
+                                            activeTrackColor = MediumBlue,
+                                            inactiveTrackColor = Color.LightGray,
+                                            activeTickColor = Color.Transparent,
+                                            inactiveTickColor = Color.Transparent
+                                        ),
                                         thumbTrackGapSize = 0.dp
                                     )
                                 }
-
                             )
 
                             Text("Background Track", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
@@ -1285,15 +1288,17 @@ fun SettingsDialogContent(
                                 valueRange = 0f..(trackOptions.size - 1).toFloat(),
                                 modifier = Modifier.fillMaxWidth().height(22.dp),
                                 colors = SliderDefaults.colors(
-                                    activeTrackColor = AccentBlue,
-                                    inactiveTrackColor = Color.LightGray,
-                                    thumbColor = AccentBlue,
-                                    activeTickColor = Color.Transparent,
-                                    inactiveTickColor = Color.Transparent
+                                    thumbColor = AccentBlue
                                 ),
                                 track = { sliderState ->
                                     SliderDefaults.Track(
                                         sliderState = sliderState,
+                                        colors = SliderDefaults.colors(
+                                            activeTrackColor = MediumBlue,
+                                            inactiveTrackColor = Color.LightGray,
+                                            activeTickColor = PastelBlue,
+                                            inactiveTickColor = MediumBlue
+                                        ),
                                         thumbTrackGapSize = 0.dp
                                     )
                                 }
@@ -1318,15 +1323,17 @@ fun SettingsDialogContent(
                                 valueRange = 0f..(speedOptions.size - 1).toFloat(),
                                 modifier = Modifier.fillMaxWidth().height(22.dp),
                                 colors = SliderDefaults.colors(
-                                    activeTrackColor = SuccessGreen,
-                                    inactiveTrackColor = Color.LightGray,
-                                    thumbColor = SuccessGreen,
-                                    activeTickColor = Color.Transparent,
-                                    inactiveTickColor = Color.Transparent
+                                    thumbColor = SuccessGreen
                                 ),
                                 track = { sliderState ->
                                     SliderDefaults.Track(
                                         sliderState = sliderState,
+                                        colors = SliderDefaults.colors(
+                                            activeTrackColor = MediumGreen,
+                                            inactiveTrackColor = Color.LightGray,
+                                            activeTickColor = PastelGreen,
+                                            inactiveTickColor = MediumGreen
+                                        ),
                                         thumbTrackGapSize = 0.dp
                                     )
                                 }
@@ -1347,15 +1354,17 @@ fun SettingsDialogContent(
                                 valueRange = 0f..(delayOptions.size - 1).toFloat(),
                                 modifier = Modifier.fillMaxWidth().height(22.dp),
                                 colors = SliderDefaults.colors(
-                                    activeTrackColor = SuccessGreen,
-                                    inactiveTrackColor = Color.LightGray,
-                                    thumbColor = SuccessGreen,
-                                    activeTickColor = Color.Transparent,
-                                    inactiveTickColor = Color.Transparent
+                                    thumbColor = SuccessGreen
                                 ),
                                 track = { sliderState ->
                                     SliderDefaults.Track(
                                         sliderState = sliderState,
+                                        colors = SliderDefaults.colors(
+                                            activeTrackColor = MediumGreen,
+                                            inactiveTrackColor = Color.LightGray,
+                                            activeTickColor = PastelGreen,
+                                            inactiveTickColor = MediumGreen
+                                        ),
                                         thumbTrackGapSize = 0.dp
                                     )
                                 }
