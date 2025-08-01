@@ -262,6 +262,33 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
         *   [x] **Fixed Visibility Issues**: Resolved thumb color display problems through proper parameter placement
         *   [x] **Consistent Implementation**: All 5 sliders follow identical clean pattern for maintainability
 
+*   **Task 4.17: Settings UI Consistency & Spacing Improvements**  
+    *   [x] **2025-08-01: Inline value display standardization across all settings:**
+        *   [x] **TTS Speed**: Changed from separate title/value to inline "TTS Speed (1.0x)" format
+        *   [x] **Letter Spelling Delay**: Updated to inline "Letter Spelling Delay (1500ms)" format  
+        *   [x] **Background Music Volume**: Added inline "Background Music Volume (75%)" format
+        *   [x] **Auto-Advance Timer**: Updated to use smaller font (12.sp) for value text in parentheses
+        *   [x] All value displays use consistent 12.sp font size with proper Row alignment
+    *   [x] **Settings reorganization and checkbox consistency:**
+        *   [x] **Moved "Spell Target Word"** from Game tab to Speech tab for better thematic grouping
+        *   [x] **Renamed** to "Spell Word at Start" for clearer functionality description
+        *   [x] **Updated checkbox styling** to SuccessGreen color scheme matching Speech tab theme
+        *   [x] **Standardized spacing** across all checkboxes using `padding(top = 16.dp, bottom = 2.dp)`
+    *   [x] **About tab text spacing fix:**
+        *   [x] Fixed double-spaced line wrapping by adding explicit `lineHeight = 12.sp`
+        *   [x] Eliminated awkward text spacing in portrait mode with controlled line height ratio (1.2)
+
+*   **Task 4.18: Repository Maintenance & Build Artifact Management**
+    *   [x] **2025-08-01: Enhanced .gitignore protection for Android development:**
+        *   [x] **Android build artifacts**: Added `app/release/`, `app/debug/`, `*/build/` exclusions
+        *   [x] **Security files**: Added `*.jks`, `*.keystore`, `keystore.properties` exclusions  
+        *   [x] **Development files**: Added `*.hprof`, `.claude/settings.local.json` exclusions
+        *   [x] **Repository cleanup**: Removed tracked build artifacts and sensitive files from version control
+            *   [x] Removed `.claude/settings.local.json` (local development settings)
+            *   [x] Removed `app/release/TinyWords_v1.0.0.aab` and `.apk` (release builds)
+            *   [x] Removed `app/release/baselineProfiles/` and `output-metadata.json` (build metadata)
+        *   [x] **Best practices**: Prevents accidental commits of large files, build artifacts, and credentials
+
 ## Phase 5: Refinement & Testing
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**

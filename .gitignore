@@ -13,3 +13,19 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android release builds
+app/release/
+app/debug/
+*/build/
+
+# Android signing files
+*.jks
+*.keystore
+keystore.properties
+
+# Android profiling
+*.hprof
+
+# Claude Code local settings
+.claude/settings.local.json

@@ -890,15 +890,14 @@ fun SettingsDialogContent(
                         val timerIndex =
                             timerOptions.indexOfFirst { it == (if (autoAdvanceEnabled) autoAdvanceInterval else 0) }
                                 .coerceAtLeast(0)
-                        Text(
-                            "Auto-Advance Timer " + if (timerOptions[timerIndex] == 0) "(Off)" else "(${timerOptions[timerIndex]}s)",
-                            modifier = Modifier.padding(
-                                bottom = 2.dp,
-                                top = 0.dp,
-                                start = 0.dp,
-                                end = 0.dp
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Auto-Advance Timer ", fontWeight = FontWeight.Bold)
+                            Text(
+                                if (timerOptions[timerIndex] == 0) "(Off)" else "(${timerOptions[timerIndex]}s)",
+                                fontSize = 12.sp
                             )
-                        )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
                         Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
                             Slider(
                                 value = timerIndex.toFloat(),
@@ -934,7 +933,7 @@ fun SettingsDialogContent(
                         }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
+                            modifier = Modifier.padding(top = 16.dp, bottom = 2.dp)
                         ) {
                             Checkbox(
                                 checked = alwaysShowWords,
@@ -952,27 +951,6 @@ fun SettingsDialogContent(
                                 modifier = Modifier.size(18.dp).padding(end = 8.dp)
                             )
                             Text("Always Show Words")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.height(28.dp).padding(bottom = 2.dp)
-                        ) {
-                            Checkbox(
-                                checked = pronounceTargetAtStart,
-                                onCheckedChange = {
-                                    onSettingsChange(
-                                        currentSettings.copy(
-                                            pronounceTargetAtStart = it
-                                        )
-                                    )
-                                },
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = AccentPink, // pink fallback
-                                    checkmarkColor = Color.White
-                                ),
-                                modifier = Modifier.size(18.dp).padding(end = 8.dp)
-                            )
-                            Text("Spell Target Word")
                         }
 
                         var showResetConfirm by remember { mutableStateOf(false) }
@@ -1237,7 +1215,10 @@ fun SettingsDialogContent(
                     1 -> Column(
                         Modifier.padding(28.dp)
                     ) {
-                            Text("Background Music Volume", fontWeight = FontWeight.Bold)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("Background Music Volume ", fontWeight = FontWeight.Bold)
+                                Text("(${currentSettings.musicVolume}%)", fontSize = 12.sp)
+                            }
                             Slider(
                                 value = currentSettings.musicVolume.toFloat(),
                                 valueRange = 0f..100f,
@@ -1308,10 +1289,13 @@ fun SettingsDialogContent(
                     2 -> Column(
                         Modifier.padding(28.dp)
                     ) {
-                            Text("TTS Speed", fontWeight = FontWeight.Bold)
                             val speedOptions = listOf(0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f)
                             val speedIndex = speedOptions.indexOfFirst { kotlin.math.abs(it - currentSettings.ttsSpeed) < 0.01f }.coerceAtLeast(0)
-                            Text("${String.format("%.1f", currentSettings.ttsSpeed)}x", fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("TTS Speed ", fontWeight = FontWeight.Bold)
+                                Text("(${String.format("%.1f", currentSettings.ttsSpeed)}x)", fontSize = 12.sp)
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
                             Slider(
                                 value = speedIndex.toFloat(),
                                 onValueChange = {
@@ -1339,10 +1323,13 @@ fun SettingsDialogContent(
                                 }
                             )
                             
-                            Text("Letter Spelling Delay", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
                             val delayOptions = listOf(500, 750, 1000, 1250, 1500, 1750, 2000)
                             val delayIndex = delayOptions.indexOfFirst { it == currentSettings.letterSpellingDelayMs }.coerceAtLeast(0)
-                            Text("${currentSettings.letterSpellingDelayMs}ms", fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 12.dp)) {
+                                Text("Letter Spelling Delay ", fontWeight = FontWeight.Bold)
+                                Text("(${currentSettings.letterSpellingDelayMs}ms)", fontSize = 12.sp)
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
                             Slider(
                                 value = delayIndex.toFloat(),
                                 onValueChange = {
@@ -1387,6 +1374,28 @@ fun SettingsDialogContent(
                                 )
                                 Text("TTS Spelling & Feedback")
                             }
+                            
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(top = 16.dp, bottom = 2.dp)
+                            ) {
+                                Checkbox(
+                                    checked = pronounceTargetAtStart,
+                                    onCheckedChange = {
+                                        onSettingsChange(
+                                            currentSettings.copy(
+                                                pronounceTargetAtStart = it
+                                            )
+                                        )
+                                    },
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = SuccessGreen,
+                                        checkmarkColor = Color.White
+                                    ),
+                                    modifier = Modifier.size(18.dp).padding(end = 8.dp)
+                                )
+                                Text("Spell Word at Start")
+                            }
                         }
 
                     3 -> Box(
@@ -1395,6 +1404,7 @@ fun SettingsDialogContent(
                         Text(
                             text = stringResource(R.string.about_summary),
                             fontSize = 10.sp,
+                            lineHeight = 12.sp,
                             softWrap = true,
                             maxLines = Int.MAX_VALUE
                         )
