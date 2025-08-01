@@ -360,7 +360,8 @@ class GameViewModel @Inject constructor(
                 word.length > 1 && word.uppercase() == word -> word.lowercase()
                 else -> word
             }
-            ttsHelper.speak(spoken, pitch = pitch, rate = rate)
+            val effectiveRate = rate ?: _gameSettings.value.ttsSpeed
+            ttsHelper.speak(spoken, pitch = pitch, rate = effectiveRate)
         } else {
             Log.w("GameViewModel", "Attempted to pronounceWord, but TTS is not ready. Word: $word")
         }
@@ -373,8 +374,9 @@ class GameViewModel @Inject constructor(
         spellJob = viewModelScope.launch {
             if (isTtsReady.value) {
                 val currentSettings = gameSettings.value
+                val effectiveRate = rate ?: currentSettings.ttsSpeed
                 for ((i, c) in word.withIndex()) {
-                    ttsHelper.speak(c.uppercaseChar().toString(), pitch = pitch, rate = rate)
+                    ttsHelper.speak(c.uppercaseChar().toString(), pitch = pitch, rate = effectiveRate)
                     if (i < word.lastIndex) delay(currentSettings.letterSpellingDelayMs.toLong())
                 }
             } else {

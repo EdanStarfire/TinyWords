@@ -96,6 +96,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -809,7 +810,8 @@ fun SettingsDialogContent(
 
     val tabAccentBgColors = listOf(
         PastelPink, // Game - pink pastel
-        PastelBlue, // Sound - blue pastel
+        PastelBlue, // Music - blue pastel
+        Color(0xFFE8F5E8), // Speech - light green pastel
         PastelPurple  // About - purple pastel
     )
     var selectedTab by rememberSaveable { mutableStateOf(0) }
@@ -828,7 +830,7 @@ fun SettingsDialogContent(
                 .fillMaxWidth()
                 .heightIn(max = 520.dp) // prevents infinite height crash
         ) {
-            val tabTitles = listOf("Game", "Sound", "About")
+            val tabTitles = listOf("Game", "Music", "Speech", "About")
 
             Row(
                 Modifier.fillMaxWidth().height(48.dp),
@@ -844,7 +846,7 @@ fun SettingsDialogContent(
                                 tabAccentBgColors[idx],
                                 when (idx) {
                                     0 -> RoundedCornerShape(topStart = 32.dp, topEnd = 0.dp)
-                                    2 -> RoundedCornerShape(topStart = 0.dp, topEnd = 32.dp)
+                                    3 -> RoundedCornerShape(topStart = 0.dp, topEnd = 32.dp)
                                     else -> RoundedCornerShape(0.dp)
                                 }
                             ),
@@ -855,7 +857,8 @@ fun SettingsDialogContent(
                             color = if (selected) when (idx) {
                                 0 -> AccentPink
                                 1 -> AccentBlue
-                                2 -> AccentPurple
+                                2 -> SuccessGreen
+                                3 -> AccentPurple
                                 else -> Color.Black
                             } else Color.Black,
                             fontWeight = if (selected) FontWeight.Bold else null
@@ -866,7 +869,8 @@ fun SettingsDialogContent(
                                     when (selectedTab) {
                                         0 -> AccentPink
                                         1 -> AccentBlue
-                                        2 -> AccentPurple
+                                        2 -> SuccessGreen
+                                        3 -> AccentPurple
                                         else -> AccentPink
                                     }
                                 )
@@ -1036,10 +1040,9 @@ fun SettingsDialogContent(
                         }
                     }
 
-                    1 -> Box(
-                        Modifier.fillMaxSize()
+                    1 -> Column(
+                        Modifier.padding(28.dp)
                     ) {
-                        Column(Modifier.fillMaxSize().align(Alignment.TopCenter).padding(28.dp)) {
                             Text("Background Music Volume", fontWeight = FontWeight.Bold)
                             Slider(
                                 value = currentSettings.musicVolume.toFloat(),
@@ -1064,36 +1067,7 @@ fun SettingsDialogContent(
                                 }
 
                             )
-                            
-                            Text("Letter Spelling Delay", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
-                            val delayOptions = listOf(500, 750, 1000, 1250, 1500, 1750, 2000)
-                            val delayIndex = delayOptions.indexOfFirst { it == currentSettings.letterSpellingDelayMs }.coerceAtLeast(0)
-                            Text("${currentSettings.letterSpellingDelayMs}ms", fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
-                            Slider(
-                                value = delayIndex.toFloat(),
-                                onValueChange = {
-                                    val index = it.roundToInt()
-                                    val newDelay = delayOptions[index]
-                                    onSettingsChange(currentSettings.copy(letterSpellingDelayMs = newDelay))
-                                },
-                                steps = delayOptions.size - 2,
-                                valueRange = 0f..(delayOptions.size - 1).toFloat(),
-                                modifier = Modifier.fillMaxWidth().height(22.dp),
-                                colors = SliderDefaults.colors(
-                                    activeTrackColor = AccentBlue,
-                                    inactiveTrackColor = Color.LightGray,
-                                    thumbColor = AccentBlue,
-                                    activeTickColor = Color.Transparent,
-                                    inactiveTickColor = Color.Transparent
-                                ),
-                                track = { sliderState ->
-                                    SliderDefaults.Track(
-                                        sliderState = sliderState,
-                                        thumbTrackGapSize = 0.dp
-                                    )
-                                }
-                            )
-                            
+
                             val trackOptions = listOf(
                                 "8-bit" to "eightbit.mp3",
                                 "Bedtime" to "bedtime.mp3",
@@ -1130,6 +1104,69 @@ fun SettingsDialogContent(
                                     }
                                 }
                             }
+                        }
+
+                    2 -> Column(
+                        Modifier.padding(28.dp)
+                    ) {
+                            Text("TTS Speed", fontWeight = FontWeight.Bold)
+                            val speedOptions = listOf(0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f)
+                            val speedIndex = speedOptions.indexOfFirst { kotlin.math.abs(it - currentSettings.ttsSpeed) < 0.01f }.coerceAtLeast(0)
+                            Text("${String.format("%.1f", currentSettings.ttsSpeed)}x", fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
+                            Slider(
+                                value = speedIndex.toFloat(),
+                                onValueChange = {
+                                    val index = it.roundToInt()
+                                    val newSpeed = speedOptions[index]
+                                    onSettingsChange(currentSettings.copy(ttsSpeed = newSpeed))
+                                },
+                                steps = speedOptions.size - 2,
+                                valueRange = 0f..(speedOptions.size - 1).toFloat(),
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
+                                colors = SliderDefaults.colors(
+                                    activeTrackColor = SuccessGreen,
+                                    inactiveTrackColor = Color.LightGray,
+                                    thumbColor = SuccessGreen,
+                                    activeTickColor = Color.Transparent,
+                                    inactiveTickColor = Color.Transparent
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        thumbTrackGapSize = 0.dp
+                                    )
+                                }
+                            )
+                            
+                            Text("Letter Spelling Delay", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
+                            val delayOptions = listOf(500, 750, 1000, 1250, 1500, 1750, 2000)
+                            val delayIndex = delayOptions.indexOfFirst { it == currentSettings.letterSpellingDelayMs }.coerceAtLeast(0)
+                            Text("${currentSettings.letterSpellingDelayMs}ms", fontSize = 12.sp, modifier = Modifier.padding(bottom = 4.dp))
+                            Slider(
+                                value = delayIndex.toFloat(),
+                                onValueChange = {
+                                    val index = it.roundToInt()
+                                    val newDelay = delayOptions[index]
+                                    onSettingsChange(currentSettings.copy(letterSpellingDelayMs = newDelay))
+                                },
+                                steps = delayOptions.size - 2,
+                                valueRange = 0f..(delayOptions.size - 1).toFloat(),
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
+                                colors = SliderDefaults.colors(
+                                    activeTrackColor = SuccessGreen,
+                                    inactiveTrackColor = Color.LightGray,
+                                    thumbColor = SuccessGreen,
+                                    activeTickColor = Color.Transparent,
+                                    inactiveTickColor = Color.Transparent
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        thumbTrackGapSize = 0.dp
+                                    )
+                                }
+                            )
+                            
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(top = 16.dp, bottom = 2.dp)
@@ -1140,7 +1177,7 @@ fun SettingsDialogContent(
                                         onSettingsChange(currentSettings.copy(ttsEnabled = it))
                                     },
                                     colors = CheckboxDefaults.colors(
-                                        checkedColor = AccentBlue,
+                                        checkedColor = SuccessGreen,
                                         checkmarkColor = Color.White
                                     ),
                                     modifier = Modifier.size(18.dp).padding(end = 8.dp)
@@ -1148,17 +1185,23 @@ fun SettingsDialogContent(
                                 Text("TTS Spelling & Feedback")
                             }
                         }
-                    }
 
-                    2 -> Box(
-                        Modifier.fillMaxSize()
+                    3 -> Box(
+                        modifier = Modifier.padding(28.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.about_summary),
                             fontSize = 10.sp,
-                            modifier = Modifier.align(Alignment.TopCenter).padding(28.dp),
                             softWrap = true,
                             maxLines = Int.MAX_VALUE
+                        )
+                        val packageInfo = LocalContext.current.packageManager.getPackageInfo(LocalContext.current.packageName, 0)
+                        Text(
+                            text = "v${packageInfo.versionName}",
+                            fontSize = 8.sp,
+                            color = Color.Gray,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
                         )
                     }
                 }

@@ -95,7 +95,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Implement modal or screen for user to modify:
         *   [x] Timer on/off and duration
         *   [x] Always Show Words Under Images
-        *   [ ] TTS rate
+        *   [x] TTS rate/speed (0.25x - 2.0x range with live display)
         *   [x] Pronounce target word at start of each challenge (default: OFF)
         *   [ ] Other future toggles
 *   **Task 3.7: Settings Persistence (Jetpack DataStore)**
@@ -158,9 +158,13 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] All previously unfinished modal, underline, and rainbow skinning tasks are complete.
 
 *   **Task 4.10: Settings Modal Tabs**
-    *   [x] Three settings modal tabs ('Game', 'Sound', 'About') added atop modal with correct tab indicator, evenly divided header.
-    *   [x] About tab now loads a multi-line app summary and AI usage disclosure from string resources; supports line breaks/display for large body text in Compose UI.
-    *   [x] Game tab is functional; Sound/About content blocks scaffolded and tab coloring/refinement now complete.
+    *   [x] Four settings modal tabs ('Game', 'Music', 'Speech', 'About') reorganized with proper content distribution:
+        *   [x] Game tab: Auto-advance timer, word display options, reset scores functionality
+        *   [x] Music tab: Background music volume and track selection
+        *   [x] Speech tab: TTS speed control, letter spelling delay, TTS enable/disable 
+        *   [x] About tab: App summary, AI disclosure, and dynamic version display (v1.0.1)
+    *   [x] Tab colors updated: Pink (Game), Blue (Music), Green (Speech), Purple (About)
+    *   [x] Fixed layout issues preventing unwanted scrolling in settings tabs
 *   **Task 4.11: Background Music Selection**
     *   [x] Implement background music selection and playback for MP3s. Allow user to choose tracks in Sound tab of settings.
     *   [x] Build out sound settings: master volume, music volume, TTS enable/disable, and music selection options.
@@ -169,6 +173,13 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 *   **Task 4.12: App Icon Migration**
     *   [x] Migrated app icon to a new custom asset, placed app_icon.png in all mipmap-* folders for proper device support and updated manifest reference. Ensured all new icon files are included in git and handled mipmap-anydpi guidance.
 
+*   **Task 4.13: Version Management System**
+    *   [x] Implemented automated version display system:
+        *   [x] Updated app version to v1.0.1 (versionCode 2) in build.gradle.kts
+        *   [x] Added dynamic version display in About tab that reads from app package info
+        *   [x] Version automatically updates in UI when build version is changed
+        *   [x] Positioned version display in bottom-right corner of About settings tab
+
 ## Phase 5: Refinement & Testing
 
 *   **Task 5.1: TTS Refinements & Optional Sound Effects**
@@ -176,6 +187,7 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   [x] Adjust TTS parameters (pitch, rate) if necessary for better experience.
     *     [x] Slow down the spelling speed - it's pretty fast right now. (2025-07-28): Now each letter is spoken by TTS with a ~750ms pause between, implemented via coroutine per-letter in GameViewModel.)
     *     [x] Make letter spelling delay user-configurable (2025-07-31): Added slider in Audio settings tab allowing users to adjust delay between letters from 500ms to 2000ms in 250ms increments. Default remains 750ms.
+    *     [x] Add TTS speed control (2025-08-01): Implemented configurable TTS speech rate from 0.25x to 2.0x speed with live display in Speech settings tab. All TTS calls now respect user's preferred speech rate.
     *   [ ] (Post-MVP or iterative) Consider adding subtle, non-verbal sound effects for UI interactions (button clicks, animations) if desired, to complement TTS.
 *   **Task 5.2: Thorough Testing** (Includes testing TTS functionality thoroughly)
 *   **Task 5.3: UI Polish & Animations**
