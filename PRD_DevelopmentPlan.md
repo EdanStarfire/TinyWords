@@ -334,6 +334,138 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
     *   Support for landscape layout and border UI in all modes.
 *   [ ] (General) Sweep for any additional polish or small gaps left in UI/logic per PRD/UX checklist.
 
+## Phase 6: Multi-Level Complexity Progression System Implementation
+
+*   **Planning & Documentation Tasks:**
+    *   [x] Create comprehensive leveling proposal (PRD_LevelingProposal.md)
+    *   [x] Document Phase 6 implementation plan in development roadmap
+    *   [x] Define 5-level phonetic progression system requirements
+    *   [x] Specify technical architecture and data schema changes
+
+### **Phase 6.1: Data Schema Enhancement & Migration**
+*   **Task 6.1.1: Enhanced WordDefinition Data Structure**
+    *   [ ] Update `WordDefinition` data class with new fields:
+        *   `phonicComplexity: Int` (1-5 difficulty rating)
+        *   `soundType: SoundTypeClassification` (nested data class)
+        *   `levelAvailability: List<Int>` (levels where word can appear)
+        *   `tags: List<String>` (semantic grouping)
+    *   [ ] Create `SoundTypeClassification` data class with consonant/vowel categorization
+    *   [ ] Implement backward compatibility for existing WordDefinition usage
+*   **Task 6.1.2: Asset Migration & Phonetic Classification**
+    *   [ ] Create phonetic classification utility functions for automated tagging
+    *   [ ] Develop migration script for existing `word_definitions.json`
+    *   [ ] Classify all existing words by phonetic complexity (1-5 levels)
+    *   [ ] Add level availability and semantic tags to all current vocabulary
+    *   [ ] Validate migrated data against new schema requirements
+*   **Task 6.1.3: Data Validation & Testing Infrastructure**
+    *   [ ] Create comprehensive validation tests for phonetic classifications
+    *   [ ] Add unit tests for migration script accuracy
+    *   [ ] Implement data consistency checks for level assignments
+    *   [ ] Create test fixtures for each complexity level
+
+### **Phase 6.2: Algorithm Implementation & Challenge Generation**
+*   **Task 6.2.1: Level-Aware WordChallengeGenerator Enhancement**
+    *   [ ] Add new core methods:
+        *   `generateLevelChallenge(targetWord: String, difficultyLevel: Int): WordChallenge?`
+        *   `findLevelAppropriateDistractors(target: WordDefinition, level: Int): List<WordDefinition>`
+        *   `validateChallengeAppropriateForLevel(challenge: WordChallenge, level: Int): Boolean`
+    *   [ ] Implement backward compatibility with existing random generation
+    *   [ ] Add deterministic mode support for level-based testing
+*   **Task 6.2.2: Level-Specific Algorithm Implementation**
+    *   [ ] **Level 1: Single Letter Variation**
+        *   Implement enhanced phonetic matching for CVC patterns
+        *   Create single-position letter variation logic
+        *   Add phoneme awareness validation
+    *   [ ] **Level 2: Consonant Blends & Digraphs**
+        *   Implement consonant cluster detection and matching
+        *   Create blend vs. simple consonant variation logic
+        *   Add CCVC pattern recognition
+    *   [ ] **Level 3: Complex Vowel Patterns**
+        *   Implement vowel digraph matching (ea, oa, etc.)
+        *   Create silent letter awareness algorithms
+        *   Add complex vowel pattern validation
+    *   [ ] **Level 4: Plural Forms** (Optional)
+        *   Implement morphological transformation detection
+        *   Create plural vs. singular matching logic
+        *   Add basic morphological awareness patterns
+    *   [ ] **Level 5: Multi-Word Concepts** (Optional)
+        *   Implement compound concept matching
+        *   Create semantic relationship algorithms
+        *   Add adjective-noun pair logic
+*   **Task 6.2.3: Phonetic Pattern Matching Infrastructure**
+    *   [ ] Create phonetic similarity scoring algorithms
+    *   [ ] Implement sound pattern categorization utilities
+    *   [ ] Add phoneme position analysis functions
+    *   [ ] Create distractor quality validation logic
+
+### **Phase 6.3: Game Logic Integration & Level Management**
+*   **Task 6.3.1: GameViewModel Level Integration**
+    *   [ ] Add level state management to GameViewModel
+    *   [ ] Integrate level-aware challenge generation
+    *   [ ] Update challenge selection logic for current level
+    *   [ ] Add level validation for challenge appropriateness
+*   **Task 6.3.2: Level Progression Logic**
+    *   [ ] Implement level selection and persistence
+    *   [ ] Add level-appropriate word pool filtering
+    *   [ ] Create level validation and fallback mechanisms
+    *   [ ] Add level-based challenge difficulty scaling
+*   **Task 6.3.3: Settings Integration for Level Selection**
+    *   [ ] Add level selection to GameSettingsPreferences
+    *   [ ] Implement level persistence across sessions
+    *   [ ] Add level change handling in GameViewModel
+    *   [ ] Create level reset functionality
+
+### **Phase 6.4: UI Integration & Level Selection Interface**
+*   **Task 6.4.1: Level Selection UI Components**
+    *   [ ] Create level selection composable
+    *   [ ] Add level indicator to main game screen
+    *   [ ] Implement level progression visual feedback
+    *   [ ] Add level description and help text
+*   **Task 6.4.2: Settings Modal Level Integration**
+    *   [ ] Add level selection to Game tab in settings
+    *   [ ] Create level difficulty description display
+    *   [ ] Implement level change confirmation dialog
+    *   [ ] Add level reset functionality to settings
+*   **Task 6.4.3: Level Progress & Feedback Systems**
+    *   [ ] Add level-appropriate challenge feedback
+    *   [ ] Create level progression indicators
+    *   [ ] Implement level completion celebrations
+    *   [ ] Add level-based hint system enhancements
+
+### **Phase 6.5: Comprehensive Testing & Validation**
+*   **Task 6.5.1: Algorithm Testing Suite**
+    *   [ ] Create comprehensive unit tests for each level's algorithms
+    *   [ ] Add integration tests for level progression logic
+    *   [ ] Implement challenge quality validation tests
+    *   [ ] Create phonetic classification accuracy tests
+*   **Task 6.5.2: Data Migration & Consistency Testing**
+    *   [ ] Test migration script with full vocabulary
+    *   [ ] Validate phonetic classifications for accuracy
+    *   [ ] Test level availability assignments
+    *   [ ] Verify semantic tag consistency
+*   **Task 6.5.3: User Experience & Flow Testing**
+    *   [ ] Test level progression user flows
+    *   [ ] Validate difficulty scaling between levels
+    *   [ ] Test edge cases with limited vocabulary subsets
+    *   [ ] Verify level selection and persistence
+
+### **Phase 6.6: Performance Optimization & Polish**
+*   **Task 6.6.1: Algorithm Performance Optimization**
+    *   [ ] Optimize challenge generation for each level
+    *   [ ] Implement caching strategies for level-appropriate words
+    *   [ ] Add performance monitoring for complex algorithms
+    *   [ ] Create level-specific optimization strategies
+*   **Task 6.6.2: Memory & Storage Optimization**
+    *   [ ] Optimize phonetic data storage structure
+    *   [ ] Implement lazy loading for level-specific data
+    *   [ ] Add memory usage monitoring for large vocabularies
+    *   [ ] Create efficient level switching mechanisms
+*   **Task 6.6.3: Final Integration & Polish**
+    *   [ ] Complete end-to-end testing across all levels
+    *   [ ] Implement final UI polish and animations
+    *   [ ] Add comprehensive error handling and recovery
+    *   [ ] Create final documentation and help content
+
 ## General Considerations Throughout Development:
 *   (Same as before)
 

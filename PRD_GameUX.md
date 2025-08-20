@@ -116,4 +116,4 @@
 *   Tracking scores/achievements (beyond streak).
 *   Parental controls (perhaps locking settings).
 *   More granular sound controls (e.g., voice vs. SFX toggle in Options).
-
+*   Lives (# wrong before streak over)
