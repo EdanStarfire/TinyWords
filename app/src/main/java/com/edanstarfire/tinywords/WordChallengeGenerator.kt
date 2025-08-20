@@ -29,16 +29,53 @@ object GameModule { // You can name this module as you see fit
                 .use { it.readText() }
         } catch (ioException: IOException) {
             // Log the error or handle it appropriately
-            ioException.printStackTrace()
+            Log.e("GameModule", "Error reading word_definitions.json", ioException)
             return emptyList()
         }
 
         return try {
-            Json { ignoreUnknownKeys = true } // Good practice to add ignoreUnknownKeys
-                .decodeFromString<List<WordDefinition>>(jsonString)
+            // Phase 6.1: Enhanced JSON parsing with backward compatibility
+            val json = Json { 
+                ignoreUnknownKeys = true // Handle both old and new JSON formats
+                coerceInputValues = true // Handle type mismatches gracefully
+            }
+            
+            val definitions = json.decodeFromString<List<WordDefinition>>(jsonString)
+            Log.i("GameModule", "Successfully loaded ${definitions.size} word definitions")
+            
+            // Validate the loaded definitions
+            val validatedDefinitions = definitions.filter { definition ->
+                val isValid = definition.targetWord.isNotBlank() && 
+                             definition.imageResName.isNotBlank() &&
+                             definition.phonicComplexity in 1..5 &&
+                             definition.levelAvailability.isNotEmpty() &&
+                             definition.levelAvailability.all { it in 1..5 }
+                
+                if (!isValid) {
+                    Log.w("GameModule", "Invalid word definition: ${definition.targetWord}")
+                }
+                isValid
+            }
+            
+            Log.i("GameModule", "Validated ${validatedDefinitions.size} word definitions")
+            validatedDefinitions
+            
         } catch (e: Exception) {
             // Log the error or handle it appropriately
-            e.printStackTrace()
+            Log.e("GameModule", "Error parsing word definitions JSON", e)
+            
+            // Attempt fallback migration if this appears to be legacy format
+            try {
+                Log.i("GameModule", "Attempting legacy format migration...")
+                val migratedJson = WordDefinitionMigrator.migrateWordDefinitionsJson(jsonString)
+                val json = Json { ignoreUnknownKeys = true }
+                val migratedDefinitions = json.decodeFromString<List<WordDefinition>>(migratedJson)
+                Log.i("GameModule", "Successfully migrated ${migratedDefinitions.size} legacy definitions")
+                return migratedDefinitions
+            } catch (migrationError: Exception) {
+                Log.e("GameModule", "Migration also failed", migrationError)
+            }
+            
             return emptyList()
         }
     }

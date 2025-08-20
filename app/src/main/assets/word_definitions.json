@@ -1,837 +1,2935 @@
 [
-  {
-    "targetWord": "CAT",
-    "imageResName": "cat_image",
-    "part1Sound": "C",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "BAT",
-    "imageResName": "bat_image",
-    "part1Sound": "B",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "HAT",
-    "imageResName": "hat_image",
-    "part1Sound": "H",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "MAT",
-    "imageResName": "mat_image",
-    "part1Sound": "M",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "FAT",
-    "imageResName": "fat_image",
-    "part1Sound": "F",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "PAT",
-    "imageResName": "pat_image",
-    "part1Sound": "P",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "RAT",
-    "imageResName": "rat_image",
-    "part1Sound": "R",
-    "part2Sound": "A",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "DOG",
-    "imageResName": "dog_image",
-    "part1Sound": "D",
-    "part2Sound": "O",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "HOG",
-    "imageResName": "hog_image",
-    "part1Sound": "H",
-    "part2Sound": "O",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "LOG",
-    "imageResName": "log_image",
-    "part1Sound": "L",
-    "part2Sound": "O",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "FOG",
-    "imageResName": "fog_image",
-    "part1Sound": "F",
-    "part2Sound": "O",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "SUN",
-    "imageResName": "sun_image",
-    "part1Sound": "S",
-    "part2Sound": "U",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "BUN",
-    "imageResName": "bun_image",
-    "part1Sound": "B",
-    "part2Sound": "U",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "RUN",
-    "imageResName": "run_image",
-    "part1Sound": "R",
-    "part2Sound": "U",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "BED",
-    "imageResName": "bed_image",
-    "part1Sound": "B",
-    "part2Sound": "E",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "RED",
-    "imageResName": "red_image",
-    "part1Sound": "R",
-    "part2Sound": "E",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "PIG",
-    "imageResName": "pig_image",
-    "part1Sound": "P",
-    "part2Sound": "I",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "BIG",
-    "imageResName": "big_image",
-    "part1Sound": "B",
-    "part2Sound": "I",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "DIG",
-    "imageResName": "dig_image",
-    "part1Sound": "D",
-    "part2Sound": "I",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "WIG",
-    "imageResName": "wig_image",
-    "part1Sound": "W",
-    "part2Sound": "I",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "FIN",
-    "imageResName": "fin_image",
-    "part1Sound": "F",
-    "part2Sound": "I",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "PIN",
-    "imageResName": "pin_image",
-    "part1Sound": "P",
-    "part2Sound": "I",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "TIN",
-    "imageResName": "tin_image",
-    "part1Sound": "T",
-    "part2Sound": "I",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "WIN",
-    "imageResName": "win_image",
-    "part1Sound": "W",
-    "part2Sound": "I",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "BIN",
-    "imageResName": "bin_image",
-    "part1Sound": "B",
-    "part2Sound": "I",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "MOP",
-    "imageResName": "mop_image",
-    "part1Sound": "M",
-    "part2Sound": "O",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "TOP",
-    "imageResName": "top_image",
-    "part1Sound": "T",
-    "part2Sound": "O",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "POP",
-    "imageResName": "pop_image",
-    "part1Sound": "P",
-    "part2Sound": "O",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "COP",
-    "imageResName": "cop_image",
-    "part1Sound": "C",
-    "part2Sound": "O",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "HOP",
-    "imageResName": "hop_image",
-    "part1Sound": "H",
-    "part2Sound": "O",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "CUP",
-    "imageResName": "cup_image",
-    "part1Sound": "C",
-    "part2Sound": "U",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "TUB",
-    "imageResName": "tub_image",
-    "part1Sound": "T",
-    "part2Sound": "U",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "CUB",
-    "imageResName": "cub_image",
-    "part1Sound": "C",
-    "part2Sound": "U",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "RUB",
-    "imageResName": "rub_image",
-    "part1Sound": "R",
-    "part2Sound": "U",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "CAB",
-    "imageResName": "cab_image",
-    "part1Sound": "C",
-    "part2Sound": "A",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "COB",
-    "imageResName": "cob_image",
-    "part1Sound": "C",
-    "part2Sound": "O",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "NAB",
-    "imageResName": "nab_image",
-    "part1Sound": "N",
-    "part2Sound": "A",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "LAB",
-    "imageResName": "lab_image",
-    "part1Sound": "L",
-    "part2Sound": "A",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "SOB",
-    "imageResName": "sob_image",
-    "part1Sound": "S",
-    "part2Sound": "O",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "ROB",
-    "imageResName": "rob_image",
-    "part1Sound": "R",
-    "part2Sound": "O",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "RIB",
-    "imageResName": "rib_image",
-    "part1Sound": "R",
-    "part2Sound": "I",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "SIT",
-    "imageResName": "sit_image",
-    "part1Sound": "S",
-    "part2Sound": "I",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "PIT",
-    "imageResName": "pit_image",
-    "part1Sound": "P",
-    "part2Sound": "I",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "HIT",
-    "imageResName": "hit_image",
-    "part1Sound": "H",
-    "part2Sound": "I",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "FIT",
-    "imageResName": "fit_image",
-    "part1Sound": "F",
-    "part2Sound": "I",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "JET",
-    "imageResName": "jet_image",
-    "part1Sound": "J",
-    "part2Sound": "E",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "NET",
-    "imageResName": "net_image",
-    "part1Sound": "N",
-    "part2Sound": "E",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "WET",
-    "imageResName": "wet_image",
-    "part1Sound": "W",
-    "part2Sound": "E",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "PET",
-    "imageResName": "pet_image",
-    "part1Sound": "P",
-    "part2Sound": "E",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "PEN",
-    "imageResName": "pen_image",
-    "part1Sound": "P",
-    "part2Sound": "E",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "HEN",
-    "imageResName": "hen_image",
-    "part1Sound": "H",
-    "part2Sound": "E",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "TEN",
-    "imageResName": "ten_image",
-    "part1Sound": "T",
-    "part2Sound": "E",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "MEN",
-    "imageResName": "men_image",
-    "part1Sound": "M",
-    "part2Sound": "E",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "BOX",
-    "imageResName": "box_image",
-    "part1Sound": "B",
-    "part2Sound": "O",
-    "part3Sound": "X"
-  },
-  {
-    "targetWord": "FOX",
-    "imageResName": "fox_image",
-    "part1Sound": "F",
-    "part2Sound": "O",
-    "part3Sound": "X"
-  },
-  {
-    "targetWord": "BOY",
-    "imageResName": "boy_image",
-    "part1Sound": "B",
-    "part2Sound": "O",
-    "part3Sound": "Y"
-  },
-  {
-    "targetWord": "BOW",
-    "imageResName": "bow_image",
-    "part1Sound": "B",
-    "part2Sound": "O",
-    "part3Sound": "W"
-  },
-  {
-    "targetWord": "TOY",
-    "imageResName": "toy_image",
-    "part1Sound": "T",
-    "part2Sound": "O",
-    "part3Sound": "Y"
-  },
-  {
-    "targetWord": "JOY",
-    "imageResName": "joy_image",
-    "part1Sound": "J",
-    "part2Sound": "O",
-    "part3Sound": "Y"
-  },
-  {
-    "targetWord": "MOM",
-    "imageResName": "mom_image",
-    "part1Sound": "M",
-    "part2Sound": "O",
-    "part3Sound": "M"
-  },
-  {
-    "targetWord": "MOW",
-    "imageResName": "mow_image",
-    "part1Sound": "M",
-    "part2Sound": "O",
-    "part3Sound": "W"
-  },
-  {
-    "targetWord": "COW",
-    "imageResName": "cow_image",
-    "part1Sound": "C",
-    "part2Sound": "O",
-    "part3Sound": "W"
-  },
-  {
-    "targetWord": "SIX",
-    "imageResName": "six_image",
-    "part1Sound": "S",
-    "part2Sound": "I",
-    "part3Sound": "X"
-  },
-  {
-    "targetWord": "MIX",
-    "imageResName": "mix_image",
-    "part1Sound": "M",
-    "part2Sound": "I",
-    "part3Sound": "X"
-  },
-  {
-    "targetWord": "FIX",
-    "imageResName": "fix_image",
-    "part1Sound": "F",
-    "part2Sound": "I",
-    "part3Sound": "X"
-  },
-  {
-    "targetWord": "CAN",
-    "imageResName": "can_image",
-    "part1Sound": "C",
-    "part2Sound": "A",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "FAN",
-    "imageResName": "fan_image",
-    "part1Sound": "F",
-    "part2Sound": "A",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "MAN",
-    "imageResName": "man_image",
-    "part1Sound": "M",
-    "part2Sound": "A",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "VAN",
-    "imageResName": "van_image",
-    "part1Sound": "V",
-    "part2Sound": "A",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "PAN",
-    "imageResName": "pan_image",
-    "part1Sound": "P",
-    "part2Sound": "A",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "TAN",
-    "imageResName": "tan_image",
-    "part1Sound": "T",
-    "part2Sound": "A",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "CAP",
-    "imageResName": "cap_image",
-    "part1Sound": "C",
-    "part2Sound": "A",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "MAP",
-    "imageResName": "map_image",
-    "part1Sound": "M",
-    "part2Sound": "A",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "NAP",
-    "imageResName": "nap_image",
-    "part1Sound": "N",
-    "part2Sound": "A",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "SAP",
-    "imageResName": "sap_image",
-    "part1Sound": "S",
-    "part2Sound": "A",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "DAD",
-    "imageResName": "dad_image",
-    "part1Sound": "D",
-    "part2Sound": "A",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "MAD",
-    "imageResName": "mad_image",
-    "part1Sound": "M",
-    "part2Sound": "A",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "SAD",
-    "imageResName": "sad_image",
-    "part1Sound": "S",
-    "part2Sound": "A",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "DAM",
-    "imageResName": "dam_image",
-    "part1Sound": "D",
-    "part2Sound": "A",
-    "part3Sound": "M"
-  },
-  {
-    "targetWord": "JAM",
-    "imageResName": "jam_image",
-    "part1Sound": "J",
-    "part2Sound": "A",
-    "part3Sound": "M"
-  },
-  {
-    "targetWord": "RAM",
-    "imageResName": "ram_image",
-    "part1Sound": "R",
-    "part2Sound": "A",
-    "part3Sound": "M"
-  },
-  {
-    "targetWord": "YAM",
-    "imageResName": "yam_image",
-    "part1Sound": "Y",
-    "part2Sound": "A",
-    "part3Sound": "M"
-  },
-  {
-    "targetWord": "HAM",
-    "imageResName": "ham_image",
-    "part1Sound": "H",
-    "part2Sound": "A",
-    "part3Sound": "M"
-  },
-  {
-    "targetWord": "BAG",
-    "imageResName": "bag_image",
-    "part1Sound": "B",
-    "part2Sound": "A",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "TAG",
-    "imageResName": "tag_image",
-    "part1Sound": "T",
-    "part2Sound": "A",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "RAG",
-    "imageResName": "rag_image",
-    "part1Sound": "R",
-    "part2Sound": "A",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "WAG",
-    "imageResName": "wag_image",
-    "part1Sound": "W",
-    "part2Sound": "A",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "LEG",
-    "imageResName": "leg_image",
-    "part1Sound": "L",
-    "part2Sound": "E",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "DIP",
-    "imageResName": "dip_image",
-    "part1Sound": "D",
-    "part2Sound": "I",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "HIP",
-    "imageResName": "hip_image",
-    "part1Sound": "H",
-    "part2Sound": "I",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "LIP",
-    "imageResName": "lip_image",
-    "part1Sound": "L",
-    "part2Sound": "I",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "ZIP",
-    "imageResName": "zip_image",
-    "part1Sound": "Z",
-    "part2Sound": "I",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "SIP",
-    "imageResName": "sip_image",
-    "part1Sound": "S",
-    "part2Sound": "I",
-    "part3Sound": "P"
-  },
-  {
-    "targetWord": "COT",
-    "imageResName": "cot_image",
-    "part1Sound": "C",
-    "part2Sound": "O",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "DOT",
-    "imageResName": "dot_image",
-    "part1Sound": "D",
-    "part2Sound": "O",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "HOT",
-    "imageResName": "hot_image",
-    "part1Sound": "H",
-    "part2Sound": "O",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "POT",
-    "imageResName": "pot_image",
-    "part1Sound": "P",
-    "part2Sound": "O",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "LOT",
-    "imageResName": "lot_image",
-    "part1Sound": "L",
-    "part2Sound": "O",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "COD",
-    "imageResName": "cod_image",
-    "part1Sound": "C",
-    "part2Sound": "O",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "NOD",
-    "imageResName": "nod_image",
-    "part1Sound": "N",
-    "part2Sound": "O",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "POD",
-    "imageResName": "pod_image",
-    "part1Sound": "P",
-    "part2Sound": "O",
-    "part3Sound": "D"
-  },
-  {
-    "targetWord": "BUG",
-    "imageResName": "bug_image",
-    "part1Sound": "B",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "HUG",
-    "imageResName": "hug_image",
-    "part1Sound": "H",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "JUG",
-    "imageResName": "jug_image",
-    "part1Sound": "J",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "MUG",
-    "imageResName": "mug_image",
-    "part1Sound": "M",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "RUG",
-    "imageResName": "rug_image",
-    "part1Sound": "R",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "TUG",
-    "imageResName": "tug_image",
-    "part1Sound": "T",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  },
-  {
-    "targetWord": "CUT",
-    "imageResName": "cut_image",
-    "part1Sound": "C",
-    "part2Sound": "U",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "HUT",
-    "imageResName": "hut_image",
-    "part1Sound": "H",
-    "part2Sound": "U",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "NUT",
-    "imageResName": "nut_image",
-    "part1Sound": "N",
-    "part2Sound": "U",
-    "part3Sound": "T"
-  },
-  {
-    "targetWord": "TON",
-    "imageResName": "ton_image",
-    "part1Sound": "T",
-    "part2Sound": "O",
-    "part3Sound": "N"
-  },
-  {
-    "targetWord": "HAY",
-    "imageResName": "hay_image",
-    "part1Sound": "H",
-    "part2Sound": "A",
-    "part3Sound": "Y"
-  },
-  {
-    "targetWord": "CAR",
-    "imageResName": "car_image",
-    "part1Sound": "C",
-    "part2Sound": "A",
-    "part3Sound": "R"
-  },
-  {
-    "targetWord": "FAR",
-    "imageResName": "far_image",
-    "part1Sound": "F",
-    "part2Sound": "A",
-    "part3Sound": "R"
-  },
-  {
-    "targetWord": "JAR",
-    "imageResName": "jar_image",
-    "part1Sound": "J",
-    "part2Sound": "A",
-    "part3Sound": "R"
-  },
-  {
-    "targetWord": "WEB",
-    "imageResName": "web_image",
-    "part1Sound": "W",
-    "part2Sound": "E",
-    "part3Sound": "B"
-  },
-  {
-    "targetWord": "WED",
-    "imageResName": "wed_image",
-    "part1Sound": "W",
-    "part2Sound": "E",
-    "part3Sound": "D"
-
-  },
-  {
-    "targetWord": "POX",
-    "imageResName": "pox_image",
-    "part1Sound": "P",
-    "part2Sound": "O",
-    "part3Sound": "X"
-
-  },
-  {
-    "targetWord": "LUG",
-    "imageResName": "lug_image",
-    "part1Sound": "L",
-    "part2Sound": "U",
-    "part3Sound": "G"
-  }
+    {
+        "targetWord": "CAT",
+        "imageResName": "cat_image",
+        "part1Sound": "C",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "BAT",
+        "imageResName": "bat_image",
+        "part1Sound": "B",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "HAT",
+        "imageResName": "hat_image",
+        "part1Sound": "H",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "MAT",
+        "imageResName": "mat_image",
+        "part1Sound": "M",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "FAT",
+        "imageResName": "fat_image",
+        "part1Sound": "F",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "PAT",
+        "imageResName": "pat_image",
+        "part1Sound": "P",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "RAT",
+        "imageResName": "rat_image",
+        "part1Sound": "R",
+        "part2Sound": "A",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "DOG",
+        "imageResName": "dog_image",
+        "part1Sound": "D",
+        "part2Sound": "O",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "HOG",
+        "imageResName": "hog_image",
+        "part1Sound": "H",
+        "part2Sound": "O",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "LOG",
+        "imageResName": "log_image",
+        "part1Sound": "L",
+        "part2Sound": "O",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "nature"
+        ]
+    },
+    {
+        "targetWord": "FOG",
+        "imageResName": "fog_image",
+        "part1Sound": "F",
+        "part2Sound": "O",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "nature"
+        ]
+    },
+    {
+        "targetWord": "SUN",
+        "imageResName": "sun_image",
+        "part1Sound": "S",
+        "part2Sound": "U",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "nature"
+        ]
+    },
+    {
+        "targetWord": "BUN",
+        "imageResName": "bun_image",
+        "part1Sound": "B",
+        "part2Sound": "U",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "food"
+        ]
+    },
+    {
+        "targetWord": "RUN",
+        "imageResName": "run_image",
+        "part1Sound": "R",
+        "part2Sound": "U",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "BED",
+        "imageResName": "bed_image",
+        "part1Sound": "B",
+        "part2Sound": "E",
+        "part3Sound": "D",
+        "phonicComplexity": 4,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "plural_form"
+            ]
+        },
+        "levelAvailability": [
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "RED",
+        "imageResName": "red_image",
+        "part1Sound": "R",
+        "part2Sound": "E",
+        "part3Sound": "D",
+        "phonicComplexity": 4,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "plural_form"
+            ]
+        },
+        "levelAvailability": [
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "PIG",
+        "imageResName": "pig_image",
+        "part1Sound": "P",
+        "part2Sound": "I",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "BIG",
+        "imageResName": "big_image",
+        "part1Sound": "B",
+        "part2Sound": "I",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "DIG",
+        "imageResName": "dig_image",
+        "part1Sound": "D",
+        "part2Sound": "I",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "WIG",
+        "imageResName": "wig_image",
+        "part1Sound": "W",
+        "part2Sound": "I",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "FIN",
+        "imageResName": "fin_image",
+        "part1Sound": "F",
+        "part2Sound": "I",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "PIN",
+        "imageResName": "pin_image",
+        "part1Sound": "P",
+        "part2Sound": "I",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "TIN",
+        "imageResName": "tin_image",
+        "part1Sound": "T",
+        "part2Sound": "I",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "WIN",
+        "imageResName": "win_image",
+        "part1Sound": "W",
+        "part2Sound": "I",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "BIN",
+        "imageResName": "bin_image",
+        "part1Sound": "B",
+        "part2Sound": "I",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MOP",
+        "imageResName": "mop_image",
+        "part1Sound": "M",
+        "part2Sound": "O",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "TOP",
+        "imageResName": "top_image",
+        "part1Sound": "T",
+        "part2Sound": "O",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "POP",
+        "imageResName": "pop_image",
+        "part1Sound": "P",
+        "part2Sound": "O",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "COP",
+        "imageResName": "cop_image",
+        "part1Sound": "C",
+        "part2Sound": "O",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "HOP",
+        "imageResName": "hop_image",
+        "part1Sound": "H",
+        "part2Sound": "O",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "CUP",
+        "imageResName": "cup_image",
+        "part1Sound": "C",
+        "part2Sound": "U",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "TUB",
+        "imageResName": "tub_image",
+        "part1Sound": "T",
+        "part2Sound": "U",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "CUB",
+        "imageResName": "cub_image",
+        "part1Sound": "C",
+        "part2Sound": "U",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "RUB",
+        "imageResName": "rub_image",
+        "part1Sound": "R",
+        "part2Sound": "U",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "CAB",
+        "imageResName": "cab_image",
+        "part1Sound": "C",
+        "part2Sound": "A",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "COB",
+        "imageResName": "cob_image",
+        "part1Sound": "C",
+        "part2Sound": "O",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "NAB",
+        "imageResName": "nab_image",
+        "part1Sound": "N",
+        "part2Sound": "A",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "LAB",
+        "imageResName": "lab_image",
+        "part1Sound": "L",
+        "part2Sound": "A",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "SOB",
+        "imageResName": "sob_image",
+        "part1Sound": "S",
+        "part2Sound": "O",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "ROB",
+        "imageResName": "rob_image",
+        "part1Sound": "R",
+        "part2Sound": "O",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "RIB",
+        "imageResName": "rib_image",
+        "part1Sound": "R",
+        "part2Sound": "I",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "body"
+        ]
+    },
+    {
+        "targetWord": "SIT",
+        "imageResName": "sit_image",
+        "part1Sound": "S",
+        "part2Sound": "I",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "PIT",
+        "imageResName": "pit_image",
+        "part1Sound": "P",
+        "part2Sound": "I",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "HIT",
+        "imageResName": "hit_image",
+        "part1Sound": "H",
+        "part2Sound": "I",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "FIT",
+        "imageResName": "fit_image",
+        "part1Sound": "F",
+        "part2Sound": "I",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "JET",
+        "imageResName": "jet_image",
+        "part1Sound": "J",
+        "part2Sound": "E",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "NET",
+        "imageResName": "net_image",
+        "part1Sound": "N",
+        "part2Sound": "E",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "WET",
+        "imageResName": "wet_image",
+        "part1Sound": "W",
+        "part2Sound": "E",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "PET",
+        "imageResName": "pet_image",
+        "part1Sound": "P",
+        "part2Sound": "E",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "PEN",
+        "imageResName": "pen_image",
+        "part1Sound": "P",
+        "part2Sound": "E",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "HEN",
+        "imageResName": "hen_image",
+        "part1Sound": "H",
+        "part2Sound": "E",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "TEN",
+        "imageResName": "ten_image",
+        "part1Sound": "T",
+        "part2Sound": "E",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MEN",
+        "imageResName": "men_image",
+        "part1Sound": "M",
+        "part2Sound": "E",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "BOX",
+        "imageResName": "box_image",
+        "part1Sound": "B",
+        "part2Sound": "O",
+        "part3Sound": "X",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "FOX",
+        "imageResName": "fox_image",
+        "part1Sound": "F",
+        "part2Sound": "O",
+        "part3Sound": "X",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "BOY",
+        "imageResName": "boy_image",
+        "part1Sound": "B",
+        "part2Sound": "O",
+        "part3Sound": "Y",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "BOW",
+        "imageResName": "bow_image",
+        "part1Sound": "B",
+        "part2Sound": "O",
+        "part3Sound": "W",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "TOY",
+        "imageResName": "toy_image",
+        "part1Sound": "T",
+        "part2Sound": "O",
+        "part3Sound": "Y",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "JOY",
+        "imageResName": "joy_image",
+        "part1Sound": "J",
+        "part2Sound": "O",
+        "part3Sound": "Y",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MOM",
+        "imageResName": "mom_image",
+        "part1Sound": "M",
+        "part2Sound": "O",
+        "part3Sound": "M",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MOW",
+        "imageResName": "mow_image",
+        "part1Sound": "M",
+        "part2Sound": "O",
+        "part3Sound": "W",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "COW",
+        "imageResName": "cow_image",
+        "part1Sound": "C",
+        "part2Sound": "O",
+        "part3Sound": "W",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "SIX",
+        "imageResName": "six_image",
+        "part1Sound": "S",
+        "part2Sound": "I",
+        "part3Sound": "X",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MIX",
+        "imageResName": "mix_image",
+        "part1Sound": "M",
+        "part2Sound": "I",
+        "part3Sound": "X",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "FIX",
+        "imageResName": "fix_image",
+        "part1Sound": "F",
+        "part2Sound": "I",
+        "part3Sound": "X",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "CAN",
+        "imageResName": "can_image",
+        "part1Sound": "C",
+        "part2Sound": "A",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "FAN",
+        "imageResName": "fan_image",
+        "part1Sound": "F",
+        "part2Sound": "A",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MAN",
+        "imageResName": "man_image",
+        "part1Sound": "M",
+        "part2Sound": "A",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "VAN",
+        "imageResName": "van_image",
+        "part1Sound": "V",
+        "part2Sound": "A",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "PAN",
+        "imageResName": "pan_image",
+        "part1Sound": "P",
+        "part2Sound": "A",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "TAN",
+        "imageResName": "tan_image",
+        "part1Sound": "T",
+        "part2Sound": "A",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "CAP",
+        "imageResName": "cap_image",
+        "part1Sound": "C",
+        "part2Sound": "A",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MAP",
+        "imageResName": "map_image",
+        "part1Sound": "M",
+        "part2Sound": "A",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "NAP",
+        "imageResName": "nap_image",
+        "part1Sound": "N",
+        "part2Sound": "A",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "SAP",
+        "imageResName": "sap_image",
+        "part1Sound": "S",
+        "part2Sound": "A",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "DAD",
+        "imageResName": "dad_image",
+        "part1Sound": "D",
+        "part2Sound": "A",
+        "part3Sound": "D",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MAD",
+        "imageResName": "mad_image",
+        "part1Sound": "M",
+        "part2Sound": "A",
+        "part3Sound": "D",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "SAD",
+        "imageResName": "sad_image",
+        "part1Sound": "S",
+        "part2Sound": "A",
+        "part3Sound": "D",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "DAM",
+        "imageResName": "dam_image",
+        "part1Sound": "D",
+        "part2Sound": "A",
+        "part3Sound": "M",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "JAM",
+        "imageResName": "jam_image",
+        "part1Sound": "J",
+        "part2Sound": "A",
+        "part3Sound": "M",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "food"
+        ]
+    },
+    {
+        "targetWord": "RAM",
+        "imageResName": "ram_image",
+        "part1Sound": "R",
+        "part2Sound": "A",
+        "part3Sound": "M",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "YAM",
+        "imageResName": "yam_image",
+        "part1Sound": "Y",
+        "part2Sound": "A",
+        "part3Sound": "M",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "food"
+        ]
+    },
+    {
+        "targetWord": "HAM",
+        "imageResName": "ham_image",
+        "part1Sound": "H",
+        "part2Sound": "A",
+        "part3Sound": "M",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "food"
+        ]
+    },
+    {
+        "targetWord": "BAG",
+        "imageResName": "bag_image",
+        "part1Sound": "B",
+        "part2Sound": "A",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "TAG",
+        "imageResName": "tag_image",
+        "part1Sound": "T",
+        "part2Sound": "A",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "RAG",
+        "imageResName": "rag_image",
+        "part1Sound": "R",
+        "part2Sound": "A",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "WAG",
+        "imageResName": "wag_image",
+        "part1Sound": "W",
+        "part2Sound": "A",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "LEG",
+        "imageResName": "leg_image",
+        "part1Sound": "L",
+        "part2Sound": "E",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "body"
+        ]
+    },
+    {
+        "targetWord": "DIP",
+        "imageResName": "dip_image",
+        "part1Sound": "D",
+        "part2Sound": "I",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "HIP",
+        "imageResName": "hip_image",
+        "part1Sound": "H",
+        "part2Sound": "I",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "body"
+        ]
+    },
+    {
+        "targetWord": "LIP",
+        "imageResName": "lip_image",
+        "part1Sound": "L",
+        "part2Sound": "I",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "body"
+        ]
+    },
+    {
+        "targetWord": "ZIP",
+        "imageResName": "zip_image",
+        "part1Sound": "Z",
+        "part2Sound": "I",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "SIP",
+        "imageResName": "sip_image",
+        "part1Sound": "S",
+        "part2Sound": "I",
+        "part3Sound": "P",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "COT",
+        "imageResName": "cot_image",
+        "part1Sound": "C",
+        "part2Sound": "O",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "DOT",
+        "imageResName": "dot_image",
+        "part1Sound": "D",
+        "part2Sound": "O",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "HOT",
+        "imageResName": "hot_image",
+        "part1Sound": "H",
+        "part2Sound": "O",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "POT",
+        "imageResName": "pot_image",
+        "part1Sound": "P",
+        "part2Sound": "O",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "LOT",
+        "imageResName": "lot_image",
+        "part1Sound": "L",
+        "part2Sound": "O",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "COD",
+        "imageResName": "cod_image",
+        "part1Sound": "C",
+        "part2Sound": "O",
+        "part3Sound": "D",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "NOD",
+        "imageResName": "nod_image",
+        "part1Sound": "N",
+        "part2Sound": "O",
+        "part3Sound": "D",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "POD",
+        "imageResName": "pod_image",
+        "part1Sound": "P",
+        "part2Sound": "O",
+        "part3Sound": "D",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "BUG",
+        "imageResName": "bug_image",
+        "part1Sound": "B",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "nature"
+        ]
+    },
+    {
+        "targetWord": "HUG",
+        "imageResName": "hug_image",
+        "part1Sound": "H",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "JUG",
+        "imageResName": "jug_image",
+        "part1Sound": "J",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "MUG",
+        "imageResName": "mug_image",
+        "part1Sound": "M",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "RUG",
+        "imageResName": "rug_image",
+        "part1Sound": "R",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "TUG",
+        "imageResName": "tug_image",
+        "part1Sound": "T",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "CUT",
+        "imageResName": "cut_image",
+        "part1Sound": "C",
+        "part2Sound": "U",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "action"
+        ]
+    },
+    {
+        "targetWord": "HUT",
+        "imageResName": "hut_image",
+        "part1Sound": "H",
+        "part2Sound": "U",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "NUT",
+        "imageResName": "nut_image",
+        "part1Sound": "N",
+        "part2Sound": "U",
+        "part3Sound": "T",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "food"
+        ]
+    },
+    {
+        "targetWord": "TON",
+        "imageResName": "ton_image",
+        "part1Sound": "T",
+        "part2Sound": "O",
+        "part3Sound": "N",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "HAY",
+        "imageResName": "hay_image",
+        "part1Sound": "H",
+        "part2Sound": "A",
+        "part3Sound": "Y",
+        "phonicComplexity": 3,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "complex_vowel"
+            ]
+        },
+        "levelAvailability": [
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "CAR",
+        "imageResName": "car_image",
+        "part1Sound": "C",
+        "part2Sound": "A",
+        "part3Sound": "R",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "FAR",
+        "imageResName": "far_image",
+        "part1Sound": "F",
+        "part2Sound": "A",
+        "part3Sound": "R",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "JAR",
+        "imageResName": "jar_image",
+        "part1Sound": "J",
+        "part2Sound": "A",
+        "part3Sound": "R",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "WEB",
+        "imageResName": "web_image",
+        "part1Sound": "W",
+        "part2Sound": "E",
+        "part3Sound": "B",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "nature"
+        ]
+    },
+    {
+        "targetWord": "WED",
+        "imageResName": "wed_image",
+        "part1Sound": "W",
+        "part2Sound": "E",
+        "part3Sound": "D",
+        "phonicComplexity": 4,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "plural_form"
+            ]
+        },
+        "levelAvailability": [
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "POX",
+        "imageResName": "pox_image",
+        "part1Sound": "P",
+        "part2Sound": "O",
+        "part3Sound": "X",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "LUG",
+        "imageResName": "lug_image",
+        "part1Sound": "L",
+        "part2Sound": "U",
+        "part3Sound": "G",
+        "phonicComplexity": 1,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CVC",
+            "hasSilentLetters": false,
+            "complexityFactors": []
+        },
+        "levelAvailability": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    }
 ]

@@ -344,24 +344,36 @@ This document outlines the development plan for the Minimum Viable Product (MVP)
 
 ### **Phase 6.1: Data Schema Enhancement & Migration**
 *   **Task 6.1.1: Enhanced WordDefinition Data Structure**
-    *   [ ] Update `WordDefinition` data class with new fields:
+    *   [x] Update `WordDefinition` data class with new fields:
         *   `phonicComplexity: Int` (1-5 difficulty rating)
         *   `soundType: SoundTypeClassification` (nested data class)
         *   `levelAvailability: List<Int>` (levels where word can appear)
         *   `tags: List<String>` (semantic grouping)
-    *   [ ] Create `SoundTypeClassification` data class with consonant/vowel categorization
-    *   [ ] Implement backward compatibility for existing WordDefinition usage
+    *   [x] Create `SoundTypeClassification` data class with consonant/vowel categorization
+    *   [x] Implement backward compatibility for existing WordDefinition usage
 *   **Task 6.1.2: Asset Migration & Phonetic Classification**
-    *   [ ] Create phonetic classification utility functions for automated tagging
-    *   [ ] Develop migration script for existing `word_definitions.json`
-    *   [ ] Classify all existing words by phonetic complexity (1-5 levels)
-    *   [ ] Add level availability and semantic tags to all current vocabulary
-    *   [ ] Validate migrated data against new schema requirements
+    *   [x] Create phonetic classification utility functions for automated tagging
+    *   [x] Develop migration script for existing `word_definitions.json`
+    *   [x] Classify all existing words by phonetic complexity (1-5 levels)
+    *   [x] Add level availability and semantic tags to all current vocabulary
+    *   [x] Validate migrated data against new schema requirements
+    *   **Note:** Morphological complexity analysis (past-tense detection) is disabled in Phase 6.1 due to linguistic complexity requirements. Words ending in "ed" like "BED", "RED", "WED" were incorrectly classified as morphologically complex.
 *   **Task 6.1.3: Data Validation & Testing Infrastructure**
-    *   [ ] Create comprehensive validation tests for phonetic classifications
-    *   [ ] Add unit tests for migration script accuracy
-    *   [ ] Implement data consistency checks for level assignments
-    *   [ ] Create test fixtures for each complexity level
+    *   [x] Create comprehensive validation tests for phonetic classifications
+    *   [x] Add unit tests for migration script accuracy
+    *   [x] Implement data consistency checks for level assignments
+    *   [x] Create test fixtures for each complexity level
+
+**Future Requirements: Morphological Complexity Analysis (Phase 6.4+)**
+Before morphological complexity can be re-enabled in phonetic analysis, the following requirements must be implemented:
+
+*   **Root Word Validation**: Implement proper linguistic analysis to validate if a word ending in "ed" has a valid verb root (e.g., "walked" → "walk" is valid, but "bed" → "b" is not)
+*   **Known Past-Tense Dictionary**: Create curated list of confirmed past-tense words vs. words that naturally end in common suffixes
+*   **Morphological Pattern Recognition**: Replace simple string matching (`contains("ed")`) with proper linguistic pattern analysis that considers:
+    *   Word length and structure
+    *   Phonetic context of suffix
+    *   Semantic validation of root words
+    *   Known exceptions and irregular forms
 
 ### **Phase 6.2: Algorithm Implementation & Challenge Generation**
 *   **Task 6.2.1: Level-Aware WordChallengeGenerator Enhancement**
