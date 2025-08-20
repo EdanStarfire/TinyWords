@@ -43,6 +43,17 @@ kotlin {
     jvmToolchain(21) // Use the integer value for the JDK version
 }
 
+// Test logging configuration
+tasks.withType<Test> {
+    testLogging {
+        events("passed", "skipped", "failed", "standard_out", "standard_error")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)

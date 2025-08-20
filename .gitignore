@@ -18,7 +18,7 @@ local.properties
 app/release/
 app/debug/
 */build/
-
+releases/
 # Android signing files
 *.jks
 *.keystore

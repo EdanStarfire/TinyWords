@@ -31,6 +31,13 @@ Folder Structure & Orientation
 
 Build, Lint, and Test (run only if requested)
 
+**Windows (uses gradlew.bat with auto-configured JAVA_HOME):**
+- Build app: cmd.exe //c "gradlew.bat assembleDebug"
+- Run unit tests: cmd.exe //c "gradlew.bat testDebugUnitTest"
+- Run instrumented tests: cmd.exe //c "gradlew.bat connectedDebugAndroidTest" (requires emulator/device)
+- Lint: cmd.exe //c "gradlew.bat lint"
+
+**Linux/Mac:**
 - Build app: ./gradlew assembleDebug
 - Run unit tests: ./gradlew testDebugUnitTest
 - Run instrumented tests: ./gradlew connectedDebugAndroidTest (requires emulator/device)
