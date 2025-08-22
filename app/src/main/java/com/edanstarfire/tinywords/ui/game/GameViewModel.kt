@@ -36,7 +36,7 @@ data class SpokenContent(
 @HiltViewModel // Marks this ViewModel for Hilt injection
 class GameViewModel @Inject constructor(
     private val ttsHelper: TtsHelper,
-    private val wordChallengeGenerator: WordChallengeGenerator,
+    internal val wordChallengeGenerator: WordChallengeGenerator,
     @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val recentTargetWords = ArrayDeque<String>(10)
@@ -130,6 +130,8 @@ class GameViewModel @Inject constructor(
                 if (!initialGameSettingsLoaded) {
                     initialGameSettingsLoaded = true
                     _gameSettings.value = loadedSettings
+                    // Load the first word challenge after settings are loaded
+                    loadNewWordChallenge()
                 }
             }
         }
@@ -155,8 +157,6 @@ class GameViewModel @Inject constructor(
                 Log.i("GameViewModel", "TTS readiness changed: $ready")
             }
         }
-        // Load the first word challenge when the ViewModel is ready
-        loadNewWordChallenge()
     }
 
     fun loadNewWordChallenge() {
@@ -167,7 +167,19 @@ class GameViewModel @Inject constructor(
         incorrectCount = 0
         hintCount = 0
 
-        val challenge = wordChallengeGenerator.getRandomInitialChallenge(recentTargetWords.toSet())
+        val currentLevel = _gameSettings.value.challengeLevel
+        Log.d("GameViewModel", "Generating challenge for level $currentLevel")
+        
+        // Get a level-appropriate challenge directly
+        var challenge = wordChallengeGenerator.getRandomLevelChallenge(currentLevel, recentTargetWords.toSet())
+        
+        if (challenge == null && recentTargetWords.isNotEmpty()) {
+            // Clear recent words and retry if we've exhausted available words
+            Log.i("GameViewModel", "No words available with current excludes, clearing recent words for level $currentLevel")
+            recentTargetWords.clear()
+            challenge = wordChallengeGenerator.getRandomLevelChallenge(currentLevel, emptySet())
+        }
+        
         challenge?.let {
             // Track this target word for repetition avoidance
             if (recentTargetWords.size >= 10) recentTargetWords.removeFirst()
@@ -533,5 +545,6 @@ data class GameSettings(
     val ttsVolume: Int = 100, // 0-100 (UI)
     val bgMusicTrack: String = "chill.mp3",
     val ttsEnabled: Boolean = true,
-    val letterSpellingDelayMs: Int = 750 // 500-2000ms in 250ms increments
+    val letterSpellingDelayMs: Int = 750, // 500-2000ms in 250ms increments
+    val challengeLevel: Int = 1 // 1-2 for initial implementation, 1-5 in future
 )

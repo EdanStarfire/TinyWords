@@ -228,7 +228,10 @@ fun StreakProgressBar(
                 modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
-                    text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
+                    text = when (val delta = streakDelta) {
+                        null -> ""
+                        else -> if (delta > 0) "+${delta}" else "${delta}"
+                    },
                     fontSize = 22.sp,
                     color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -276,7 +279,10 @@ fun StreakProgressBar(
                 modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
-                    text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
+                    text = when (val delta = streakDelta) {
+                        null -> ""
+                        else -> if (delta > 0) "+${delta}" else "${delta}"
+                    },
                     fontSize = 22.sp,
                     color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -325,7 +331,10 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                         modifier = Modifier.align(Alignment.Center)
                     ) {
                         Text(
-                            text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
+                            text = when (val delta = streakDelta) {
+                        null -> ""
+                        else -> if (delta > 0) "+${delta}" else "${delta}"
+                    },
                             fontSize = 44.sp,
                             color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                             modifier = Modifier.padding(bottom = 4.dp)
@@ -379,7 +388,10 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel?) {
                     StreakProgressBar(currentStreak = currentStreak, highStreak = highStreak, isLandscape = false, streakDelta = null)
                     this@Column.AnimatedVisibility(visible = (streakDelta ?: 0) != 0, modifier = Modifier.align(Alignment.Center)) {
                         Text(
-                            text = if ((streakDelta ?: 0) > 0) "+${streakDelta}" else "${streakDelta}",
+                            text = when (val delta = streakDelta) {
+                        null -> ""
+                        else -> if (delta > 0) "+${delta}" else "${delta}"
+                    },
                             fontSize = 42.sp,
                             color = if ((streakDelta ?: 0) > 0) SuccessGreen else FailRed,
                             modifier = Modifier.padding(bottom = 4.dp)
@@ -431,11 +443,9 @@ fun TargetWordArea(viewModel: GameViewModel?) {
         val target = currentChallenge?.targetWord
         val incorrect1 = currentChallenge?.incorrectImageWord1
         val incorrect2 = currentChallenge?.incorrectImageWord2
-        val differingIndex = if (hintLevel >= 1 && target != null && incorrect1 != null && incorrect2 != null) {
-            target.indices.firstOrNull { idx ->
-                (idx < incorrect1.length && target[idx] != incorrect1[idx]) ||
-                        (idx < incorrect2.length && target[idx] != incorrect2[idx])
-            }
+        // Phonetically-aware highlighting: find which sound part differs
+        val differingPhoneticRange = if (hintLevel >= 1 && target != null && incorrect1 != null && incorrect2 != null) {
+            findDifferingPhoneticPart(target, incorrect1, incorrect2, viewModel)
         } else null
 
         LaunchedEffect(target, gameSettings.pronounceTargetAtStart) {
@@ -451,7 +461,7 @@ fun TargetWordArea(viewModel: GameViewModel?) {
                 Text(
                     text = buildAnnotatedString {
                         target.forEachIndexed { i, c ->
-                            if (i == differingIndex) {
+                            if (differingPhoneticRange != null && i in differingPhoneticRange) {
                                 withStyle(SpanStyle(color = SuccessGreen)) { append(c) }
                             } else append(c)
                         }
@@ -480,7 +490,7 @@ fun ImageChoice(
     isSelected: Boolean,
     isDisabled: Boolean,
     showWordBelow: Boolean = false,
-    differingIndex: Int? = null,
+    differingRange: IntRange? = null,
     onClick: () -> Unit
 ) {
     val alpha = if (isDisabled) 0.4f else 1f
@@ -588,7 +598,7 @@ fun ImageChoice(
             Text(
                 text = if (showWordBelow) buildAnnotatedString {
                     word.forEachIndexed { i, c ->
-                        if (i == differingIndex) {
+                        if (differingRange != null && i in differingRange) {
                             withStyle(SpanStyle(color = if (isCorrect) SuccessGreen else FailRed)) {
                                 append(c)
                             }
@@ -642,7 +652,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                 showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
                                         (item.word in disabledWords) ||
                                         (feedbackState is GameFeedback.Correct),
-                                differingIndex = if (
+                                differingRange = if (
                                     feedbackState is GameFeedback.Correct ||
                                     (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
                                     (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(item.word))
@@ -650,10 +660,10 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                     val tgt = currentChallenge.targetWord
                                     val incorrect1 = currentChallenge.incorrectImageWord1
                                     val incorrect2 = currentChallenge.incorrectImageWord2
-                                    tgt.indices.firstOrNull { idx ->
-                                        (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
-                                                (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
-                                    }
+                                    findDifferingPhoneticRange(item.word, 
+                                        if (item.word == tgt) incorrect1 else tgt,
+                                        if (item.word == tgt) incorrect2 else (if (item.word == incorrect1) incorrect2 else incorrect1),
+                                        viewModel)
                                 } else null,
                                 onClick = { viewModel.processPlayerChoice(item.word) }
                             )
@@ -709,7 +719,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                     showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
                                             (item.word in disabledWords) ||
                                             (feedbackState is GameFeedback.Correct),
-                                    differingIndex = if (
+                                    differingRange = if (
                                         feedbackState is GameFeedback.Correct ||
                                         (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
                                         (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(
@@ -719,10 +729,10 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                         val tgt = currentChallenge.targetWord
                                         val incorrect1 = currentChallenge.incorrectImageWord1
                                         val incorrect2 = currentChallenge.incorrectImageWord2
-                                        tgt.indices.firstOrNull { idx ->
-                                            (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
-                                                    (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
-                                        }
+                                        findDifferingPhoneticRange(item.word, 
+                                            if (item.word == tgt) incorrect1 else tgt,
+                                            if (item.word == tgt) incorrect2 else (if (item.word == incorrect1) incorrect2 else incorrect1),
+                                            viewModel)
                                     } else null,
                                     onClick = { viewModel.processPlayerChoice(item.word) }
                                 )
@@ -756,7 +766,7 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                 showWordBelow = viewModel.gameSettings.collectAsState().value.alwaysShowWords ||
                                         (item.word in disabledWords) ||
                                         (feedbackState is GameFeedback.Correct),
-                                differingIndex = if (
+                                differingRange = if (
                                     feedbackState is GameFeedback.Correct ||
                                     (feedbackState is GameFeedback.Incorrect && ((feedbackState as GameFeedback.Incorrect).chosenWord == item.word)) ||
                                     (viewModel.hintLevel.collectAsState().value == 2 && viewModel.disabledWords.collectAsState().value.contains(
@@ -766,10 +776,10 @@ fun ImageChoicesArea(viewModel: GameViewModel?, isLandscape: Boolean = false) {
                                     val tgt = currentChallenge.targetWord
                                     val incorrect1 = currentChallenge.incorrectImageWord1
                                     val incorrect2 = currentChallenge.incorrectImageWord2
-                                    tgt.indices.firstOrNull { idx ->
-                                        (idx < incorrect1.length && tgt[idx] != incorrect1[idx]) ||
-                                                (idx < incorrect2.length && tgt[idx] != incorrect2[idx])
-                                    }
+                                    findDifferingPhoneticRange(item.word, 
+                                        if (item.word == tgt) incorrect1 else tgt,
+                                        if (item.word == tgt) incorrect2 else (if (item.word == incorrect1) incorrect2 else incorrect1),
+                                        viewModel)
                                 } else null,
                                 onClick = { viewModel.processPlayerChoice(item.word) }
                             )
@@ -951,6 +961,46 @@ fun SettingsDialogContent(
                                 modifier = Modifier.size(18.dp).padding(end = 8.dp)
                             )
                             Text("Always Show Words")
+                        }
+
+                        // Challenge Level Selection
+                        val levelOptions = listOf(1, 2)
+                        val levelLabels = listOf("Level 1", "Level 2")
+                        val levelIndex = levelOptions.indexOfFirst { it == currentSettings.challengeLevel }.coerceAtLeast(0)
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 16.dp)) {
+                            Text("Challenge Level ", fontWeight = FontWeight.Bold)
+                            Text("(${levelLabels[levelIndex]})", fontSize = 12.sp)
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Column(Modifier.padding(bottom = 2.dp, top = 0.dp)) {
+                            Slider(
+                                value = levelIndex.toFloat(),
+                                onValueChange = {
+                                    val index = it.roundToInt()
+                                    val newLevel = levelOptions[index]
+                                    val newSettings = currentSettings.copy(challengeLevel = newLevel)
+                                    onSettingsChange(newSettings)
+                                },
+                                steps = levelOptions.size - 2,
+                                valueRange = 0f..(levelOptions.size - 1).toFloat(),
+                                modifier = Modifier.fillMaxWidth().height(22.dp),
+                                enabled = true,
+                                colors = SliderDefaults.colors(
+                                    thumbColor = AccentPink
+                                ),
+                                track = { sliderState ->
+                                    SliderDefaults.Track(
+                                        sliderState = sliderState,
+                                        colors = SliderDefaults.colors(
+                                            activeTrackColor = MediumPink,
+                                            inactiveTrackColor = Color.LightGray,
+                                            activeTickColor = PastelPink,
+                                            inactiveTickColor = MediumPink
+                                        ),
+                                        thumbTrackGapSize = 0.dp
+                                    )
+                                }
+                            )
                         }
 
                         var showResetConfirm by remember { mutableStateOf(false) }
@@ -1663,6 +1713,67 @@ fun ThemedSettingsModal(
                 )
             }
         }
+    }
+}
+
+/**
+ * Find the character range that corresponds to the differing phonetic part
+ * For example: FISH vs FIX/FIT should highlight "SH", "X", "T"
+ */
+private fun findDifferingPhoneticPart(target: String, incorrect1: String, incorrect2: String, viewModel: GameViewModel): IntRange? {
+    return findDifferingPhoneticRange(target, incorrect1, incorrect2, viewModel)
+}
+
+/**
+ * Unified phonetic-aware highlighting that uses actual WordDefinition data
+ * Returns the character range that should be highlighted for the differing sound
+ */
+private fun findDifferingPhoneticRange(target: String, incorrect1: String, incorrect2: String, viewModel: GameViewModel): IntRange? {
+    try {
+        // Get the actual word definitions
+        val targetDef = viewModel.wordChallengeGenerator.getWordDefinition(target) ?: return null
+        val incorrect1Def = viewModel.wordChallengeGenerator.getWordDefinition(incorrect1) ?: return null
+        val incorrect2Def = viewModel.wordChallengeGenerator.getWordDefinition(incorrect2) ?: return null
+        
+        // Compare the phonetic parts to find which one differs
+        val targetParts = listOf(targetDef.part1Sound, targetDef.part2Sound, targetDef.part3Sound)
+        val incorrect1Parts = listOf(incorrect1Def.part1Sound, incorrect1Def.part2Sound, incorrect1Def.part3Sound)
+        val incorrect2Parts = listOf(incorrect2Def.part1Sound, incorrect2Def.part2Sound, incorrect2Def.part3Sound)
+        
+        // Find which part differs
+        val differingPartIndex = targetParts.indices.firstOrNull { i ->
+            targetParts[i] != incorrect1Parts[i] || targetParts[i] != incorrect2Parts[i]
+        } ?: return null
+        
+        // Calculate the character range for the differing part
+        return when (differingPartIndex) {
+            0 -> {
+                // Part 1 (beginning sound)
+                val part1Length = targetParts[0].length
+                0 until part1Length
+            }
+            1 -> {
+                // Part 2 (middle sound)  
+                val part1Length = targetParts[0].length
+                val part2Length = targetParts[1].length
+                part1Length until (part1Length + part2Length)
+            }
+            2 -> {
+                // Part 3 (ending sound)
+                val part1Length = targetParts[0].length
+                val part2Length = targetParts[1].length
+                (part1Length + part2Length) until target.length
+            }
+            else -> null
+        }
+        
+    } catch (e: Exception) {
+        // Fallback to character-by-character comparison
+        val differPos = target.indices.firstOrNull { idx ->
+            (idx < incorrect1.length && target[idx] != incorrect1[idx]) ||
+            (idx < incorrect2.length && target[idx] != incorrect2[idx])
+        }
+        return if (differPos != null) differPos..differPos else null
     }
 }
 

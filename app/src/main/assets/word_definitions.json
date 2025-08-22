@@ -365,18 +365,19 @@
         "part1Sound": "B",
         "part2Sound": "E",
         "part3Sound": "D",
-        "phonicComplexity": 4,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "plural_form"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
+            3,
             4,
             5
         ],
@@ -388,18 +389,19 @@
         "part1Sound": "R",
         "part2Sound": "E",
         "part3Sound": "D",
-        "phonicComplexity": 4,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "plural_form"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
+            3,
             4,
             5
         ],
@@ -1367,18 +1369,18 @@
         "part1Sound": "B",
         "part2Sound": "O",
         "part3Sound": "Y",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -1391,18 +1393,18 @@
         "part1Sound": "B",
         "part2Sound": "O",
         "part3Sound": "W",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -1415,18 +1417,18 @@
         "part1Sound": "T",
         "part2Sound": "O",
         "part3Sound": "Y",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -1439,18 +1441,18 @@
         "part1Sound": "J",
         "part2Sound": "O",
         "part3Sound": "Y",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -1487,18 +1489,18 @@
         "part1Sound": "M",
         "part2Sound": "O",
         "part3Sound": "W",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -1513,18 +1515,18 @@
         "part1Sound": "C",
         "part2Sound": "O",
         "part3Sound": "W",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -2743,18 +2745,18 @@
         "part1Sound": "H",
         "part2Sound": "A",
         "part3Sound": "Y",
-        "phonicComplexity": 3,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "complex_vowel"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
             3,
             4,
             5
@@ -2867,18 +2869,19 @@
         "part1Sound": "W",
         "part2Sound": "E",
         "part3Sound": "D",
-        "phonicComplexity": 4,
+        "phonicComplexity": 1,
         "soundType": {
             "consonant1": "simple",
             "vowel": "short",
             "consonant2": "simple",
             "pattern": "CVC",
             "hasSilentLetters": false,
-            "complexityFactors": [
-                "plural_form"
-            ]
+            "complexityFactors": []
         },
         "levelAvailability": [
+            1,
+            2,
+            3,
             4,
             5
         ],
@@ -2931,5 +2934,271 @@
             5
         ],
         "tags": []
+    },
+    {
+        "targetWord": "FIST",
+        "imageResName": "fist_image",
+        "part1Sound": "F",
+        "part2Sound": "I",
+        "part3Sound": "ST",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "blend",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_blend"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "body"
+        ]
+    },
+    {
+        "targetWord": "FISH",
+        "imageResName": "fish_image",
+        "part1Sound": "F",
+        "part2Sound": "I",
+        "part3Sound": "SH",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "DUCK",
+        "imageResName": "duck_image",
+        "part1Sound": "D",
+        "part2Sound": "U",
+        "part3Sound": "CK",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "BUCK",
+        "imageResName": "buck_image",
+        "part1Sound": "B",
+        "part2Sound": "U",
+        "part3Sound": "CK",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "animal"
+        ]
+    },
+    {
+        "targetWord": "LUCK",
+        "imageResName": "luck_image",
+        "part1Sound": "L",
+        "part2Sound": "U",
+        "part3Sound": "CK",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "RING",
+        "imageResName": "ring_image",
+        "part1Sound": "R",
+        "part2Sound": "I",
+        "part3Sound": "NG",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "WING",
+        "imageResName": "wing_image",
+        "part1Sound": "W",
+        "part2Sound": "I",
+        "part3Sound": "NG",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "body"
+        ]
+    },
+    {
+        "targetWord": "KING",
+        "imageResName": "king_image",
+        "part1Sound": "K",
+        "part2Sound": "I",
+        "part3Sound": "NG",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "simple",
+            "vowel": "short",
+            "consonant2": "digraph",
+            "pattern": "CVCC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": []
+    },
+    {
+        "targetWord": "FLAG",
+        "imageResName": "flag_image",
+        "part1Sound": "FL",
+        "part2Sound": "A",
+        "part3Sound": "G",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "blend",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CCVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_blend"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
+    },
+    {
+        "targetWord": "SHIP",
+        "imageResName": "ship_image",
+        "part1Sound": "SH",
+        "part2Sound": "I",
+        "part3Sound": "P",
+        "phonicComplexity": 2,
+        "soundType": {
+            "consonant1": "digraph",
+            "vowel": "short",
+            "consonant2": "simple",
+            "pattern": "CCVC",
+            "hasSilentLetters": false,
+            "complexityFactors": [
+                "consonant_digraph"
+            ]
+        },
+        "levelAvailability": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "tags": [
+            "object"
+        ]
     }
 ]

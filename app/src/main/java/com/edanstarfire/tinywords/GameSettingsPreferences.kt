@@ -23,6 +23,7 @@ object GameSettingsPrefsKeys {
     val BG_MUSIC_TRACK = androidx.datastore.preferences.core.stringPreferencesKey("bg_music_track")
     val TTS_ENABLED = booleanPreferencesKey("tts_enabled")
     val LETTER_SPELLING_DELAY_MS = intPreferencesKey("letter_spelling_delay_ms")
+    val CHALLENGE_LEVEL = intPreferencesKey("challenge_level")
 }
 
 val Context.gameSettingsDataStore by preferencesDataStore(name = "game_settings_prefs")
@@ -40,7 +41,8 @@ class GameSettingsRepository(private val context: Context) {
             ttsVolume = prefs[GameSettingsPrefsKeys.TTS_VOLUME] ?: 100,
             bgMusicTrack = prefs[GameSettingsPrefsKeys.BG_MUSIC_TRACK] ?: "chill.mp3",
             ttsEnabled = prefs[GameSettingsPrefsKeys.TTS_ENABLED] ?: true,
-            letterSpellingDelayMs = prefs[GameSettingsPrefsKeys.LETTER_SPELLING_DELAY_MS] ?: 750
+            letterSpellingDelayMs = prefs[GameSettingsPrefsKeys.LETTER_SPELLING_DELAY_MS] ?: 750,
+            challengeLevel = prefs[GameSettingsPrefsKeys.CHALLENGE_LEVEL] ?: 1
         )
     }
 
@@ -57,6 +59,7 @@ class GameSettingsRepository(private val context: Context) {
             it[GameSettingsPrefsKeys.BG_MUSIC_TRACK] = settings.bgMusicTrack
             it[GameSettingsPrefsKeys.TTS_ENABLED] = settings.ttsEnabled
             it[GameSettingsPrefsKeys.LETTER_SPELLING_DELAY_MS] = settings.letterSpellingDelayMs
+            it[GameSettingsPrefsKeys.CHALLENGE_LEVEL] = settings.challengeLevel
         }
     }
 }
